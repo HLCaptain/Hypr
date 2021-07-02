@@ -21,16 +21,16 @@
             MinZoomFactor="0.1"
             VerticalScrollBarVisibility="Auto"
             VerticalScrollMode="Enabled"
-            ViewChanged="scrollViewer_ViewChanged"
             ZoomMode="Enabled">
-            <canvas:CanvasControl
+            <canvas:CanvasVirtualControl
                 x:Name="canvas"
                 Width="10000"
                 Height="10000"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 ClearColor="Black"
-                Draw="canvas_Draw" />
+                RegionsInvalidated="canvas_RegionsInvalidated"
+                SizeChanged="canvas_SizeChanged" />
         </ScrollViewer>
 
 
