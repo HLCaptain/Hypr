@@ -27,9 +27,15 @@ namespace HyprWinUI3.Views.CustomControls {
 			this.InitializeComponent();
 		}
 
-		// need to redraw the session?
+		/// <summary>
+		/// Decides to redraw the whole shown canvas according to the ZoomFactor of the ScrollViewer.
+		/// Canvas needed to redrawn if user scrolls too close or far from the current size of the dots.
+		/// </summary>
+		/// <returns>True if canvas needed to be invalidated, otherwise false.</returns>
 		private bool needToRedraw() {
-			int newSpaceBetweenDots = (int)(delta * Math.Pow(2, Math.Round(1 / scrollViewer.ZoomFactor / 4)));
+            // Zooming evenly and independently from the ZoomFactor.
+			int newSpaceBetweenDots = (int)(delta * Math.Pow(2, Math.Round(Math.Log(1 / scrollViewer.ZoomFactor, 2))));
+            // If the zoom has changed, then redraw the scene.
 			if (spaceBetweenDots != newSpaceBetweenDots) {
 				spaceBetweenDots = newSpaceBetweenDots;
 				return true;
@@ -39,22 +45,26 @@ namespace HyprWinUI3.Views.CustomControls {
 		}
 
 		private void canvas_RegionsInvalidated(Microsoft.Graphics.Canvas.UI.Xaml.CanvasVirtualControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasRegionsInvalidatedEventArgs args) {
-			// ini size
+			// Ini current size of the dots.
 			float dotSize = 2.4f * spaceBetweenDots / delta;
 
+            // Redrawing each region.
 			foreach (var region in args.InvalidatedRegions) {
 				using (var drawSession = sender.CreateDrawingSession(region)) {
+                    // Clearing every region first.
 					drawSession.Clear(Windows.UI.Color.FromArgb(0, 0, 0, 0));
-					for (int i = (int)Math.Round(region.Left);
-                        i < region.Right + spaceBetweenDots;
-                        i += spaceBetweenDots) {
-						for (int j = (int)Math.Round(region.Top);
+
+                    // Drawing the dots onto the region.
+					for (int i = (int)region.Left;
+						i < region.Right + spaceBetweenDots;
+						i += spaceBetweenDots) {
+						for (int j = (int)region.Top;
 							j < region.Bottom + spaceBetweenDots;
 							j += spaceBetweenDots) {
 							drawSession.FillCircle(
 								new Vector2(
-									(float)(i - (int)Math.Round(region.Left) % spaceBetweenDots),
-									(float)(j - (int)Math.Round(region.Top) % spaceBetweenDots)),
+									i - (int)region.Left % spaceBetweenDots,
+									j - (int)region.Top % spaceBetweenDots),
 								dotSize,
 								Windows.UI.Color.FromArgb(100, 255, 255, 255));
 						}
@@ -62,21 +72,34 @@ namespace HyprWinUI3.Views.CustomControls {
 				}
 			}
 		}
-        double zoom = 0;
-        bool zooming = false;
-        private void scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e) {
-            // todo: make canvas redraw itself loseless after zoom
-            if (zoom == scrollViewer.ZoomFactor) {
-                if (zooming) {
-                    if (needToRedraw()) {
-                        canvas.Invalidate();
-                    }
-                    zooming = false;
+
+		// todo: make canvas redraw itself loseless after zoom
+		/// <summary>
+		/// Stores the previous value of the ZoomFactor of the ScrollView.
+		/// Needed to check when the zooming action ended.
+		/// </summary>
+		double zoom = 0;
+        /// <summary>
+        /// Is the user zooming in right now?
+        /// </summary>
+		bool zooming = false;
+        /// <summary>
+        /// Event called when the ScrollViewer's View has been changed. (Panning and zooming counts.)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+		private void scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e) {
+			// Is the zoom of the view chaning?
+			if (zoom == scrollViewer.ZoomFactor) {
+                // If the zooming stopped right now, redraw the scene if needed.
+				if (zooming && needToRedraw()) {
+                    canvas.Invalidate();
                 }
+                zooming = false;
             } else {
-                zooming = true;
-            }
-            zoom = scrollViewer.ZoomFactor;
-        }
-    }
+				zooming = true;
+			}
+			zoom = scrollViewer.ZoomFactor;
+		}
+	}
 }
