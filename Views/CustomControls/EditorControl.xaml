@@ -32,15 +32,11 @@
                 ClearColor="Black"
                 RegionsInvalidated="canvas_RegionsInvalidated" />
         </ScrollViewer>
-
-
         <local:ToolbarControl
             Width="144"
             Height="288"
             Margin="10,10,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top" />
-
-
     </Grid>
 </UserControl>

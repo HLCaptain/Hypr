@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -19,7 +20,14 @@ using Windows.UI.Xaml.Shapes;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class EditorControl : UserControl {
+        /// <summary>
+        /// This many pixels are 1 model unit.
+        /// </summary>
 		const int delta = 48;
+
+        /// <summary>
+        /// The space between dots in pixels. This can change overtime, with the user zooming in and out.
+        /// </summary>
 		int spaceBetweenDots = delta;
 		
 
@@ -52,7 +60,7 @@ namespace HyprWinUI3.Views.CustomControls {
 			foreach (var region in args.InvalidatedRegions) {
 				using (var drawSession = sender.CreateDrawingSession(region)) {
                     // Clearing every region first.
-					drawSession.Clear(Windows.UI.Color.FromArgb(0, 0, 0, 0));
+					drawSession.Clear(Color.FromArgb(0, 0, 0, 0));
 
                     // Drawing the dots onto the region.
 					for (int i = (int)region.Left;
@@ -61,13 +69,23 @@ namespace HyprWinUI3.Views.CustomControls {
 						for (int j = (int)region.Top;
 							j < region.Bottom + spaceBetweenDots;
 							j += spaceBetweenDots) {
-							drawSession.FillCircle(
-								new Vector2(
-									i - (int)region.Left % spaceBetweenDots,
-									j - (int)region.Top % spaceBetweenDots),
-								dotSize,
-								Windows.UI.Color.FromArgb(100, 255, 255, 255));
-						}
+                            // Drawing the dots as circles.
+                            drawSession.FillCircle(
+                                new Vector2(
+                                    i - (int)region.Left % spaceBetweenDots,
+                                    j - (int)region.Top % spaceBetweenDots),
+                                dotSize,
+                                Color.FromArgb(100, 255, 255, 255));
+
+                            // Drawing the dots as rectangles
+                            //drawSession.FillRectangle(
+                            //    new Rect(
+                            //        new Point(
+                            //            i - (int)region.Left % spaceBetweenDots,
+                            //            j - (int)region.Top % spaceBetweenDots),
+                            //        new Size(dotSize, dotSize)),
+                            //    Color.FromArgb(100, 255, 255, 255));
+                        }
 					}
 				}
 			}
@@ -101,5 +119,5 @@ namespace HyprWinUI3.Views.CustomControls {
 			}
 			zoom = scrollViewer.ZoomFactor;
 		}
-	}
+    }
 }
