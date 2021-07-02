@@ -67,21 +67,21 @@ namespace HyprWinUI3.Views.CustomControls {
                             j < region.Bottom + spaceBetweenDots;
                             j += spaceBetweenDots) {
                             // Drawing the dots as circles.
-                            drawSession.FillCircle(
-                                new System.Numerics.Vector2(
-                                    i - (int)region.Left % spaceBetweenDots,
-                                    j - (int)region.Top % spaceBetweenDots),
-                                dotSize,
-                                Color.FromArgb(100, 255, 255, 255));
+                            //drawSession.FillCircle(
+                            //    new System.Numerics.Vector2(
+                            //        i - (int)region.Left % spaceBetweenDots,
+                            //        j - (int)region.Top % spaceBetweenDots),
+                            //    dotSize,
+                            //    Color.FromArgb(100, 255, 255, 255));
 
                             // Drawing the dots as rectangles
-                            //drawSession.FillRectangle(
-                            //    new Rect(
-                            //        new Point(
-                            //            i - (int)region.Left % spaceBetweenDots,
-                            //            j - (int)region.Top % spaceBetweenDots),
-                            //        new Size(dotSize, dotSize)),
-                            //    Color.FromArgb(100, 255, 255, 255));
+                            drawSession.FillRectangle(
+                                new Rect(
+                                    new Point(
+                                        i - (int)region.Left % spaceBetweenDots,
+                                        j - (int)region.Top % spaceBetweenDots),
+                                    new Size(dotSize * 1.2, dotSize * 1.2)),
+                                Color.FromArgb(100, 255, 255, 255));
                         }
                     }
                 }
