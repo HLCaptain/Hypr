@@ -20,14 +20,14 @@ using Windows.UI.Xaml.Shapes;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class EditorControl : UserControl {
-        /// <summary>
-        /// This many pixels are 1 model unit.
-        /// </summary>
+		/// <summary>
+		/// This many pixels are 1 model unit.
+		/// </summary>
 		const int delta = 48;
 
-        /// <summary>
-        /// The space between dots in pixels. This can change overtime, with the user zooming in and out.
-        /// </summary>
+		/// <summary>
+		/// The space between dots in pixels. This can change overtime, with the user zooming in and out.
+		/// </summary>
 		int spaceBetweenDots = delta;
 		
 
@@ -41,9 +41,9 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// </summary>
 		/// <returns>True if canvas needed to be invalidated, otherwise false.</returns>
 		private bool needToRedraw() {
-            // Zooming evenly and independently from the ZoomFactor.
+			// Zooming evenly and independently from the ZoomFactor.
 			int newSpaceBetweenDots = (int)(delta * Math.Pow(2, Math.Round(Math.Log(1 / scrollViewer.ZoomFactor, 2))));
-            // If the zoom has changed, then redraw the scene.
+			// If the zoom has changed, then redraw the scene.
 			if (spaceBetweenDots != newSpaceBetweenDots) {
 				spaceBetweenDots = newSpaceBetweenDots;
 				return true;
@@ -56,36 +56,36 @@ namespace HyprWinUI3.Views.CustomControls {
 			// Ini current size of the dots.
 			float dotSize = 2.4f * spaceBetweenDots / delta;
 
-            // Redrawing each region.
+			// Redrawing each region.
 			foreach (var region in args.InvalidatedRegions) {
 				using (var drawSession = sender.CreateDrawingSession(region)) {
-                    // Clearing every region first.
+					// Clearing every region first.
 					drawSession.Clear(Color.FromArgb(0, 0, 0, 0));
 
-                    // Drawing the dots onto the region.
+					// Drawing the dots onto the region.
 					for (int i = (int)region.Left;
 						i < region.Right + spaceBetweenDots;
 						i += spaceBetweenDots) {
 						for (int j = (int)region.Top;
 							j < region.Bottom + spaceBetweenDots;
 							j += spaceBetweenDots) {
-                            // Drawing the dots as circles.
-                            drawSession.FillCircle(
-                                new Vector2(
-                                    i - (int)region.Left % spaceBetweenDots,
-                                    j - (int)region.Top % spaceBetweenDots),
-                                dotSize,
-                                Color.FromArgb(100, 255, 255, 255));
+							// Drawing the dots as circles.
+							drawSession.FillCircle(
+								new Vector2(
+									i - (int)region.Left % spaceBetweenDots,
+									j - (int)region.Top % spaceBetweenDots),
+								dotSize,
+								Color.FromArgb(100, 255, 255, 255));
 
-                            // Drawing the dots as rectangles
-                            //drawSession.FillRectangle(
-                            //    new Rect(
-                            //        new Point(
-                            //            i - (int)region.Left % spaceBetweenDots,
-                            //            j - (int)region.Top % spaceBetweenDots),
-                            //        new Size(dotSize, dotSize)),
-                            //    Color.FromArgb(100, 255, 255, 255));
-                        }
+							// Drawing the dots as rectangles
+							//drawSession.FillRectangle(
+							//    new Rect(
+							//        new Point(
+							//            i - (int)region.Left % spaceBetweenDots,
+							//            j - (int)region.Top % spaceBetweenDots),
+							//        new Size(dotSize, dotSize)),
+							//    Color.FromArgb(100, 255, 255, 255));
+						}
 					}
 				}
 			}
@@ -97,27 +97,27 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// Needed to check when the zooming action ended.
 		/// </summary>
 		double zoom = 0;
-        /// <summary>
-        /// Is the user zooming in right now?
-        /// </summary>
+		/// <summary>
+		/// Is the user zooming in right now?
+		/// </summary>
 		bool zooming = false;
-        /// <summary>
-        /// Event called when the ScrollViewer's View has been changed. (Panning and zooming counts.)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+		/// <summary>
+		/// Event called when the ScrollViewer's View has been changed. (Panning and zooming counts.)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e) {
 			// Is the zoom of the view chaning?
 			if (zoom == scrollViewer.ZoomFactor) {
-                // If the zooming stopped right now, redraw the scene if needed.
+				// If the zooming stopped right now, redraw the scene if needed.
 				if (zooming && needToRedraw()) {
-                    canvas.Invalidate();
-                }
-                zooming = false;
-            } else {
+					canvas.Invalidate();
+				}
+				zooming = false;
+			} else {
 				zooming = true;
 			}
 			zoom = scrollViewer.ZoomFactor;
 		}
-    }
+	}
 }
