@@ -172,6 +172,9 @@
     <Compile Include="Views\CustomControls\EditorControl.xaml.cs">
       <DependentUpon>EditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CustomControls\EditorTreeControl.xaml.cs">
+      <DependentUpon>EditorTreeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\InteractButton.xaml.cs">
       <DependentUpon>InteractButton.xaml</DependentUpon>
     </Compile>
@@ -229,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\EditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\EditorTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
