@@ -11,27 +11,7 @@
     mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <ScrollViewer
-            x:Name="scrollViewer"
-            HorizontalScrollBarVisibility="Auto"
-            HorizontalScrollMode="Enabled"
-            IsTabStop="True"
-            IsVerticalScrollChainingEnabled="True"
-            MaxZoomFactor="1"
-            MinZoomFactor="0.1"
-            VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Enabled"
-            ViewChanged="scrollViewer_ViewChanged"
-            ZoomMode="Enabled">
-            <canvas:CanvasVirtualControl
-                x:Name="canvas"
-                Width="10000"
-                Height="10000"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                ClearColor="Black"
-                RegionsInvalidated="canvas_RegionsInvalidated" />
-        </ScrollViewer>
+
         <local:ToolbarControl
             Width="144"
             Height="288"

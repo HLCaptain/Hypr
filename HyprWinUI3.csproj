@@ -166,6 +166,9 @@
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\TabbedPivotViewModel.cs" />
     <Compile Include="ViewModels\TabViewViewModel.cs" />
+    <Compile Include="Views\CustomControls\EditorCanvasControl.xaml.cs">
+      <DependentUpon>EditorCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\EditorControl.xaml.cs">
       <DependentUpon>EditorControl.xaml</DependentUpon>
     </Compile>
@@ -218,6 +221,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\EditorCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
