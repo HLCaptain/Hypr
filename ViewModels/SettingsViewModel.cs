@@ -54,6 +54,28 @@ namespace HyprWinUI3.ViewModels
             }
         }
 
+        private bool _isHighContrast;
+
+        public bool IsHighContrast {
+            get { return _isHighContrast; }
+            set { SetProperty(ref _isHighContrast, value); }
+        }
+
+        private ICommand _switchContrastCommand;
+        public ICommand SwitchContrastCommand {
+            get {
+                if (_switchContrastCommand == null) {
+                    _switchContrastCommand = new RelayCommand<bool>(
+                        async (param) => {
+                            IsHighContrast = param;
+                            await ThemeSelectorService.SetContrastAsync(param);
+                        });
+                }
+
+                return _switchContrastCommand;
+            }
+        }
+
         public SettingsViewModel()
         {
         }

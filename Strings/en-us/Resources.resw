@@ -208,4 +208,8 @@
   <data name="ShellMenuBarItem_Settings" xml:space="preserve">
     <value></value>
   </data>
+  <data name="Settings_HighContrast_Checkbox.Content" xml:space="preserve">
+    <value>High contrast</value>
+    <comment>High contrast for Settings</comment>
+  </data>
 </root>

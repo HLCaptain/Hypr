@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.Services;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -28,8 +30,18 @@ namespace HyprWinUI3.Views.CustomControls {
         /// </summary>
         private int spaceBetweenDots = delta;
 
+        Color dotColor = Color.FromArgb(255, 0, 0, 0);
+        Color backGroundColor = Color.FromArgb(255, 240, 240, 240);
+
         public EditorCanvasControl() {
             this.InitializeComponent();
+            ThemeSelectorService.ContrastChanged += ThemeSelectorService_ContrastChanged;
+            updateColors();
+        }
+
+        private void ThemeSelectorService_ContrastChanged() {
+            updateColors();
+            canvas.Invalidate();
         }
 
         /// <summary>
@@ -52,12 +64,15 @@ namespace HyprWinUI3.Views.CustomControls {
         private void canvas_RegionsInvalidated(Microsoft.Graphics.Canvas.UI.Xaml.CanvasVirtualControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasRegionsInvalidatedEventArgs args) {
             // Ini current size of the dots.
             float dotSize = 2.4f * spaceBetweenDots / delta;
+            
+
+            
 
             // Redrawing each region.
             foreach (var region in args.InvalidatedRegions) {
                 using (var drawSession = sender.CreateDrawingSession(region)) {
                     // Clearing every region first.
-                    drawSession.Clear(Color.FromArgb(0, 0, 0, 0));
+                    drawSession.Clear(backGroundColor);
 
                     // Drawing the dots onto the region.
                     for (int i = (int)region.Left;
@@ -72,7 +87,7 @@ namespace HyprWinUI3.Views.CustomControls {
                             //        i - (int)region.Left % spaceBetweenDots,
                             //        j - (int)region.Top % spaceBetweenDots),
                             //    dotSize,
-                            //    Color.FromArgb(100, 255, 255, 255));
+                            //    dotColor);
 
                             // Drawing the dots as rectangles
                             drawSession.FillRectangle(
@@ -81,7 +96,7 @@ namespace HyprWinUI3.Views.CustomControls {
                                         i - (int)region.Left % spaceBetweenDots,
                                         j - (int)region.Top % spaceBetweenDots),
                                     new Size(dotSize * 1.2, dotSize * 1.2)),
-                                Color.FromArgb(100, 255, 255, 255));
+                                dotColor);
                         }
                     }
                 }
@@ -115,6 +130,46 @@ namespace HyprWinUI3.Views.CustomControls {
                 zooming = true;
             }
             zoom = scrollViewer.ZoomFactor;
+        }
+
+        private void UserControl_ActualThemeChanged(FrameworkElement sender, object args) {
+            updateColors();
+            canvas.Invalidate();
+        }
+
+        private void updateColors() {
+            // changing color based on current theme
+            switch (ThemeSelectorService.Theme) {
+                case ElementTheme.Default:
+                    if (ThemeSelectorService.IsHighContrast) {
+                        dotColor = Color.FromArgb(255, 255, 255, 255);
+                        backGroundColor = Color.FromArgb(255, 0, 0, 0);
+                    } else {
+                        dotColor = Color.FromArgb(255, 200, 200, 200);
+                        backGroundColor = Color.FromArgb(255, 20, 20, 20);
+                    }
+                    break;
+                case ElementTheme.Light:
+                    if (ThemeSelectorService.IsHighContrast) {
+                        dotColor = Color.FromArgb(255, 0, 0, 0);
+                        backGroundColor = Color.FromArgb(255, 255, 255, 255);
+                    } else {
+                        dotColor = Color.FromArgb(255, 40, 40, 40);
+                        backGroundColor = Color.FromArgb(255, 240, 240, 240);
+                    }
+                    break;
+                case ElementTheme.Dark:
+                    if (ThemeSelectorService.IsHighContrast) {
+                        dotColor = Color.FromArgb(255, 255, 255, 255);
+                        backGroundColor = Color.FromArgb(255, 0, 0, 0);
+                    } else {
+                        dotColor = Color.FromArgb(255, 200, 200, 200);
+                        backGroundColor = Color.FromArgb(255, 20, 20, 20);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

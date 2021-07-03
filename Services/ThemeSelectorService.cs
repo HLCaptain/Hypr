@@ -16,6 +16,10 @@ namespace HyprWinUI3.Services
 
         // todo: use the current there in elements
         public static ElementTheme Theme { get; set; } = ElementTheme.Default;
+        public static bool IsHighContrast { get; set; } = false;
+
+        public delegate void ContrastNotifierDelegate();
+        public static event ContrastNotifierDelegate ContrastChanged;
 
         public static async Task InitializeAsync()
         {
@@ -25,6 +29,14 @@ namespace HyprWinUI3.Services
         public static async Task SetThemeAsync(ElementTheme theme)
         {
             Theme = theme;
+
+            await SetRequestedThemeAsync();
+            await SaveThemeInSettingsAsync(Theme);
+        }
+
+        public static async Task SetContrastAsync(bool isHighContrast) {
+            IsHighContrast = isHighContrast;
+            ContrastChanged();
 
             await SetRequestedThemeAsync();
             await SaveThemeInSettingsAsync(Theme);

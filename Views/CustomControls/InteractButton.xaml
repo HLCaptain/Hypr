@@ -17,11 +17,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             AutomationProperties.Name="Store"
-            BorderBrush="{x:Null}"
             CornerRadius="4,4,4,4">
-            <ToggleButton.Background>
-                <AcrylicBrush TintColor="Transparent" />
-            </ToggleButton.Background>
             <FontIcon
                 x:Name="icon"
                 Width="24"
