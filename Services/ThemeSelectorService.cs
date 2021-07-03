@@ -14,6 +14,7 @@ namespace HyprWinUI3.Services
     {
         private const string SettingsKey = "AppBackgroundRequestedTheme";
 
+        // todo: use the current there in elements
         public static ElementTheme Theme { get; set; } = ElementTheme.Default;
 
         public static async Task InitializeAsync()

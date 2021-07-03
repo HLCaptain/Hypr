@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using HyprWinUI3.Models.Actors;
 
-namespace HyprWinUI3.Models {
-    class Vertex : Entity {
-        [JsonInclude]
-        private Point Position;
+namespace HyprWinUI3.Models.Actors {
+    class Vertex : Element {
+        public Point Position { get; set; }
     }
 }

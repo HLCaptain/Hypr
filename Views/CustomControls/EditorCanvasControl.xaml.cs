@@ -21,12 +21,12 @@ namespace HyprWinUI3.Views.CustomControls {
         /// <summary>
         /// This many pixels are 1 model unit.
         /// </summary>
-        const int delta = 48;
+        private const int delta = 48;
 
         /// <summary>
         /// The space between dots in pixels. This can change overtime, with the user zooming in and out.
         /// </summary>
-        int spaceBetweenDots = delta;
+        private int spaceBetweenDots = delta;
 
         public EditorCanvasControl() {
             this.InitializeComponent();

@@ -143,12 +143,21 @@
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
-    <Compile Include="Models\DragDropCompletedData.cs" />
-    <Compile Include="Models\DragDropData.cs" />
-    <Compile Include="Models\DragDropStartingData.cs" />
-    <Compile Include="Models\Edge.cs" />
-    <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Vertex.cs" />
+    <Compile Include="Models\Actors\Actor.cs" />
+    <Compile Include="Models\Actors\ClassElement.cs" />
+    <Compile Include="Models\Actors\Element.cs" />
+    <Compile Include="Models\Actors\Method.cs" />
+    <Compile Include="Models\Actors\Variable.cs" />
+    <Compile Include="Models\Actors\Visibility.cs" />
+    <Compile Include="Models\Diagrams\ClassDiagram.cs" />
+    <Compile Include="Models\Diagrams\Diagram.cs" />
+    <Compile Include="Models\Diagrams\Project.cs" />
+    <Compile Include="Models\DragAndDrop\DragDropCompletedData.cs" />
+    <Compile Include="Models\DragAndDrop\DragDropData.cs" />
+    <Compile Include="Models\DragAndDrop\DragDropStartingData.cs" />
+    <Compile Include="Models\Actors\Edge.cs" />
+    <Compile Include="Models\Actors\Entity.cs" />
+    <Compile Include="Models\Actors\Vertex.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
@@ -292,7 +301,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="HyprWinUI3_TemporaryKey.pfx" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -305,6 +315,9 @@
       <Project>{F63CD6EB-5CAD-4A66-8923-7F527790A535}</Project>
       <Name>HyprWinUI3.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
