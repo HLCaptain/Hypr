@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="HyprWinUI3.Views.CustomControls.EditorStartControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:HyprWinUI3.Views.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftTopRightBottomMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Uid="Main_Title"
+            Grid.Row="0"
+            Margin="{StaticResource MediumLeftMargin}"
+            Style="{StaticResource PageTitleStyle}" />
+        <d:ScrollViewer />
+        <Grid
+            Grid.Row="1"
+            Margin="{StaticResource SmallLeftTopRightBottomMargin}"
+            Background="{ThemeResource SystemControlBackgroundListLowBrush}"
+            CornerRadius="8,8,8,8">
+            <VariableSizedWrapGrid
+                Name="grid"
+                Margin="{StaticResource MediumLeftTopRightBottomMargin}"
+                FocusVisualPrimaryBrush="{x:Null}"
+                FocusVisualSecondaryBrush="{x:Null}" />
+
+            <!--
+                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content.
+                Place your content here.
+            -->
+
+        </Grid>
+    </Grid>
+</UserControl>
