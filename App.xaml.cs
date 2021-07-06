@@ -11,9 +11,12 @@ namespace HyprWinUI3
 	{
 		private Lazy<ActivationService> _activationService;
 
-        private ActivationService ActivationService => _activationService.Value;
+		private ActivationService ActivationService
+		{
+			get { return _activationService.Value; }
+		}
 
-        public App()
+		public App()
 		{
 			InitializeComponent();
 			UnhandledException += OnAppUnhandledException;
@@ -24,7 +27,7 @@ namespace HyprWinUI3
 
 		protected override async void OnLaunched(LaunchActivatedEventArgs args)
 		{
-			DebugSettings.EnableFrameRateCounter = true;
+            DebugSettings.EnableFrameRateCounter = true;
 			if (!args.PrelaunchActivated)
 			{
 				await ActivationService.ActivateAsync(args);
@@ -44,7 +47,7 @@ namespace HyprWinUI3
 
 		private ActivationService CreateActivationService()
 		{
-			return new ActivationService(this, typeof(Views.TabViewPage), new Lazy<UIElement>(CreateShell));
+			return new ActivationService(this, typeof(Views.MainPage), new Lazy<UIElement>(CreateShell));
 		}
 
 		private UIElement CreateShell()

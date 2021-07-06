@@ -11,26 +11,25 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
-    <Grid x:Name="grid">
-        <winui:TabView
-            Name="tabView"
-            VerticalAlignment="Stretch"
-            AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"
-            AllowDropTabs="True"
-            TabItemsSource="{x:Bind ViewModel.Tabs}">
-            <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="TabCloseRequested">
-                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.CloseTabCommand}" />
-                </ic:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-            <winui:TabView.TabItemTemplate>
-                <DataTemplate x:DataType="winui:TabViewItem">
-                    <winui:TabViewItem
-                        AutomationProperties.Name="{x:Bind Header}"
-                        Content="{x:Bind Content}"
-                        Header="{x:Bind Header}" />
-                </DataTemplate>
-            </winui:TabView.TabItemTemplate>
-        </winui:TabView>
-    </Grid>
+
+    <winui:TabView
+        Name="tabView"
+        VerticalAlignment="Stretch"
+        AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"
+        AllowDropTabs="True"
+        TabItemsSource="{x:Bind ViewModel.Tabs}">
+        <i:Interaction.Behaviors>
+            <ic:EventTriggerBehavior EventName="TabCloseRequested">
+                <ic:InvokeCommandAction Command="{x:Bind ViewModel.CloseTabCommand}" />
+            </ic:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
+        <winui:TabView.TabItemTemplate>
+            <DataTemplate x:DataType="winui:TabViewItem">
+                <winui:TabViewItem
+                    AutomationProperties.Name="{x:Bind Header}"
+                    Content="{x:Bind Content}"
+                    Header="{x:Bind Header}" />
+            </DataTemplate>
+        </winui:TabView.TabItemTemplate>
+    </winui:TabView>
 </Page>

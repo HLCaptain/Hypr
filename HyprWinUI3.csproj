@@ -164,19 +164,15 @@
     <Compile Include="Program.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
-    <Compile Include="Services\InfoService.cs" />
     <Compile Include="Services\DragAndDrop\DragDropService.cs" />
     <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
     <Compile Include="Services\DragAndDrop\ListViewDropConfiguration.cs" />
     <Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
-    <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
-    <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
-    <Compile Include="ViewModels\EditorStartControlViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellContentDialogViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -185,11 +181,8 @@
     <Compile Include="Views\CustomControls\EditorCanvasControl.xaml.cs">
       <DependentUpon>EditorCanvasControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomControls\EditorDiagramControl.xaml.cs">
-      <DependentUpon>EditorDiagramControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CustomControls\EditorStartControl.xaml.cs">
-      <DependentUpon>EditorStartControl.xaml</DependentUpon>
+    <Compile Include="Views\CustomControls\EditorControl.xaml.cs">
+      <DependentUpon>EditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\EditorTreeControl.xaml.cs">
       <DependentUpon>EditorTreeControl.xaml</DependentUpon>
@@ -200,8 +193,8 @@
     <Compile Include="Views\CustomControls\ToolbarControl.xaml.cs">
       <DependentUpon>ToolbarControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomControls\WideButtonControl.xaml.cs">
-      <DependentUpon>WideButtonControl.xaml</DependentUpon>
+    <Compile Include="Views\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -250,11 +243,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomControls\EditorDiagramControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CustomControls\EditorStartControl.xaml">
+    <Page Include="Views\CustomControls\EditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -270,9 +259,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomControls\WideButtonControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -315,6 +304,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
