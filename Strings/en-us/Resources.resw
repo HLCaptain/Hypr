@@ -129,9 +129,9 @@
     <value>File</value>
     <comment>Menu bar item Title for File</comment>
   </data>
-  <data name="ShellMenuBarItem_Views.Title" xml:space="preserve">
-    <value>Views</value>
-    <comment>Menu bar item Title for Views</comment>
+  <data name="ShellMenuBarItem_Edit.Title" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Menu bar item Title for editing.</comment>
   </data>
   <data name="ShellMenuItem_File_Exit.Text" xml:space="preserve">
     <value>Exit</value>
@@ -141,10 +141,6 @@
     <value>Main</value>
     <comment>Page title for MainPage</comment>
   </data>
-  <data name="ShellMenuItem_Views_Main.Text" xml:space="preserve">
-    <value>Main</value>
-    <comment>Menu item text for Main</comment>
-  </data>
   <data name="TabbedPivot_PivotItem1.Header" xml:space="preserve">
     <value>Item 1</value>
     <comment>First Pivot item title for TabbedPivot</comment>
@@ -152,14 +148,6 @@
   <data name="TabbedPivot_PivotItem2.Header" xml:space="preserve">
     <value>Item 2</value>
     <comment>Second Pivot item title for TabbedPivot</comment>
-  </data>
-  <data name="ShellMenuItem_Views_TabbedPivot.Text" xml:space="preserve">
-    <value>TabbedPivot</value>
-    <comment>Menu item text for TabbedPivot</comment>
-  </data>
-  <data name="ShellMenuItem_Views_TabView.Text" xml:space="preserve">
-    <value>TabView</value>
-    <comment>Menu item text for TabView</comment>
   </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
     <value>Choose Theme</value>
@@ -211,5 +199,11 @@
   <data name="Settings_HighContrast_Checkbox.Content" xml:space="preserve">
     <value>High contrast</value>
     <comment>High contrast for Settings</comment>
+  </data>
+  <data name="ShellMenuItem_Edit_CreateProject.Text" xml:space="preserve">
+    <value>Create Project</value>
+  </data>
+  <data name="ShellMenuItem_File_OpenProject.Text" xml:space="preserve">
+    <value>Open Project</value>
   </data>
 </root>
