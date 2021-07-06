@@ -36,7 +36,9 @@ namespace HyprWinUI3.Services
 
         public static async Task SetContrastAsync(bool isHighContrast) {
             IsHighContrast = isHighContrast;
-            ContrastChanged();
+            if (ContrastChanged != null) {
+                ContrastChanged();
+            }
 
             await SetRequestedThemeAsync();
             await SaveThemeInSettingsAsync(Theme);
