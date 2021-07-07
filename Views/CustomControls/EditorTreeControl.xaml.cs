@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.ViewModels.Editor;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -17,6 +18,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
     public sealed partial class EditorTreeControl : UserControl {
+        public EditorTreeViewModel ViewModel { get; } = new EditorTreeViewModel();
+
         public EditorTreeControl() {
             this.InitializeComponent();
 
