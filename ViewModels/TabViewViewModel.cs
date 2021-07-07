@@ -30,9 +30,9 @@ namespace HyprWinUI3.ViewModels
             {
                 Header = "New tab",
                 //// In this sample the content shown in the Tab is a string, set the content to the model you want to show
-                Content = new EditorStartControl() {
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch
+                Content = new EditorControl() {
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch
                 }
             }
         };
@@ -47,9 +47,9 @@ namespace HyprWinUI3.ViewModels
             Tabs.Add(new TabViewItem()
             {
                 Header = "New tab",
-                Content = new EditorStartControl() {
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch
+                Content = new EditorControl() {
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch
                 }
             });
         }
