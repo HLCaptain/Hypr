@@ -177,13 +177,17 @@
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EditorStartControlViewModel.cs" />
+    <Compile Include="ViewModels\Editor\EditorTreeViewModel.cs" />
+    <Compile Include="ViewModels\Editor\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellContentDialogViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\TabbedPivotViewModel.cs" />
     <Compile Include="ViewModels\TabViewViewModel.cs" />
     <Compile Include="Views\CustomControls\EditorCanvasControl.xaml.cs">
       <DependentUpon>EditorCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomControls\EditorControl.xaml.cs">
+      <DependentUpon>EditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\EditorDiagramControl.xaml.cs">
       <DependentUpon>EditorDiagramControl.xaml</DependentUpon>
@@ -211,9 +215,6 @@
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TabbedPivotPage.xaml.cs">
-      <DependentUpon>TabbedPivotPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TabViewPage.xaml.cs">
       <DependentUpon>TabViewPage.xaml</DependentUpon>
@@ -250,6 +251,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CustomControls\EditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CustomControls\EditorDiagramControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -283,10 +288,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ShellPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TabbedPivotPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
