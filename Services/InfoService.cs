@@ -14,20 +14,20 @@ using Windows.UI.Core;
 
 namespace HyprWinUI3.Services {
 	public static class InfoService {
+        public static VariableSizedWrapGrid InfoBarGrid { get; set; }
 		public static void DisplayInfoBar(string title, string message, InfoBarSeverity severity = InfoBarSeverity.Informational) {
-			var infoBar = new InfoBar() {
-				Title = title,
-				Message = message,
-				Severity = severity,
-				IsOpen = true,
-                VerticalAlignment = VerticalAlignment.Bottom,
+            var infoBar = new InfoBar() {
+                Title = title,
+                Message = message,
+                Severity = severity,
+                IsOpen = true,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 CornerRadius = new CornerRadius(8),
-                Margin = new Thickness(24),
+                Margin = new Thickness(4),
 			};
 
             // todo: rework how infobar displays
-            ((TabViewPage)NavigationService.Frame.Content).Grid.Children.Add(infoBar);
+            InfoBarGrid?.Children.Add(infoBar);
 
             var timer = new Timer(CloseInfoBar, infoBar, 3000, Timeout.Infinite);
         }
@@ -38,7 +38,7 @@ namespace HyprWinUI3.Services {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                 if (infoBar != null) {
                     if (infoBar.IsOpen) {
-                        ((TabViewPage)NavigationService.Frame.Content).Grid.Children.Remove(infoBar);
+                        InfoBarGrid?.Children.Remove(infoBar);
                     }
                 }
             });
