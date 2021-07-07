@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.Models.Diagrams;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -20,8 +21,15 @@ using Windows.UI.Xaml.Shapes;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class EditorDiagramControl : UserControl {
-		public EditorDiagramControl() {
+        public Diagram CurrentDiagram { get; set; }
+		public EditorDiagramControl(Diagram diagram) {
+            CurrentDiagram = diagram;
 			this.InitializeComponent();
-		}
+            Initialize();
+        }
+
+        private void Initialize() {
+            // todo draw elements
+        }
 	}
 }

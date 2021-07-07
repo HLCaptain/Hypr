@@ -12,20 +12,12 @@
     mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <SplitView IsPaneOpen="True" PanePlacement="Right">
-            <local:EditorCanvasControl />
-            <SplitView.Pane>
-                <Grid>
-                    <local:EditorTreeControl />
-                </Grid>
-            </SplitView.Pane>
-        </SplitView>
+        <local:EditorCanvasControl />
         <local:ToolbarControl
             Width="144"
             Height="288"
             Margin="10,10,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top" />
-
     </Grid>
 </UserControl>
