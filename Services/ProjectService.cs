@@ -12,18 +12,31 @@ using Windows.Storage.Provider;
 
 namespace HyprWinUI3.Services {
 	public static class ProjectService {
-		public delegate void ProjectChangedDelegate();
-		public static event ProjectChangedDelegate ProjectChangedEvent;
+		public delegate void SomethingChangedDelegate();
+		public static event SomethingChangedDelegate ProjectChangedEvent;
+		public static event SomethingChangedDelegate RootFolderChangedEvent;
 
 		private static Project _currentProject;
+		private static StorageFolder _rootFolder;
+
 		public static Project CurrentProject {
 			get => _currentProject;
 			// todo: rework set not to directly set project, but indirectly with methods
 			set {
-                if (value != null) {
-                    _currentProject = value;
-                    ProjectChangedEvent();
-                }
+				if (value != null) {
+					_currentProject = value;
+					ProjectChangedEvent?.Invoke();
+				}
+			}
+		}
+
+		public static StorageFolder RootFolder {
+			get => _rootFolder;
+			set {
+				if (value != null) {
+					_rootFolder = value;
+					RootFolderChangedEvent?.Invoke();
+				}
 			}
 		}
 
@@ -34,6 +47,9 @@ namespace HyprWinUI3.Services {
 
 			StorageFile file = await openPicker.PickSingleFileAsync();
 			if (file != null) {
+                // Prevent updates to the remote version of the file until
+                // we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
 				string projectData = await FileIO.ReadTextAsync(file);
 				CurrentProject = JsonSerializer.Deserialize<Project>(projectData);
 				// Let Windows know that we're finished changing the file so
@@ -44,9 +60,10 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("Success",
 						"File " + file.Name + " was opened.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-				} else {
-					InfoService.DisplayInfoBar("Success",
-						"File " + file.Name + " couldn't be opened.",
+                    RootFolder = await file.GetParentAsync();
+                } else {
+					InfoService.DisplayInfoBar("Failure",
+						"File " + file.Name + " couldn't be opened." +
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
 				}
 			} else {
@@ -66,6 +83,8 @@ namespace HyprWinUI3.Services {
 			StorageFile file = await savePicker.PickSaveFileAsync();
 			if (file != null) {
 				CurrentProject = new Project() { Name = file.DisplayName };
+				// Saving the file
+
 				// Prevent updates to the remote version of the file until
 				// we finish making changes and call CompleteUpdatesAsync.
 				CachedFileManager.DeferUpdates(file);
@@ -74,11 +93,14 @@ namespace HyprWinUI3.Services {
 				// Let Windows know that we're finished changing the file so
 				// the other app can update the remote version of the file.
 				// Completing updates may require Windows to ask for user input.
+
+				// Saving ends
 				FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
 				if (status == FileUpdateStatus.Complete) {
 					InfoService.DisplayInfoBar("Success",
 						"File " + file.Name + " was saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					RootFolder = await file.GetParentAsync();
 				} else {
 					InfoService.DisplayInfoBar("Success",
 						"File " + file.Name + " couldn't be saved.",
