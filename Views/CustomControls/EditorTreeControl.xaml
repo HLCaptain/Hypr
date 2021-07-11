@@ -11,23 +11,16 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Custom:TreeView>
-            <!--<Custom:TreeView ItemsSource="{x:Bind ViewModel.Items}">-->
-            <!--<Custom:TreeView.ItemTemplate>-->
-            <!--<DataTemplate x:DataType="StackPanel">-->
-            <!--<TreeViewItem Content="{x:Bind Children}" />-->
-            <!-- <TreeViewItem Content="{x:Bind Name}" ItemsSource="{x:Bind Children}" /> -->
-            <!--</DataTemplate>-->
-            <!--</Custom:TreeView.ItemTemplate>-->
-            <Custom:TreeView.RootNodes>
-                <Custom:TreeViewNode Content="Flavors" IsExpanded="True">
-                    <Custom:TreeViewNode.Children>
-                        <Custom:TreeViewNode Content="Vanilla" />
-                        <Custom:TreeViewNode Content="Strawberry" />
-                        <Custom:TreeViewNode Content="Chocolate" />
-                    </Custom:TreeViewNode.Children>
-                </Custom:TreeViewNode>
-            </Custom:TreeView.RootNodes>
+        <Custom:TreeView
+            Name="treeView"
+            Collapsed="treeView_Collapsed"
+            Expanding="treeView_Expanding"
+            ItemInvoked="treeView_ItemInvoked">
+            <Custom:TreeView.ItemTemplate>
+                <DataTemplate x:DataType="TreeViewNode">
+                    <TextBlock Text="wow" />
+                </DataTemplate>
+            </Custom:TreeView.ItemTemplate>
         </Custom:TreeView>
     </Grid>
 </UserControl>

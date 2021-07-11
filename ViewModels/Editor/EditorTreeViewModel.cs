@@ -6,31 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using HyprWinUI3.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.ViewModels.Editor {
-    public class EditorTreeViewModel : ObservableObject {
-        public ObservableCollection<StackPanel> Items = new ObservableCollection<StackPanel>();
+	public class EditorTreeViewModel : ObservableObject {
 
-        public EditorTreeViewModel() {
-            ProjectService.ProjectChangedEvent += RefreshTree;
-            //RefreshTree();
-        }
+		public EditorTreeViewModel() {
 
-        private void RefreshTree() {
-            //Items.Clear();
-            //if (ProjectService.CurrentProject != null) {
-            //    var projectLoadedPanel = new StackPanel();
-            //    projectLoadedPanel.Children.Add(new SymbolIcon(Symbol.Like));
-            //    projectLoadedPanel.Children.Add(new TextBlock() { Text = "Project Loaded" });
-            //    Items.Add(projectLoadedPanel);
-            //} else {
-            //    var noProjectPanel = new StackPanel();
-            //    noProjectPanel.Children.Add(new SymbolIcon(Symbol.Important));
-            //    noProjectPanel.Children.Add(new TextBlock() { Text = "No Project" });
-            //    Items.Add(noProjectPanel);
-            //}
-        }
-    }
+		}
+	}
 }
