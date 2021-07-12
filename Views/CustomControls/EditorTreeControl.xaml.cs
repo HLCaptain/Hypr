@@ -19,104 +19,112 @@ using Windows.UI.Xaml.Navigation;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace HyprWinUI3.Views.CustomControls {
-    public sealed partial class EditorTreeControl : UserControl {
-        public EditorTreeViewModel ViewModel { get; } = new EditorTreeViewModel();
+	public sealed partial class EditorTreeControl : UserControl {
+		public EditorTreeViewModel ViewModel { get; } = new EditorTreeViewModel();
 
-        public EditorTreeControl() {
-            this.InitializeComponent();
+		public EditorTreeControl() {
+			this.InitializeComponent();
 
-            ProjectService.RootFolderChangedEvent += InitializeTreeView;
+			ProjectService.RootFolderChangedEvent += InitializeTreeView;
 
-            // ini with dummy data
-            InitializeTreeView();
-        }
+			InitializeTreeView();
+		}
 
-        private void InitializeTreeView() {
-            treeView.RootNodes.Clear();
-            if (ProjectService.RootFolder == null) {
-                StackPanel content = new StackPanel();
-                content.Children.Add(new SymbolIcon(Symbol.Cancel));
-                content.Children.Add(new TextBlock() { Text = "No project" });
-                treeView.RootNodes.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
-                    Content = "No project",
-                });
-            } else {
-                StackPanel content = new StackPanel();
-                content.Children.Add(new SymbolIcon(Symbol.Document));
-                content.Children.Add(new TextBlock() { Text = ProjectService.RootFolder.Name });
-                var newRoot = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
-                    Content = ProjectService.RootFolder,
-                };
-                treeView.RootNodes.Add(newRoot);
-                newRoot.HasUnrealizedChildren = true;
-                FillTreeNode(newRoot);
-            }
-        }
+		private void InitializeTreeView() {
+			treeView.RootNodes.Clear();
+			if (ProjectService.RootFolder == null) {
+				treeView.RootNodes.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "No project",
+				});
+			} else {
+				var newRoot = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
+					Content = ProjectService.RootFolder
+				};
+				treeView.RootNodes.Add(newRoot);
+				newRoot.HasUnrealizedChildren = true;
+				FillTreeNode(newRoot);
+			}
+		}
 
-        private async void FillTreeNode(Microsoft.UI.Xaml.Controls.TreeViewNode rootNode) {
-            // Get the contents of the folder represented by the current tree node.
-            // Add each item as a new child node of the node that's being expanded.
+		private async void FillTreeNode(Microsoft.UI.Xaml.Controls.TreeViewNode rootNode) {
+			// Get the contents of the folder represented by the current tree node.
+			// Add each item as a new child node of the node that's being expanded.
 
-            // Only process the node if it's a folder and has unrealized children.
-            StorageFolder folder = null;
+			// Only process the node if it's a folder and has unrealized children.
+			StorageFolder rootFolder = null;
 
-            if (rootNode.Content is StorageFolder && rootNode.HasUnrealizedChildren == true) {
-                folder = rootNode.Content as StorageFolder;
-            } else {
-                // The node isn't a folder, or it's already been filled.
-                return;
-            }
+			if (rootNode.Content is StorageFolder && rootNode.HasUnrealizedChildren == true) {
+				rootFolder = rootNode.Content as StorageFolder;
+			} else {
+				// The node isn't a folder, or it's already been filled.
+				return;
+			}
 
-            IReadOnlyList<IStorageItem> itemsList = await folder.GetItemsAsync();
+			var fileList = await rootFolder.GetFilesAsync();
+			var folderList = await rootFolder.GetFoldersAsync();
 
-            if (itemsList.Count == 0) {
-                // The item is a folder, but it's empty. Leave HasUnrealizedChildren = true so
-                // that the chevron appears, but don't try to process children that aren't there.
-                return;
-            }
+			if (fileList.Count == 0 && folderList.Count == 0) {
+				return;
+			}
+			foreach (var folder in folderList) {
+				var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
+					Content = folder
+				};
+				newNode.HasUnrealizedChildren = true;
+				rootNode.Children.Add(newNode);
+			}
+			foreach (var file in fileList) {
+				var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
+					Content = file
+				};
+				rootNode.Children.Add(newNode);
+			}
+			rootNode.HasUnrealizedChildren = false;
+		}
 
-            foreach (var item in itemsList) {
-                var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode();
-                newNode.Content = item;
+		private void treeView_Expanding(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewExpandingEventArgs args) {
+			if (args.Node.HasUnrealizedChildren) {
+				FillTreeNode(args.Node);
+			}
+		}
 
-                if (item is StorageFolder) {
-                    // If the item is a folder, set HasUnrealizedChildren to true.
-                    // This makes the collapsed chevron show up.
-                    newNode.HasUnrealizedChildren = true;
-                } else {
-                    // Item is StorageFile. No processing needed for this scenario.
-                }
+		private void treeView_Collapsed(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewCollapsedEventArgs args) {
+			args.Node.Children.Clear();
+			args.Node.HasUnrealizedChildren = true;
+		}
 
-                rootNode.Children.Add(newNode);
-            }
+		private void treeView_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args) {
+			var node = args.InvokedItem as Microsoft.UI.Xaml.Controls.TreeViewNode;
+			if (node.Content is IStorageItem item) {
+				if (node.Content is StorageFolder) {
+					node.IsExpanded = !node.IsExpanded;
+				}
+			}
+		}
+	}
+	public class ExplorerItemTemplateSelector : DataTemplateSelector {
+		public DataTemplate DefaultTemplate { get; set; }
+		public DataTemplate FileTemplate { get; set; }
+		public DataTemplate FolderTemplate { get; set; }
+		public DataTemplate StringTemplate { get; set; }
+		public DataTemplate NullTemplate { get; set; }
 
-            // Children were just added to this node, so set HasUnrealizedChildren to false.
-            rootNode.HasUnrealizedChildren = false;
-        }
+		protected override DataTemplate SelectTemplateCore(object item) {
+			var node = (Microsoft.UI.Xaml.Controls.TreeViewNode)item;
 
-        private void treeView_Expanding(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewExpandingEventArgs args) {
-            if (args.Node.HasUnrealizedChildren) {
-                FillTreeNode(args.Node);
-            }
-        }
-
-        private void treeView_Collapsed(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewCollapsedEventArgs args) {
-            args.Node.Children.Clear();
-            args.Node.HasUnrealizedChildren = true;
-        }
-
-        private void treeView_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args) {
-            var node = args.InvokedItem as Microsoft.UI.Xaml.Controls.TreeViewNode;
-
-            if (node.Content is IStorageItem item) {
-                //FileNameTextBlock.Text = item.Name;
-                //FilePathTextBlock.Text = item.Path;
-                //TreeDepthTextBlock.Text = node.Depth.ToString();
-
-                if (node.Content is StorageFolder) {
-                    node.IsExpanded = !node.IsExpanded;
-                }
-            }
-        }
-    }
+			if (node.Content is StorageFolder) {
+				return FolderTemplate;
+			}
+			if (node.Content is StorageFile) {
+				return FileTemplate;
+			}
+			if (node.Content is string) {
+				return StringTemplate;
+			}
+			if (node.Content is IStorageItem) {
+				return DefaultTemplate;
+			}
+			return NullTemplate;
+		}
+	}
 }

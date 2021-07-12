@@ -6,21 +6,85 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:HyprWinUI3.Views.CustomControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:storage="using:Windows.Storage"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:ExplorerItemTemplateSelector
+            x:Key="ExplorerItemTemplateSelector"
+            DefaultTemplate="{StaticResource DefaultItemDataTemplate}"
+            FileTemplate="{StaticResource FileDataTemplate}"
+            FolderTemplate="{StaticResource FolderDataTemplate}"
+            NullTemplate="{StaticResource NullDataTemplate}"
+            StringTemplate="{StaticResource StringDataTemplate}" />
+        <DataTemplate x:Key="DefaultItemDataTemplate" x:DataType="Custom:TreeViewNode">
+            <Grid>
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Text="{x:Bind ((storage:IStorageItem)Content).Name}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="NullDataTemplate" x:DataType="Custom:TreeViewNode">
+            <Grid>
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Text="NullDataTemplate" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FileDataTemplate" x:DataType="Custom:TreeViewNode">
+            <StackPanel Orientation="Horizontal">
+                <SymbolIcon Margin="0,0,4,0" Symbol="Document" />
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+            </StackPanel>
+        </DataTemplate>
 
+        <DataTemplate x:Key="FolderDataTemplate" x:DataType="Custom:TreeViewNode">
+            <StackPanel Orientation="Horizontal">
+                <SymbolIcon Margin="0,0,4,0" Symbol="Folder" />
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Text="{x:Bind ((storage:StorageFolder)Content).Name}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="StringDataTemplate" x:DataType="Custom:TreeViewNode">
+            <StackPanel Orientation="Horizontal">
+                <SymbolIcon Margin="0,0,4,0" Symbol="Stop" />
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource BodyTextBlockStyle}"
+                    Text="{x:Bind (x:String)Content}" />
+            </StackPanel>
+        </DataTemplate>
+
+    </UserControl.Resources>
     <Grid>
-        <Custom:TreeView
-            Name="treeView"
-            Collapsed="treeView_Collapsed"
-            Expanding="treeView_Expanding"
-            ItemInvoked="treeView_ItemInvoked">
-            <Custom:TreeView.ItemTemplate>
-                <DataTemplate x:DataType="TreeViewNode">
-                    <TextBlock Text="wow" />
-                </DataTemplate>
-            </Custom:TreeView.ItemTemplate>
-        </Custom:TreeView>
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Auto"
+            HorizontalScrollMode="Enabled"
+            IsTabStop="True"
+            IsVerticalScrollChainingEnabled="True"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Enabled"
+            ZoomMode="Disabled">
+            <Custom:TreeView
+                Name="treeView"
+                Collapsed="treeView_Collapsed"
+                Expanding="treeView_Expanding"
+                ItemInvoked="treeView_ItemInvoked"
+                ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"
+                SelectionMode="Single" />
+        </ScrollViewer>
     </Grid>
 </UserControl>
