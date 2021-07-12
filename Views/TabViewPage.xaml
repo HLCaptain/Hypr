@@ -2,34 +2,69 @@
     x:Class="HyprWinUI3.Views.TabViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:HyprWinUI3.Models"
+    xmlns:my="using:HyprWinUI3.Views.CustomControls"
     xmlns:system="using:System"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
+    <Grid>
+        <Grid x:Name="grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <my:EditorTreeControl
+                x:Name="treeView"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch" />
+            <controls:GridSplitter
+                x:Name="gridSplitter"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                CursorBehavior="ChangeOnSplitterHover"
+                FocusVisualSecondaryBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}"
+                GripperForeground="Transparent"
+                ResizeBehavior="BasedOnAlignment"
+                ResizeDirection="Auto" />
 
-    <winui:TabView
-        Name="tabView"
-        VerticalAlignment="Stretch"
-        AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"
-        AllowDropTabs="True"
-        TabItemsSource="{x:Bind ViewModel.Tabs}">
-        <i:Interaction.Behaviors>
-            <ic:EventTriggerBehavior EventName="TabCloseRequested">
-                <ic:InvokeCommandAction Command="{x:Bind ViewModel.CloseTabCommand}" />
-            </ic:EventTriggerBehavior>
-        </i:Interaction.Behaviors>
-        <winui:TabView.TabItemTemplate>
-            <DataTemplate x:DataType="winui:TabViewItem">
-                <winui:TabViewItem
-                    AutomationProperties.Name="{x:Bind Header}"
-                    Content="{x:Bind Content}"
-                    Header="{x:Bind Header}" />
-            </DataTemplate>
-        </winui:TabView.TabItemTemplate>
-    </winui:TabView>
+
+            <winui:TabView
+                Name="tabView"
+                Grid.Row="0"
+                Grid.Column="0"
+                VerticalAlignment="Stretch"
+                AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"
+                AllowDropTabs="True"
+                TabItemsSource="{x:Bind ViewModel.Tabs}">
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="TabCloseRequested">
+                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.CloseTabCommand}" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                <winui:TabView.TabItemTemplate>
+                    <DataTemplate x:DataType="winui:TabViewItem">
+                        <winui:TabViewItem
+                            AutomationProperties.Name="{x:Bind Header}"
+                            Content="{x:Bind Content}"
+                            Header="{x:Bind Header}" />
+                    </DataTemplate>
+                </winui:TabView.TabItemTemplate>
+            </winui:TabView>
+        </Grid>
+        <VariableSizedWrapGrid
+            Name="infoBarGrid"
+            Margin="{StaticResource MediumLeftTopRightBottomMargin}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            FocusVisualPrimaryBrush="{x:Null}"
+            FocusVisualSecondaryBrush="{x:Null}" />
+    </Grid>
+
 </Page>

@@ -9,6 +9,8 @@ using HyprWinUI3.Views.CustomControls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace HyprWinUI3.ViewModels
@@ -29,11 +31,12 @@ namespace HyprWinUI3.ViewModels
                 Header = "New tab",
                 //// In this sample the content shown in the Tab is a string, set the content to the model you want to show
                 Content = new EditorControl() {
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch
                 }
             }
         };
+        public HorizontalAlignment HorizontalAlignment { get; private set; }
 
         public TabViewViewModel()
         {
@@ -45,8 +48,8 @@ namespace HyprWinUI3.ViewModels
             {
                 Header = "New tab",
                 Content = new EditorControl() {
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Stretch,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalAlignment = HorizontalAlignment.Stretch
                 }
             });
         }
@@ -57,6 +60,15 @@ namespace HyprWinUI3.ViewModels
             {
                 Tabs.Remove(item);
             }
+        }
+
+        private void OpenTab(UserControl content) {
+            content.VerticalAlignment = VerticalAlignment.Stretch;
+            content.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Tabs.Add(new TabViewItem() {
+                Header = "New tab",
+                Content = content
+            });
         }
     }
 }

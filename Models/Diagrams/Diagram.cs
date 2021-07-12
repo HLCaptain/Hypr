@@ -7,7 +7,7 @@ using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Diagrams {
     // composite design pattern
-    class Diagram : Actor {
+    public class Diagram : Actor {
         public List<Element> Elements { get; set; }
     }
 }

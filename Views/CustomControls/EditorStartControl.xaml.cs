@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using HyprWinUI3.ViewModels.Editor;
+using HyprWinUI3.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -17,11 +17,12 @@ using Windows.UI.Xaml.Navigation;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace HyprWinUI3.Views.CustomControls {
-    public sealed partial class EditorControl : UserControl {
-        public EditorViewModel ViewModel { get; set; }
-        public EditorControl() {
+    public sealed partial class EditorStartControl : UserControl {
+        public EditorStartControlViewModel ViewModel { get; set; }
+
+        public EditorStartControl() {
             this.InitializeComponent();
-            ViewModel = new EditorViewModel(grid);
+            ViewModel = new EditorStartControlViewModel(grid);
         }
     }
 }

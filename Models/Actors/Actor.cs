@@ -8,6 +8,7 @@ namespace HyprWinUI3.Models.Actors {
     /// <summary>
     /// Actors can be saved and can be represented in the tree view as an item (always leaf).
     /// </summary>
-    class Actor : Entity {
+    public class Actor : Entity {
+        public string RelativePath { get; set; }
     }
 }
