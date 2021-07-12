@@ -2,6 +2,7 @@
     x:Class="HyprWinUI3.Views.TabViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
@@ -16,13 +17,24 @@
         <Grid x:Name="grid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <my:EditorTreeControl
-                Grid.Row="0"
+                x:Name="treeView"
                 Grid.Column="1"
-                Width="200"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Stretch" />
+            <controls:GridSplitter
+                x:Name="gridSplitter"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                CursorBehavior="ChangeOnSplitterHover"
+                FocusVisualSecondaryBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}"
+                GripperForeground="Transparent"
+                ResizeBehavior="BasedOnAlignment"
+                ResizeDirection="Auto" />
+
+
             <winui:TabView
                 Name="tabView"
                 Grid.Row="0"

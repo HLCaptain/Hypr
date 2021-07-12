@@ -1,7 +1,7 @@
 ﻿using System;
 using HyprWinUI3.Services;
 using HyprWinUI3.ViewModels;
-
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.Views
