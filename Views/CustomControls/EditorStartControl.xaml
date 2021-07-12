@@ -10,7 +10,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftTopRightBottomMargin}">
+    <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftTopBottomMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
@@ -24,7 +24,7 @@
         <d:ScrollViewer />
         <Grid
             Grid.Row="1"
-            Margin="{StaticResource SmallLeftTopRightBottomMargin}"
+            Margin="{StaticResource SmallLeftTopBottomMargin}"
             Background="{ThemeResource SystemControlBackgroundListLowBrush}"
             CornerRadius="8,8,8,8">
             <VariableSizedWrapGrid
