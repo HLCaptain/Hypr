@@ -9,7 +9,14 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.Services {
+	/// <summary>
+	/// Helps interact with the filesystem.
+	/// </summary>
 	public static class FilesystemService {
+		/// <summary>
+		/// Asks user for the new file's name and extention, then creates the file to specific location.
+		/// </summary>
+		/// <param name="folder">The folder the file is created in.</param>
 		public static async void CreateNewFile(StorageFolder folder) {
 			// ini content of the content dialog
 			StackPanel content = new StackPanel() {
@@ -57,6 +64,14 @@ namespace HyprWinUI3.Services {
 			} else {
 				InfoService.DisplayInfoBar("Error", "Operation cancelled.", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
 			}
+		}
+
+		// todo make this method with strategy pattern in mind.
+		/// <summary>
+		/// Can create any given files.
+		/// </summary>
+		public static void CreateNewFile() {
+
 		}
 	}
 }

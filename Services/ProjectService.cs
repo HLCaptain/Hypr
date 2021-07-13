@@ -12,14 +12,25 @@ using Windows.Storage.Provider;
 using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.Services {
+	/// <summary>
+	/// Helps manage the Project. One project can be allocated per application.
+	/// </summary>
 	public static class ProjectService {
-		public delegate void SomethingChangedDelegate();
-		public static event SomethingChangedDelegate ProjectChangedEvent;
-		public static event SomethingChangedDelegate RootFolderChangedEvent;
+		/// <summary>
+		/// Fires when the Project file has been changed.
+		/// </summary>
+		public static event Action ProjectChangedEvent;
+		/// <summary>
+		/// Fires when the Root folder has been changed.
+		/// </summary>
+		public static event Action RootFolderChangedEvent;
 
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
 
+		/// <summary>
+		/// Current Project loaded. Cannot be null after given a proper value.
+		/// </summary>
 		public static Project CurrentProject {
 			get => _currentProject;
 			// todo: rework set not to directly set project, but indirectly with methods
@@ -31,6 +42,9 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
+		/// <summary>
+		/// Root Folder loaded. Cannot be null after given a proper value.
+		/// </summary>
 		public static StorageFolder RootFolder {
 			get => _rootFolder;
 			set {
@@ -41,6 +55,10 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
+		/// <summary>
+		/// Creates a diagram and adds it to the project.
+		/// </summary>
+		/// <param name="diagram">The diagram to handle.</param>
 		public static async void CreateDiagram(Diagram diagram) {
 			if (CurrentProject == null) {
 				return;
@@ -48,6 +66,9 @@ namespace HyprWinUI3.Services {
 			CurrentProject.Diagrams.Add(diagram);
 			// todo save diagram
 		}
+		/// <summary>
+		/// Opens and loads a project by a FileOpenPicker.
+		/// </summary>
 		public static async void OpenProject() {
 			var openPicker = new FileOpenPicker();
 			openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -80,6 +101,9 @@ namespace HyprWinUI3.Services {
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
 			}
 		}
+		/// <summary>
+		/// Creates and loads a project by a FileSavePicker.
+		/// </summary>
 		public static async void CreateProject() {
 			var savePicker = new FileSavePicker();
 			savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -108,6 +132,7 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("Success",
 						"File " + file.Name + " was saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					// if everything is alright, then we can set the root folder to be the folder the project is in
 					RootFolder = await file.GetParentAsync();
 				} else {
 					InfoService.DisplayInfoBar("Success",

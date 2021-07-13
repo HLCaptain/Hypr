@@ -14,16 +14,22 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace HyprWinUI3.ViewModels {
-	public class EditorStartControlViewModel : ObservableObject {
+	public class EditorStartViewModel : ObservableObject {
 		public VariableSizedWrapGrid Grid;
 
         private ICommand _createProjectCommand;
         private ICommand _openProjectCommand;
+		private ICommand _createClassDiagramCommand;
 
         public ICommand CreateProjectCommand => _createProjectCommand ?? (_createProjectCommand = new RelayCommand(ProjectService.CreateProject));
         public ICommand OpenProjectCommand => _openProjectCommand ?? (_openProjectCommand = new RelayCommand(ProjectService.OpenProject));
-
-        public EditorStartControlViewModel(VariableSizedWrapGrid grid) {
+		// todo add a strategy dependency injection onto this method
+		public ICommand CreateClassDiagramCommand => _createClassDiagramCommand ?? (_createClassDiagramCommand = new RelayCommand(FilesystemService.CreateNewFile));
+		/// <summary>
+		/// Start screen of an editor tab.
+		/// </summary>
+		/// <param name="grid">Grid to display data on.</param>
+        public EditorStartViewModel(VariableSizedWrapGrid grid) {
 			Grid = grid;
 			ProjectService.ProjectChangedEvent += RefreshItems;
 			RefreshItems();

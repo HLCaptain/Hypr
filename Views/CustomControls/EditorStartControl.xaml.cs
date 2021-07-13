@@ -18,11 +18,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
     public sealed partial class EditorStartControl : UserControl {
-        public EditorStartControlViewModel ViewModel { get; set; }
+        public EditorStartViewModel ViewModel { get; set; }
 
         public EditorStartControl() {
             this.InitializeComponent();
-            ViewModel = new EditorStartControlViewModel(grid);
+            ViewModel = new EditorStartViewModel(grid);
         }
     }
 }

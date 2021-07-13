@@ -13,8 +13,21 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 namespace HyprWinUI3.Services {
+    /// <summary>
+	/// Helps displaying information bars to the user.
+	/// </summary>
 	public static class InfoService {
+        /// <summary>
+		/// The UI element, the InfoBar is displayed on.
+		/// </summary>
         public static VariableSizedWrapGrid InfoBarGrid { get; set; }
+
+        /// <summary>
+		/// Displays an InfoBar on the InfoBarGrid for 3 seconds.
+		/// </summary>
+		/// <param name="title">Title of the InfoBar</param>
+		/// <param name="message">Message of the InfoBar</param>
+		/// <param name="severity">Severity of the InfoBar</param>
 		public static void DisplayInfoBar(string title, string message, InfoBarSeverity severity = InfoBarSeverity.Informational) {
             var infoBar = new InfoBar() {
                 Title = title,
@@ -26,12 +39,16 @@ namespace HyprWinUI3.Services {
                 Margin = new Thickness(4),
 			};
 
-            // todo: rework how infobar displays
             InfoBarGrid?.Children.Add(infoBar);
 
+            // timer removes infobar after 3 seconds
             var timer = new Timer(CloseInfoBar, infoBar, 3000, Timeout.Infinite);
         }
 
+        /// <summary>
+		/// Method is called when timer needs to close the InfoBar.
+		/// </summary>
+		/// <param name="state">The InfoBar that needs to be closed</param>
         private static async void CloseInfoBar(object state) {
             InfoBar infoBar = (InfoBar)state;
             // egy kurva zseni vagyok
