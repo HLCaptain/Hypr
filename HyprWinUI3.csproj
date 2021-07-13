@@ -167,6 +167,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
+    <Compile Include="Services\FilesystemService.cs" />
     <Compile Include="Services\InfoService.cs" />
     <Compile Include="Services\DragAndDrop\DragDropService.cs" />
     <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />
@@ -333,7 +334,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Strategies\" />
     <Folder Include="Tests\" />
+    <Folder Include="Views\CustomDialogs\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

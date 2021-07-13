@@ -20,11 +20,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class EditorTreeControl : UserControl {
-		public EditorTreeViewModel ViewModel { get; } = new EditorTreeViewModel();
+		public EditorTreeViewModel ViewModel { get; set; }
 
 		public EditorTreeControl() {
 			this.InitializeComponent();
-
+			ViewModel = new EditorTreeViewModel(this);
 			ProjectService.RootFolderChangedEvent += InitializeTreeView;
 
 			InitializeTreeView();
@@ -100,6 +100,39 @@ namespace HyprWinUI3.Views.CustomControls {
 					node.IsExpanded = !node.IsExpanded;
 				}
 			}
+		}
+
+		private void AddFile(object sender, RoutedEventArgs e) {
+			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
+
+			// closing the treenode (forces refresh after adding new file)
+			if (treeNode.IsExpanded) {
+				treeNode.IsExpanded = false;
+			}
+			treeNode.Children.Clear();
+			treeNode.HasUnrealizedChildren = true;
+
+			// todo make this return async and make the whole method async
+			FilesystemService.CreateNewFile((StorageFolder)treeNode.Content);
+
+			// todo refresh treenode properly
+		}
+
+		private void RenameItem(object sender, RoutedEventArgs e) {
+			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
+
+			// may need to refresh the TreeView
+			var nodeParent = treeNode.Parent;
+
+			// closing the treenode (forces refresh after adding new file)
+			if (treeNode.IsExpanded) {
+				treeNode.IsExpanded = false;
+			}
+			treeNode.Children.Clear();
+			treeNode.HasUnrealizedChildren = true;
+
+			// todo call the FsService rename method with treeNode
+			// todo refresh tree
 		}
 	}
 	public class ExplorerItemTemplateSelector : DataTemplateSelector {

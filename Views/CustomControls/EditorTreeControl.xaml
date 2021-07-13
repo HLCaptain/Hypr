@@ -49,6 +49,13 @@
 
         <DataTemplate x:Key="FolderDataTemplate" x:DataType="Custom:TreeViewNode">
             <StackPanel Orientation="Horizontal">
+                <StackPanel.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Click="AddFile" Text="Add File" />
+                        <MenuFlyoutItem Text="Rename" Click="RenameItem" />
+                        <MenuFlyoutItem Text="Delete" />
+                    </MenuFlyout>
+                </StackPanel.ContextFlyout>
                 <SymbolIcon Margin="0,0,4,0" Symbol="Folder" />
                 <TextBlock
                     HorizontalAlignment="Left"
