@@ -43,11 +43,12 @@ namespace HyprWinUI3.ViewModels {
                     Icon = new SymbolIcon(Symbol.OpenFile),
                     Command = OpenProjectCommand
                 });
-            }
-			Grid.Children.Add(new AppBarButton() {
-				Label = "New Class Diagram",
-				Icon = new SymbolIcon(Symbol.Add)
-			});
+            } else {
+				Grid.Children.Add(new AppBarButton() {
+					Label = "New Class Diagram",
+					Icon = new SymbolIcon(Symbol.Add)
+				});
+			}
 		}
 	}
 }
