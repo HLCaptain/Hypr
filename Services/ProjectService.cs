@@ -9,6 +9,7 @@ using HyprWinUI3.Models.Diagrams;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.Services {
 	public static class ProjectService {
@@ -40,6 +41,13 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
+		public static async void CreateDiagram(Diagram diagram) {
+			if (CurrentProject == null) {
+				return;
+			}
+			CurrentProject.Diagrams.Add(diagram);
+			// todo save diagram
+		}
 		public static async void OpenProject() {
 			var openPicker = new FileOpenPicker();
 			openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -47,9 +55,9 @@ namespace HyprWinUI3.Services {
 
 			StorageFile file = await openPicker.PickSingleFileAsync();
 			if (file != null) {
-                // Prevent updates to the remote version of the file until
-                // we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
+				// Prevent updates to the remote version of the file until
+				// we finish making changes and call CompleteUpdatesAsync.
+				CachedFileManager.DeferUpdates(file);
 				string projectData = await FileIO.ReadTextAsync(file);
 				CurrentProject = JsonSerializer.Deserialize<Project>(projectData);
 				// Let Windows know that we're finished changing the file so
@@ -60,8 +68,8 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("Success",
 						"File " + file.Name + " was opened.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-                    RootFolder = await file.GetParentAsync();
-                } else {
+					RootFolder = await file.GetParentAsync();
+				} else {
 					InfoService.DisplayInfoBar("Failure",
 						"File " + file.Name + " couldn't be opened." +
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
