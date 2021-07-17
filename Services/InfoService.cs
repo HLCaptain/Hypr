@@ -28,22 +28,27 @@ namespace HyprWinUI3.Services {
 		/// <param name="title">Title of the InfoBar</param>
 		/// <param name="message">Message of the InfoBar</param>
 		/// <param name="severity">Severity of the InfoBar</param>
-		public static void DisplayInfoBar(string title, string message, InfoBarSeverity severity = InfoBarSeverity.Informational) {
+		public static void DisplayInfoBar(string message, InfoBarSeverity severity = InfoBarSeverity.Informational, int dueTime = 5000) {
             var infoBar = new InfoBar() {
-                Title = title,
+                Title = severity.ToString(),
                 Message = message,
                 Severity = severity,
                 IsOpen = true,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 CornerRadius = new CornerRadius(8),
                 Margin = new Thickness(4),
+                MinHeight = 80,
+                MinWidth = 600,
 			};
 
             InfoBarGrid?.Children.Add(infoBar);
 
             // timer removes infobar after 3 seconds
-            var timer = new Timer(CloseInfoBar, infoBar, 3000, Timeout.Infinite);
+            var timer = new Timer(CloseInfoBar, infoBar, dueTime, Timeout.Infinite);
         }
+        public static void DisplayError(string message) {
+            DisplayInfoBar(message, InfoBarSeverity.Error, 10000);
+		}
 
         /// <summary>
 		/// Method is called when timer needs to close the InfoBar.
@@ -52,7 +57,7 @@ namespace HyprWinUI3.Services {
         private static async void CloseInfoBar(object state) {
             InfoBar infoBar = (InfoBar)state;
             // egy kurva zseni vagyok
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => {
                 if (infoBar != null) {
                     if (infoBar.IsOpen) {
                         InfoBarGrid?.Children.Remove(infoBar);

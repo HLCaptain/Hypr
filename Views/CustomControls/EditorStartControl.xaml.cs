@@ -20,9 +20,9 @@ namespace HyprWinUI3.Views.CustomControls {
     public sealed partial class EditorStartControl : UserControl {
         public EditorStartViewModel ViewModel { get; set; }
 
-        public EditorStartControl() {
+        public EditorStartControl(EditorControl editor) {
             this.InitializeComponent();
-            ViewModel = new EditorStartViewModel(grid);
+            ViewModel = new EditorStartViewModel(editor, grid);
         }
     }
 }

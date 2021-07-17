@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using HyprWinUI3.Services;
+using HyprWinUI3.Strategies.ExtentionFiller;
+using HyprWinUI3.ViewModels;
 using HyprWinUI3.ViewModels.Editor;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,6 +26,7 @@ namespace HyprWinUI3.Views.CustomControls {
 	/// </summary>
 	public sealed partial class EditorTreeControl : UserControl {
 		public EditorTreeViewModel ViewModel { get; set; }
+		public TabViewViewModel TabViewViewModel { get; set; }
 
 		public EditorTreeControl() {
 			this.InitializeComponent();
@@ -134,7 +137,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void AddFile(object sender, RoutedEventArgs e) {
+		private async void AddDiagram(object sender, RoutedEventArgs e) {
 			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
 
 			// closing the treenode (forces refresh after adding new file)
@@ -145,8 +148,13 @@ namespace HyprWinUI3.Views.CustomControls {
 			treeNode.HasUnrealizedChildren = true;
 
 			// todo make this return async and make the whole method async
-			FilesystemService.CreateNewFile((StorageFolder)treeNode.Content);
-
+			if (ProjectService.IsInProjectSubfolder((StorageFolder)treeNode.Content)) {
+				var diagram = await FilesystemService.CreateDiagramHere((StorageFolder)treeNode.Content, new DiagramExtentionFiller());
+				ProjectService.AddDiagramFileToProject(diagram);
+				TabViewViewModel.OpenDiagram(diagram);
+			} else {
+				InfoService.DisplayError("File is not in project folder");
+			}
 			// todo refresh treenode properly
 		}
 		/// <summary>
@@ -170,7 +178,20 @@ namespace HyprWinUI3.Views.CustomControls {
 			// todo call the FsService rename method with treeNode
 			// todo refresh tree
 		}
+
+		private async void OpenFile(object sender, DoubleTappedRoutedEventArgs e) {
+			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((StackPanel)sender).DataContext;
+			try {
+				var file = (StorageFile)treeNode.Content;
+				TabViewViewModel.OpenDiagram(await Factories.DiagramFactory.MakeDiagramFromFile(file));
+			} catch (Exception exception) {
+				InfoService.DisplayInfoBar(exception.Message, Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
+				throw;
+			}
+		}
 	}
+
+	// todo make each file type a template and open method, so no type check is needed nowhere?
 	/// <summary>
 	/// Templates to define items in TreeView.
 	/// </summary>

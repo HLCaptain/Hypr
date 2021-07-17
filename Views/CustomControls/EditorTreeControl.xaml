@@ -37,7 +37,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FileDataTemplate" x:DataType="Custom:TreeViewNode">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel DoubleTapped="OpenFile" Orientation="Horizontal">
                 <SymbolIcon Margin="0,0,4,0" Symbol="Document" />
                 <TextBlock
                     HorizontalAlignment="Left"
@@ -51,8 +51,8 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel.ContextFlyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Click="AddFile" Text="Add File" />
-                        <MenuFlyoutItem Text="Rename" Click="RenameItem" />
+                        <MenuFlyoutItem Click="AddDiagram" Text="Add Diagram" />
+                        <MenuFlyoutItem Click="RenameItem" Text="Rename" />
                         <MenuFlyoutItem Text="Delete" />
                     </MenuFlyout>
                 </StackPanel.ContextFlyout>

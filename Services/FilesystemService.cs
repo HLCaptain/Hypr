@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.Factories;
+using HyprWinUI3.Models.Diagrams;
+using HyprWinUI3.Strategies.ExtentionFiller;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,7 +22,7 @@ namespace HyprWinUI3.Services {
 		/// Asks user for the new file's name and extention, then creates the file to specific location.
 		/// </summary>
 		/// <param name="folder">The folder the file is created in.</param>
-		public static async void CreateNewFile(StorageFolder folder) {
+		public static async Task<Diagram> CreateDiagramHere(StorageFolder folder, IExtentionFiller filler) {
 			// ini content of the content dialog
 			StackPanel content = new StackPanel() {
 				Orientation = Orientation.Horizontal,
@@ -37,9 +42,8 @@ namespace HyprWinUI3.Services {
 			};
 
 			// todo use strategy pattern when choosing file type to create an appropriate file
-			fileTypes.Items.Add(".hyclass");
-			fileTypes.Items.Add(".txt");
-			fileTypes.Items.Add(".json");
+			filler.FillWithExtentions(fileTypes.Items);
+			fileTypes.SelectedIndex = 0;
 			content.Children.Add(fileTypes);
 
 			// ini contentdialog
@@ -54,24 +58,46 @@ namespace HyprWinUI3.Services {
 			// saving file
 			if (result == ContentDialogResult.Primary) {
 				try {
-					var file = await folder.CreateFileAsync(textBox.Text + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
+					Diagram diagram = DiagramFactory.CreateDiagram((string)fileTypes.SelectedItem);
+					diagram.Name = textBox.Text == "" ? diagram.Uid : textBox.Text;
+					var file = await folder.CreateFileAsync(diagram.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
 					// todo use strategy when saving file data
-					await FileIO.WriteTextAsync(file, "insert file data here");
-					InfoService.DisplayInfoBar("Success", $"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					
+					
+					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(diagram));
+					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					diagram.File = file;
+					return diagram;
 				} catch (Exception e) {
-					InfoService.DisplayInfoBar("Error", e.Message, Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
+					InfoService.DisplayError(e.Message);
 				}
 			} else {
-				InfoService.DisplayInfoBar("Error", "Operation cancelled.", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
+				InfoService.DisplayError("Operation cancelled.");
 			}
+			return null;
 		}
 
 		// todo make this method with strategy pattern in mind.
 		/// <summary>
 		/// Can create any given files.
 		/// </summary>
-		public static void CreateNewFile() {
+		public static async Task<Diagram> CreateDiagram() {
+			var folderPicker = new FolderPicker();
+			folderPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			folderPicker.CommitButtonText = "Save diagram here";
+			folderPicker.FileTypeFilter.Add("*");
 
+			var folder = await folderPicker.PickSingleFolderAsync();
+
+			if (folder != null) {
+				// todo if in subfolder of the project's rootfolder
+				if (ProjectService.IsInProjectSubfolder(folder)) {
+					return await CreateDiagramHere(folder, new DiagramExtentionFiller());
+				} else {
+					InfoService.DisplayError("File is not in project folder");
+				}
+			}
+			return null;
 		}
 	}
 }

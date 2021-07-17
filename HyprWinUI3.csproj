@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Constants\Extentions.cs" />
+    <Compile Include="Factories\DiagramFactory.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
@@ -178,6 +180,11 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
+    <Compile Include="Strategies\ExtentionFiller\AllFileExtentionFiller.cs" />
+    <Compile Include="Strategies\ExtentionFiller\DiagramExtentionFiller.cs" />
+    <Compile Include="Strategies\ExtentionFiller\IExtentionFiller.cs" />
+    <Compile Include="Strategies\LoadStrategy\ClassDiagramLoader.cs" />
+    <Compile Include="Strategies\LoadStrategy\ILoadStrategy.cs" />
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
     <Compile Include="ViewModels\EditorStartViewModel.cs" />
@@ -320,6 +327,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Models\ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -334,7 +342,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Strategies\" />
     <Folder Include="Tests\" />
     <Folder Include="Views\CustomDialogs\" />
   </ItemGroup>
