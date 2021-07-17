@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyprWinUI3.Services;
+using HyprWinUI3.Views.CustomControls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -12,9 +13,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.ViewModels.Editor {
 	public class EditorTreeViewModel : ObservableObject {
-
-		public EditorTreeViewModel() {
-
+		public EditorTreeControl View { get; set; }
+		public EditorTreeViewModel(EditorTreeControl view) {
+			View = view;
 		}
 	}
 }

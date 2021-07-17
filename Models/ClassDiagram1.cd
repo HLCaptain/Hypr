@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HyprWinUI3.Models.Actors.Actor" Collapsed="true">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Actor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.ClassElement" Collapsed="true">
+    <Position X="10.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAABAAAAAAAAAAAAAAAAAAAAQAAAAAAEA=</HashCode>
+      <FileName>Models\Actors\ClassElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Edge" Collapsed="true">
+    <Position X="8" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Edge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Element" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Element.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Entity" Collapsed="true">
+    <Position X="6.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAABAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Method" Collapsed="true">
+    <Position X="1.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Method.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Variable" Collapsed="true">
+    <Position X="3.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Variable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Actors.Vertex" Collapsed="true">
+    <Position X="10.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Actors\Vertex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Diagrams.ClassDiagram" Collapsed="true">
+    <Position X="5.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Diagrams\ClassDiagram.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Diagrams.Diagram" Collapsed="true">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Diagrams\Diagram.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.Diagrams.Project" Collapsed="true">
+    <Position X="12.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Models\Diagrams\Project.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.DragDropCompletedData" Collapsed="true">
+    <Position X="15" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\DragAndDrop\DragDropCompletedData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.DragDropData" Collapsed="true">
+    <Position X="16.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Models\DragAndDrop\DragDropData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HyprWinUI3.Models.DragDropStartingData" Collapsed="true">
+    <Position X="15" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DragAndDrop\DragDropStartingData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="HyprWinUI3.Models.Actors.Visibility" Collapsed="true">
+    <Position X="15" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAIAAAEAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\Actors\Visibility.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

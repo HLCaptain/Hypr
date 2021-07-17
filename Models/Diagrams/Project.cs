@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Diagrams {
-    public class Project : Entity {
-        public List<Diagram> Diagrams { get; set; } = new List<Diagram>();
+	public class Project : Entity {
+		/// <summary>
+		/// Relative paths to Diagrams.
+		/// </summary>
+		public List<string> Diagrams { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Relative paths to diagrams which contains the Elements.
-        /// </summary>
-        public List<Element> Elements { get; set; } = new List<Element>();
-    }
+		/// <summary>
+		/// Relative paths to Elements.
+		/// </summary>
+		public List<string> Elements { get; set; } = new List<string>();
+	}
 }

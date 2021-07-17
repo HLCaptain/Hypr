@@ -65,7 +65,6 @@ namespace HyprWinUI3.Services
 			if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParamUsed)))
 			{
 				Frame.Tag = clearNavigation;
-				// todo: replace drillin with strategy design pattern
 				var navigationResult = Frame.Navigate(pageType, parameter, new DrillInNavigationTransitionInfo());
 				if (navigationResult)
 				{
