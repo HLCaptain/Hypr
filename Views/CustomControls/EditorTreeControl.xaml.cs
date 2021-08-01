@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using HyprWinUI3.Services;
 using HyprWinUI3.Strategies.ExtentionFiller;
 using HyprWinUI3.ViewModels;
@@ -34,6 +35,10 @@ namespace HyprWinUI3.Views.CustomControls {
 			ProjectService.RootFolderChangedEvent += InitializeTreeView;
 
 			InitializeTreeView();
+			FilesystemService.DiagramCreated += () => { RefreshTreeNode(treeView.RootNodes[0]); };
+
+			// Needed when renaming an item can be done outside of the TreeView.s
+			//FilesystemService.ItemRenamed += () => { RefreshTreeNode(treeView.RootNodes[0]); };
 		}
 
 		/// <summary>
@@ -45,30 +50,64 @@ namespace HyprWinUI3.Views.CustomControls {
 				treeView.RootNodes.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
 					Content = "No project",
 				});
+				treeView.RootNodes[0].Children.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "Child",
+				});
+				treeView.RootNodes[0].Children.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "Child",
+				});
+				treeView.RootNodes[0].Children.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "Child",
+				});
+				treeView.RootNodes[0].Children[0].Children.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "Child",
+				});
+				treeView.RootNodes[0].Children[0].Children.Add(new Microsoft.UI.Xaml.Controls.TreeViewNode {
+					Content = "Child",
+				});
 			} else {
 				var newRoot = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
 					Content = ProjectService.RootFolder
 				};
-				treeView.RootNodes.Add(newRoot);
 				newRoot.HasUnrealizedChildren = true;
-				FillTreeNode(newRoot);
+				treeView.RootNodes.Add(newRoot);
 			}
 		}
-		/// <summary>
-		/// Loads and fills in a node with its children if there is any.
-		/// </summary>
-		/// <param name="rootNode"></param>
-		private async void FillTreeNode(Microsoft.UI.Xaml.Controls.TreeViewNode rootNode) {
-			// Get the contents of the folder represented by the current tree node.
-			// Add each item as a new child node of the node that's being expanded.
 
-			// Only process the node if it's a folder and has unrealized children.
-			StorageFolder rootFolder = null;
+		private async Task RefreshTreeNode(Microsoft.UI.Xaml.Controls.TreeViewNode rootNode) {
+			if (rootNode == null) {
+				return;
+			}
 
-			if (rootNode.Content is StorageFolder && rootNode.HasUnrealizedChildren == true) {
+			Stack<Microsoft.UI.Xaml.Controls.TreeViewNode> nodeStack = new Stack<Microsoft.UI.Xaml.Controls.TreeViewNode>();
+			nodeStack.Push(rootNode);
+
+			// DFS Preorder
+			while (nodeStack.Any()) {
+				Microsoft.UI.Xaml.Controls.TreeViewNode node = nodeStack.Pop();
+				await FillTreeNode(node);
+				// update it in treeview if needed
+				foreach (var nodeChild in node.Children) {
+					if (node.IsExpanded) {
+						nodeStack.Push(nodeChild);
+					}
+				}
+			}
+		}
+
+		// has current data to work with, just fills in 1 layer
+		private async Task FillTreeNode(Microsoft.UI.Xaml.Controls.TreeViewNode rootNode) {
+			if (rootNode == null) {
+				return;
+			}
+
+			// Checking if the rootNode is empty right now, matters when loading in the first node.
+			bool wasEmpty = rootNode.Children.Count == 0;
+
+			StorageFolder rootFolder;
+			if (rootNode.Content is StorageFolder) {
 				rootFolder = rootNode.Content as StorageFolder;
 			} else {
-				// The node isn't a folder, or it's already been filled.
 				return;
 			}
 
@@ -76,37 +115,83 @@ namespace HyprWinUI3.Views.CustomControls {
 			var fileList = await rootFolder.GetFilesAsync();
 			var folderList = await rootFolder.GetFoldersAsync();
 
-			// If there is none, return.
-			if (fileList.Count == 0 && folderList.Count == 0) {
-				return;
-			}
-			// adding folders first
+			// List of nodes to be in the final node's Children list.
+			var presentNodes = new List<Microsoft.UI.Xaml.Controls.TreeViewNode>();
+
 			foreach (var folder in folderList) {
-				var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
-					Content = folder
-				};
-				// folders may contain children
-				newNode.HasUnrealizedChildren = true;
-				rootNode.Children.Add(newNode);
+				// todo rework predicate, because it is kinda wacky
+				//var sameFolders = rootNode.Children.Where(node => (node.Content as IStorageItem).Name == folder.Name);
+				List<Microsoft.UI.Xaml.Controls.TreeViewNode> sameFolders = new List<Microsoft.UI.Xaml.Controls.TreeViewNode>(rootNode.Children.Where((node) => (node.Content as IStorageItem).Name.Equals(folder.Name)));
+				// add the list of present same files so we know, we dont have to delete these nodes later on
+				presentNodes.AddRange(sameFolders);
+
+				// if the folder is not present in the node, add it
+				if (!sameFolders.Any()) {
+					// adding new folder
+					var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
+						Content = folder,
+						HasUnrealizedChildren = true
+					};
+					rootNode.Children.Add(newNode);
+					presentNodes.Add(newNode);
+				}
 			}
-			// adding files
+
 			foreach (var file in fileList) {
-				var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
-					Content = file
-				};
-				rootNode.Children.Add(newNode);
+				// todo rework predicate, because it is kinda wacky
+				//var sameFiles = rootNode.Children.Where(node => (node.Content as IStorageItem).Name == file.Name);
+				List<Microsoft.UI.Xaml.Controls.TreeViewNode> sameFiles = new List<Microsoft.UI.Xaml.Controls.TreeViewNode>(rootNode.Children.Where((node) => (node.Content as IStorageItem).Name.Equals(file.Name)));
+				sameFiles.ForEach((node) => { node.HasUnrealizedChildren = false; });
+
+				// add the list of present same files so we know, we dont have to delete these later on
+				presentNodes.AddRange(sameFiles);
+
+				// if the file is not present in the node, add it
+				if (!sameFiles.Any()) {
+					// adding new file
+					var newNode = new Microsoft.UI.Xaml.Controls.TreeViewNode() {
+						Content = file,
+						HasUnrealizedChildren = false
+					};
+					rootNode.Children.Add(newNode);
+					presentNodes.Add(newNode);
+				}
 			}
-			// this folder no longer has any unrealized children
+
+			if (!wasEmpty) {
+				// filter outdated nodes
+				var outdatedNodes = new List<Microsoft.UI.Xaml.Controls.TreeViewNode>();
+				foreach (var item in rootNode.Children) {
+					if (!presentNodes.Contains(item)) {
+						outdatedNodes.Add(item);
+					}
+				}
+				// delete outdated nodes
+				foreach (var item in outdatedNodes) {
+					rootNode.Children.Remove(item);
+				}
+			}
+
+			// already filled this node up
 			rootNode.HasUnrealizedChildren = false;
+
+			// todo sort
+			// sorting nodes based on content type and alphabetical order
+
 		}
+
+		private volatile bool manualRefresh = false;
 		/// <summary>
 		/// If a args.Node has unrealized children, then load and fill them in.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		private void treeView_Expanding(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewExpandingEventArgs args) {
-			if (args.Node.HasUnrealizedChildren) {
-				FillTreeNode(args.Node);
+		private async void treeView_Expanding(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewExpandingEventArgs args) {
+			if (args.Node.HasUnrealizedChildren && !manualRefresh && ProjectService.CurrentProject != null) {
+				await RefreshTreeNode(args.Node);
+
+				// need to expand it after filling the node, without this, folders with items wouldnt expend
+				args.Node.IsExpanded = true;
 			}
 		}
 		/// <summary>
@@ -115,7 +200,6 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
 		private void treeView_Collapsed(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewCollapsedEventArgs args) {
-			args.Node.Children.Clear();
 			args.Node.HasUnrealizedChildren = true;
 		}
 		/// <summary>
@@ -124,12 +208,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
 		private void treeView_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args) {
-			var node = args.InvokedItem as Microsoft.UI.Xaml.Controls.TreeViewNode;
-			if (node.Content is IStorageItem item) {
-				if (node.Content is StorageFolder) {
-					node.IsExpanded = !node.IsExpanded;
-				}
-			}
+			// placeholder for now
 		}
 
 		/// <summary>
@@ -139,54 +218,60 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// <param name="e"></param>
 		private async void AddDiagram(object sender, RoutedEventArgs e) {
 			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
-
-			// closing the treenode (forces refresh after adding new file)
-			if (treeNode.IsExpanded) {
-				treeNode.IsExpanded = false;
-			}
-			treeNode.Children.Clear();
-			treeNode.HasUnrealizedChildren = true;
-
 			// todo make this return async and make the whole method async
 			if (ProjectService.IsInProjectSubfolder((StorageFolder)treeNode.Content)) {
 				var diagram = await FilesystemService.CreateDiagramHere((StorageFolder)treeNode.Content, new DiagramExtentionFiller());
 				ProjectService.AddDiagramFileToProject(diagram);
-				TabViewViewModel.OpenDiagram(diagram);
+				TabViewViewModel?.OpenDiagram(diagram);
+				treeNode.HasUnrealizedChildren = true;
+				await RefreshTreeNode(treeNode);
 			} else {
 				InfoService.DisplayError("File is not in project folder");
 			}
-			// todo refresh treenode properly
 		}
+
 		/// <summary>
 		/// Renames a node item.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void RenameItem(object sender, RoutedEventArgs e) {
+		private async void RenameItem(object sender, RoutedEventArgs e) {
 			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
 
-			// may need to refresh the TreeView
+			await FilesystemService.RenameItem(treeNode.Content as IStorageItem);
+
+			// View refresh
 			var nodeParent = treeNode.Parent;
-
-			// closing the treenode (forces refresh after adding new file)
-			if (treeNode.IsExpanded) {
-				treeNode.IsExpanded = false;
+			await RefreshTreeNode(treeNode.Parent);
+			if (nodeParent.IsExpanded) {
+				nodeParent.IsExpanded = false;
+				nodeParent.IsExpanded = true;
 			}
-			treeNode.Children.Clear();
-			treeNode.HasUnrealizedChildren = true;
-
-			// todo call the FsService rename method with treeNode
-			// todo refresh tree
 		}
 
 		private async void OpenFile(object sender, DoubleTappedRoutedEventArgs e) {
 			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((StackPanel)sender).DataContext;
 			try {
 				var file = (StorageFile)treeNode.Content;
+				// todo generalize it
 				TabViewViewModel.OpenDiagram(await Factories.DiagramFactory.MakeDiagramFromFile(file));
 			} catch (Exception exception) {
 				InfoService.DisplayInfoBar(exception.Message, Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
 				throw;
+			}
+		}
+
+		private async void DeleteItem(object sender, RoutedEventArgs e) {
+			var treeNode = (Microsoft.UI.Xaml.Controls.TreeViewNode)((MenuFlyoutItem)sender).DataContext;
+
+			await FilesystemService.DeleteItem(treeNode.Content as IStorageItem);
+
+			// View refresh
+			var nodeParent = treeNode.Parent;
+			await RefreshTreeNode(treeNode.Parent);
+			if (nodeParent.IsExpanded) {
+				nodeParent.IsExpanded = false;
+				nodeParent.IsExpanded = true;
 			}
 		}
 	}

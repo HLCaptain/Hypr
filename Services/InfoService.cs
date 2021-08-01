@@ -65,5 +65,9 @@ namespace HyprWinUI3.Services {
                 }
             });
         }
+
+        public static void OperationCancelled() {
+            DisplayError("Operation Cancelled");
+		}
 	}
 }

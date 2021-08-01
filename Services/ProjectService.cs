@@ -67,7 +67,7 @@ namespace HyprWinUI3.Services {
 		}
 
 		public static void AddDiagramFileToProject(Diagram diagram) {
-			if (CurrentProject == null) {
+			if (CurrentProject == null || diagram == null) {
 				return;
 			}
 			AddFileToProjectList(diagram.File, CurrentProject.Diagrams);

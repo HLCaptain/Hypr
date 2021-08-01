@@ -18,6 +18,8 @@ namespace HyprWinUI3.Services {
 	/// Helps interact with the filesystem.
 	/// </summary>
 	public static class FilesystemService {
+		public static event Action DiagramCreated;
+		public static event Action ItemRenamed;
 		/// <summary>
 		/// Asks user for the new file's name and extention, then creates the file to specific location.
 		/// </summary>
@@ -32,7 +34,8 @@ namespace HyprWinUI3.Services {
 			TextBox textBox = new TextBox() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
-				Margin = new Thickness(4)
+				Margin = new Thickness(4),
+				PlaceholderText = "File name"
 			};
 			content.Children.Add(textBox);
 			ComboBox fileTypes = new ComboBox() {
@@ -66,6 +69,7 @@ namespace HyprWinUI3.Services {
 					
 					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(diagram));
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					DiagramCreated?.Invoke();
 					diagram.File = file;
 					return diagram;
 				} catch (Exception e) {
@@ -98,6 +102,73 @@ namespace HyprWinUI3.Services {
 				}
 			}
 			return null;
+		}
+
+		public static async Task RenameItem(IStorageItem storageItem, string newName) {
+			await storageItem.RenameAsync(newName);
+			ItemRenamed?.Invoke();
+			return;
+		}
+
+		public static async Task RenameItem(IStorageItem storageItem) {
+			// ini content of the content dialog
+			StackPanel content = new StackPanel() {
+				Orientation = Orientation.Horizontal,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch
+			};
+			TextBox textBox = new TextBox() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
+				Margin = new Thickness(4),
+				PlaceholderText = "New name"
+			};
+			content.Children.Add(textBox);
+
+			// ini contentdialog
+			ContentDialog dialog = new ContentDialog();
+			dialog.Title = $"Rename {storageItem.Name}";
+			dialog.CloseButtonText = "Cancel";
+			dialog.PrimaryButtonText = "Rename item";
+			dialog.Content = content;
+
+			var result = await dialog.ShowAsync();
+
+			if (result == ContentDialogResult.Primary) {
+				try {
+					string newName = textBox.Text == "" ? Guid.NewGuid().ToString() : textBox.Text;
+					await RenameItem(storageItem, textBox.Text);
+					InfoService.DisplayInfoBar($"{storageItem.Name} renamed!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+				} catch (Exception e) {
+					InfoService.DisplayError(e.Message);
+				}
+			} else {
+				InfoService.OperationCancelled();
+			}
+		}
+
+		public static async Task DeleteItem(IStorageItem storageItem) {
+			// ini content of the content dialog
+
+			// ini contentdialog
+			ContentDialog dialog = new ContentDialog();
+			dialog.Title = $"Delete {storageItem.Name}";
+			dialog.CloseButtonText = "Cancel";
+			dialog.PrimaryButtonText = "Delete item";
+			dialog.Content = $"Are you sure, you want to delete {storageItem.Name}?";
+
+			var result = await dialog.ShowAsync();
+
+			if (result == ContentDialogResult.Primary) {
+				try {
+					await storageItem.DeleteAsync();
+					InfoService.DisplayInfoBar($"{storageItem.Name} deleted!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+				} catch (Exception e) {
+					InfoService.DisplayError(e.Message);
+				}
+			} else {
+				InfoService.OperationCancelled();
+			}
 		}
 	}
 }
