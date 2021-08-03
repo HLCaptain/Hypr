@@ -157,6 +157,7 @@
     <Compile Include="Models\Actors\Method.cs" />
     <Compile Include="Models\Actors\Variable.cs" />
     <Compile Include="Models\Actors\Visibility.cs" />
+    <Compile Include="Models\Data\TreeItem.cs" />
     <Compile Include="Models\Diagrams\ClassDiagram.cs" />
     <Compile Include="Models\Diagrams\Diagram.cs" />
     <Compile Include="Models\Diagrams\Project.cs" />

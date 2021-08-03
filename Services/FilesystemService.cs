@@ -104,13 +104,13 @@ namespace HyprWinUI3.Services {
 			return null;
 		}
 
-		public static async Task RenameItem(IStorageItem storageItem, string newName) {
+		public static async Task<IStorageItem> RenameItem(IStorageItem storageItem, string newName) {
 			await storageItem.RenameAsync(newName);
 			ItemRenamed?.Invoke();
-			return;
+			return storageItem;
 		}
 
-		public static async Task RenameItem(IStorageItem storageItem) {
+		public static async Task<IStorageItem> RenameItem(IStorageItem storageItem) {
 			// ini content of the content dialog
 			StackPanel content = new StackPanel() {
 				Orientation = Orientation.Horizontal,
@@ -137,7 +137,7 @@ namespace HyprWinUI3.Services {
 			if (result == ContentDialogResult.Primary) {
 				try {
 					string newName = textBox.Text == "" ? Guid.NewGuid().ToString() : textBox.Text;
-					await RenameItem(storageItem, textBox.Text);
+					storageItem = await RenameItem(storageItem, textBox.Text);
 					InfoService.DisplayInfoBar($"{storageItem.Name} renamed!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 				} catch (Exception e) {
 					InfoService.DisplayError(e.Message);
@@ -145,6 +145,7 @@ namespace HyprWinUI3.Services {
 			} else {
 				InfoService.OperationCancelled();
 			}
+			return storageItem;
 		}
 
 		public static async Task DeleteItem(IStorageItem storageItem) {

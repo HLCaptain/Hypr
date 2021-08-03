@@ -5,6 +5,7 @@ using System.Linq;
 using HyprWinUI3.Helpers;
 using HyprWinUI3.Models;
 using HyprWinUI3.Models.Diagrams;
+using HyprWinUI3.Services;
 using HyprWinUI3.Views;
 using HyprWinUI3.Views.CustomControls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -39,6 +40,7 @@ namespace HyprWinUI3.ViewModels
 					HorizontalAlignment = HorizontalAlignment.Stretch
 				}
 			});
+			ProjectService.OpenDiagramEvent += OpenDiagram;
 		}
 
 		private void AddTab() {

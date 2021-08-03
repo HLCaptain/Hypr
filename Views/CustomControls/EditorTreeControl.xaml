@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Custom="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:data="using:HyprWinUI3.Models.Data"
     xmlns:local="using:HyprWinUI3.Views.CustomControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:storage="using:Windows.Storage"
@@ -18,61 +19,71 @@
             FolderTemplate="{StaticResource FolderDataTemplate}"
             NullTemplate="{StaticResource NullDataTemplate}"
             StringTemplate="{StaticResource StringDataTemplate}" />
-        <DataTemplate x:Key="DefaultItemDataTemplate" x:DataType="Custom:TreeViewNode">
-            <Grid>
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="{x:Bind ((storage:IStorageItem)Content).Name}" />
-            </Grid>
+        <DataTemplate x:Key="DefaultItemDataTemplate" x:DataType="data:TreeItem">
+            <Custom:TreeViewItem ItemsSource="{x:Bind Children}">
+                <Grid>
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind ((storage:IStorageItem)Content).Name}" />
+                </Grid>
+            </Custom:TreeViewItem>
         </DataTemplate>
-        <DataTemplate x:Key="NullDataTemplate" x:DataType="Custom:TreeViewNode">
-            <Grid>
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="NullDataTemplate" />
-            </Grid>
+        <DataTemplate x:Key="NullDataTemplate" x:DataType="data:TreeItem">
+            <Custom:TreeViewItem ItemsSource="{x:Bind Children}">
+                <Grid>
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="NullDataTemplate" />
+                </Grid>
+            </Custom:TreeViewItem>
         </DataTemplate>
-        <DataTemplate x:Key="FileDataTemplate" x:DataType="Custom:TreeViewNode">
-            <StackPanel DoubleTapped="OpenFile" Orientation="Horizontal">
-                <SymbolIcon Margin="0,0,4,0" Symbol="Document" />
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="{x:Bind ((storage:StorageFile)Content).Name}" />
-            </StackPanel>
+        <DataTemplate x:Key="FileDataTemplate" x:DataType="data:TreeItem">
+            <Custom:TreeViewItem ItemsSource="{x:Bind Children}">
+                <StackPanel DoubleTapped="OpenFile" Orientation="Horizontal">
+                    <SymbolIcon Margin="0,0,4,0" Symbol="Document" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind ((storage:StorageFile)Content).Name}" />
+                </StackPanel>
+            </Custom:TreeViewItem>
         </DataTemplate>
 
-        <DataTemplate x:Key="FolderDataTemplate" x:DataType="Custom:TreeViewNode">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Click="AddDiagram" Text="Add Diagram" />
-                        <MenuFlyoutItem Click="RenameItem" Text="Rename" />
-                        <MenuFlyoutItem Text="Delete" Click="DeleteItem" />
-                    </MenuFlyout>
-                </StackPanel.ContextFlyout>
-                <SymbolIcon Margin="0,0,4,0" Symbol="Folder" />
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="{x:Bind ((storage:StorageFolder)Content).Name}" />
-            </StackPanel>
+        <DataTemplate x:Key="FolderDataTemplate" x:DataType="data:TreeItem">
+            <Custom:TreeViewItem ItemsSource="{x:Bind Children}">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Click="AddDiagram" Text="Add Diagram" />
+                            <MenuFlyoutItem Click="RenameItem" Text="Rename" />
+                            <MenuFlyoutItem Click="DeleteItem" Text="Delete" />
+                        </MenuFlyout>
+                    </StackPanel.ContextFlyout>
+                    <SymbolIcon Margin="0,0,4,0" Symbol="Folder" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind ((storage:StorageFolder)Content).Name}" />
+                </StackPanel>
+            </Custom:TreeViewItem>
         </DataTemplate>
-        <DataTemplate x:Key="StringDataTemplate" x:DataType="Custom:TreeViewNode">
-            <StackPanel Orientation="Horizontal">
-                <SymbolIcon Margin="0,0,4,0" Symbol="Stop" />
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="{x:Bind (x:String)Content}" />
-            </StackPanel>
+        <DataTemplate x:Key="StringDataTemplate" x:DataType="data:TreeItem">
+            <Custom:TreeViewItem ItemsSource="{x:Bind Children}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Margin="0,0,4,0" Symbol="Stop" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="{x:Bind (x:String)Content}" />
+                </StackPanel>
+            </Custom:TreeViewItem>
         </DataTemplate>
 
     </UserControl.Resources>
@@ -91,6 +102,7 @@
                 Expanding="treeView_Expanding"
                 ItemInvoked="treeView_ItemInvoked"
                 ItemTemplateSelector="{StaticResource ExplorerItemTemplateSelector}"
+                ItemsSource="{x:Bind ViewModel.TreeItems}"
                 SelectionMode="Single" />
         </ScrollViewer>
     </Grid>

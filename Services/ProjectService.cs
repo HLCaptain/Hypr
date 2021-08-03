@@ -26,6 +26,8 @@ namespace HyprWinUI3.Services {
 		/// </summary>
 		public static event Action RootFolderChangedEvent;
 
+		public static event Action<Diagram> OpenDiagramEvent;
+
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
 		private static StorageFile _projectFile;
@@ -193,6 +195,10 @@ namespace HyprWinUI3.Services {
 			} else {
 				InfoService.DisplayError(ProjectFile.Name + " couldn't be saved.");
 			}
+		}
+
+		public static void OpenDiagram(Diagram diagram) {
+			OpenDiagramEvent?.Invoke(diagram);
 		}
 	}
 }
