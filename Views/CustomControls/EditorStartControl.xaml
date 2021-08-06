@@ -28,7 +28,7 @@
             Background="{ThemeResource SystemControlBackgroundListLowBrush}"
             CornerRadius="8,8,8,8">
             <VariableSizedWrapGrid
-                Name="grid"
+                x:Name="grid"
                 Margin="{StaticResource MediumLeftTopRightBottomMargin}"
                 FocusVisualPrimaryBrush="{x:Null}"
                 FocusVisualSecondaryBrush="{x:Null}" />

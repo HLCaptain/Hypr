@@ -14,6 +14,7 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <local:EditorCanvasControl />
         <local:ToolbarControl
+            x:Name="toolbar"
             Width="144"
             Height="288"
             Margin="10,10,0,0"

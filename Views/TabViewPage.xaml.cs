@@ -1,4 +1,5 @@
 ﻿using System;
+using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
 using HyprWinUI3.ViewModels;
 using Windows.UI.Xaml;
@@ -17,8 +18,18 @@ namespace HyprWinUI3.Views
         public TabViewPage() {
 			InitializeComponent();
             InfoService.InfoBarGrid = InfoBarGrid;
-			ViewModel = new TabViewViewModel(tabView);
+			ViewModel = new TabViewViewModel();
 			treeView.TabViewViewModel = ViewModel;
-        }
+			ProjectService.OpenDiagramEvent += (diagram) => OpenDiagram(diagram);
+		}
+		
+		private void OpenDiagram(Diagram diagram) {
+			int index = ViewModel.OpenDiagram(diagram);
+			try {
+				tabView.SelectedIndex = index;
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+			}
+		}
 	}
 }

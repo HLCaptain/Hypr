@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using HyprWinUI3.Models.Data;
+using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
 using HyprWinUI3.Strategies.ExtentionFiller;
 using HyprWinUI3.ViewModels;
@@ -33,7 +34,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		public EditorTreeControl() {
 			this.InitializeComponent();
 
-			FilesystemService.DiagramCreated += () => { RefreshTreeNode(treeView.RootNodes[0]); };
+			FilesystemService.DiagramCreated += (diagram) => { RefreshTreeNode(treeView.RootNodes[0]); };
 
 			// Needed when renaming an item can be done outside of the TreeView.s
 			//FilesystemService.ItemRenamed += () => { RefreshTreeNode(treeView.RootNodes[0]); };
@@ -119,7 +120,7 @@ namespace HyprWinUI3.Views.CustomControls {
 			// todo make this return async and make the whole method async
 			if (ProjectService.IsInProjectSubfolder(item.Content as StorageFolder)) {
 				var diagram = await FilesystemService.CreateDiagramHere(item.Content as StorageFolder, new DiagramExtentionFiller());
-				ProjectService.AddDiagramFileToProject(diagram);
+				ProjectService.AddFileToProjectList(diagram.File, ProjectService.CurrentProject.Diagrams);
 				ProjectService.OpenDiagram(diagram);
 				await RefreshTreeNode(node);
 			} else {

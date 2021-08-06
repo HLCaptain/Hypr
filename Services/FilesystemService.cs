@@ -5,8 +5,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HyprWinUI3.Factories;
-using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Strategies.ExtentionFiller;
+using HyprWinUI3.Models.Data;
+using HyprWinUI3.Models.Diagrams;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -18,8 +19,16 @@ namespace HyprWinUI3.Services {
 	/// Helps interact with the filesystem.
 	/// </summary>
 	public static class FilesystemService {
-		public static event Action DiagramCreated;
-		public static event Action ItemRenamed;
+		/// <summary>
+		/// Fires when a new Diagram is created. arg1 is the new Diagram.
+		/// </summary>
+		public static event Action<Diagram> DiagramCreated;
+
+		/// <summary>
+		/// Event when fires when a StorageItem is renamed. arg1 is the old file's name, arg2 is the new file.
+		/// </summary>
+		public static event Action<string, IStorageItem> ItemRenamed;
+
 		/// <summary>
 		/// Asks user for the new file's name and extention, then creates the file to specific location.
 		/// </summary>
@@ -61,7 +70,7 @@ namespace HyprWinUI3.Services {
 			// saving file
 			if (result == ContentDialogResult.Primary) {
 				try {
-					Diagram diagram = DiagramFactory.CreateDiagram((string)fileTypes.SelectedItem);
+					var diagram = DiagramFactory.CreateDiagram((string)fileTypes.SelectedItem);
 					diagram.Name = textBox.Text == "" ? diagram.Uid : textBox.Text;
 					var file = await folder.CreateFileAsync(diagram.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
 					// todo use strategy when saving file data
@@ -69,7 +78,7 @@ namespace HyprWinUI3.Services {
 					
 					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(diagram));
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-					DiagramCreated?.Invoke();
+					DiagramCreated?.Invoke(diagram);
 					diagram.File = file;
 					return diagram;
 				} catch (Exception e) {
@@ -105,8 +114,9 @@ namespace HyprWinUI3.Services {
 		}
 
 		public static async Task<IStorageItem> RenameItem(IStorageItem storageItem, string newName) {
+			string oldName = storageItem.Name;
 			await storageItem.RenameAsync(newName);
-			ItemRenamed?.Invoke();
+			ItemRenamed?.Invoke(oldName, storageItem);
 			return storageItem;
 		}
 

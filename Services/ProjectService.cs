@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Models.Data;
 using HyprWinUI3.Models.Diagrams;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -68,24 +69,14 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
-		public static void AddDiagramFileToProject(Diagram diagram) {
-			if (CurrentProject == null || diagram == null) {
-				return;
-			}
-			AddFileToProjectList(diagram.File, CurrentProject.Diagrams);
-		}
-		public static void AddElementFileToProject(Element element) {
-			if (CurrentProject == null) {
-				return;
-			}
-			AddFileToProjectList(element.File, CurrentProject.Elements);
-		}
+		// todo renaming paths in project file's pathlist when folder is renamed
+
 		/// <summary>
 		/// Adds a reference path to a project's list.
 		/// </summary>
 		/// <param name="file">We add the relative path of this file. Has to be in the same folder or in subfolders as the Project.</param>
 		/// <param name="list">The list related to the project to add the relative path to.</param>
-		private static void AddFileToProjectList(StorageFile file, IList<string> list) {
+		public static void AddFileToProjectList(StorageFile file, IList<string> list) {
 			try {
 				if (!list.Contains(file.Path.Substring(RootFolder.Path.Length + 1)) && // is the file name already in the list?
 					IsInProjectSubfolder(file)) {

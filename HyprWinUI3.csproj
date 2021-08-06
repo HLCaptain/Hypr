@@ -148,6 +148,7 @@
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Constants\Extentions.cs" />
     <Compile Include="Factories\DiagramFactory.cs" />
+    <Compile Include="Factories\InteractButtonFactory.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
@@ -185,10 +186,10 @@
     <Compile Include="Strategies\ExtentionFiller\DiagramExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\IExtentionFiller.cs" />
     <Compile Include="Strategies\LoadStrategy\ClassDiagramLoader.cs" />
+    <Compile Include="Strategies\LoadStrategy\DiagramLoader.cs" />
     <Compile Include="Strategies\LoadStrategy\ILoadStrategy.cs" />
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
-    <Compile Include="ViewModels\EditorStartViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorTreeViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

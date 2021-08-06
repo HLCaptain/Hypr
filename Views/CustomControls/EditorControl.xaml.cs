@@ -24,22 +24,44 @@ namespace HyprWinUI3.Views.CustomControls {
         public EditorViewModel ViewModel { get; set; }
         public Diagram CurrentDiagram { get; set; }
         public Grid Grid { get => grid; }
-        public TabView TabView { get; set; }
-        public TabViewViewModel TabViewViewModel { get; set; }
-        public EditorControl(TabViewViewModel tabViewVM) {
+        public EditorControl() {
             this.InitializeComponent();
-            TabView = tabViewVM.TabView;
-            TabViewViewModel = tabViewVM;
-            ViewModel = new EditorViewModel(this);
+            ViewModel = new EditorViewModel();
+            Initialize();
         }
 
-        public EditorControl(TabViewViewModel tabViewVM, Diagram diagram) {
+        public EditorControl(Diagram diagram) {
             this.InitializeComponent();
-            TabView = tabViewVM.TabView;
-            TabViewViewModel = tabViewVM;
-            ViewModel = new EditorViewModel(this);
+            ViewModel = new EditorViewModel();
             CurrentDiagram = diagram;
-            ViewModel.LoadDiagram(diagram);
+            LoadDiagram(diagram);
+        }
+
+        /// <summary>
+		/// Initializes with an EditorStartControl, because there are no files yet to open.
+		/// </summary>
+        private void Initialize() {
+            Grid?.Children.Clear();
+            Grid?.Children.Add(new EditorStartControl() {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+            });
+        }
+        /// <summary>
+		/// Loads up a diagram to display its content in an EditorDiagramControl.
+		/// </summary>
+		/// <param name="diagram">Diagram to display.</param>
+        public void LoadDiagram(Diagram diagram) {
+            if (diagram == null) {
+                return;
+            }
+            Grid?.Children.Clear();
+            var editor = new EditorDiagramControl(diagram) {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+            CurrentDiagram = diagram;
+            Grid?.Children.Add(editor);
         }
     }
 }

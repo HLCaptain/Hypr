@@ -30,6 +30,7 @@ namespace HyprWinUI3.Views.CustomControls {
 
         private void Initialize() {
             // todo draw elements
+            CurrentDiagram?.LoadStrategy.LoadToEditor(toolbar.Grid);
         }
 	}
 }
