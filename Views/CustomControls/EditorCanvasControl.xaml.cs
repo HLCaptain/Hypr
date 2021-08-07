@@ -151,6 +151,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// Updates colors to match the new theme.
 		/// </summary>
 		private void UpdateColors() {
+			// todo make color a systematic brush, so we don't have to change it manually
 			// changing color based on current theme
 			switch (ThemeSelectorService.Theme) {
 				case ElementTheme.Default:
