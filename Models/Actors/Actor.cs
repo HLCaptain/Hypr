@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using HyprWinUI3.Strategies;
 using HyprWinUI3.Strategies.LoadStrategy;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Windows.Storage;
 
 namespace HyprWinUI3.Models.Actors {

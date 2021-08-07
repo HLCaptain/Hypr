@@ -35,14 +35,15 @@ namespace HyprWinUI3.Views.CustomControls {
 
 		public EditorCanvasControl() {
 			this.InitializeComponent();
-			ThemeSelectorService.ThemeChanged += ThemeSelectorService_ThemeChanged;
+			ThemeSelectorService.ThemeChanged += ThemeSelectorService_ColorChanged;
+			ThemeSelectorService.ContrastChanged += ThemeSelectorService_ColorChanged;
 			UpdateColors();
 		}
 
 		/// <summary>
 		/// Invalidates the whole canvas and updates the drawing colors to match the new theme.
 		/// </summary>
-		private void ThemeSelectorService_ThemeChanged() {
+		private void ThemeSelectorService_ColorChanged() {
 			UpdateColors();
 			canvas.Invalidate();
 		}

@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HyprWinUI3.Models.Actors {
-    public class Method : Actor {
-    }
+namespace HyprWinUI3.Constants {
+	public enum ElementSize {
+		Small, Normal, Big, Huge
+	}
 }

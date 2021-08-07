@@ -143,7 +143,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 				ProjectService.OpenDiagram(await Factories.DiagramFactory.MakeDiagramFromFile(file));
 			} catch (Exception exception) {
 				InfoService.DisplayInfoBar(exception.Message, Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
-				throw;
+				//throw;
 			}
 		}
 		public async Task DeleteItem(TreeItem item) {

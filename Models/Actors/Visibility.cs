@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HyprWinUI3.Models.Actors {
-	enum Visibility {
+	public enum Visibility {
 		Default,
 		Public,
 		Private,

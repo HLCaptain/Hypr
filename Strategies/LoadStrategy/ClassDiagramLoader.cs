@@ -11,14 +11,15 @@ using HyprWinUI3.ViewModels;
 using HyprWinUI3.ViewModels.Editor;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace HyprWinUI3.Strategies.LoadStrategy {
 	class ClassDiagramLoader : DiagramLoader {
 		public override void LoadToEditor(VariableSizedWrapGrid grid) {
 			base.LoadToEditor(grid);
-			grid.Children.Add(InteractButtonFactory.MakeInteractToggleButton(null));
-			grid.Children.Add(InteractButtonFactory.MakeInteractToggleButton(null));
-			grid.Children.Add(InteractButtonFactory.MakeInteractToggleButton(null));
+			grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new Button(), null));
+			grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new Button(), null));
+			grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new Button(), null));
 		}
 	}
 }

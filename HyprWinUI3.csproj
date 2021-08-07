@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Constants\Enums.cs" />
     <Compile Include="Constants\Extentions.cs" />
     <Compile Include="Factories\DiagramFactory.cs" />
     <Compile Include="Factories\InteractButtonFactory.cs" />
@@ -196,6 +197,9 @@
     <Compile Include="ViewModels\ShellContentDialogViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\TabViewViewModel.cs" />
+    <Compile Include="Views\CustomControls\ClassElementView.xaml.cs">
+      <DependentUpon>ClassElementView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\EditorCanvasControl.xaml.cs">
       <DependentUpon>EditorCanvasControl.xaml</DependentUpon>
     </Compile>
@@ -257,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\ClassElementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

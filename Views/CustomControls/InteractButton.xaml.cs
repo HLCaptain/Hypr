@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Input;
 using HyprWinUI3.Factories;
+using HyprWinUI3.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -52,18 +53,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		}
 		public InteractButton() {
 			this.InitializeComponent();
-			Button = InteractButtonFactory.MakeInteractToggleButton(null);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="command"></param>
-		/// <param name="button">If null, button will be InteractButtonFactory.MakeInteractToggleButton(null);</param>
-		public InteractButton(RelayCommand command, ButtonBase button) {
-			this.InitializeComponent();
-			Button = button ?? InteractButtonFactory.MakeInteractToggleButton(null);
-			Button.Command = command;
+			ThemeSelectorService.SizeChanged += () => InteractButtonFactory.FormatInteractButton(this);
 		}
 	}
 }

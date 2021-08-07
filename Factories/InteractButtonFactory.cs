@@ -3,64 +3,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using HyprWinUI3.Constants;
+using HyprWinUI3.Services;
+using HyprWinUI3.Views.CustomControls;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace HyprWinUI3.Factories {
-	public enum InteractButtonSize {
-		Small, Normal, Big, Huge
-	}
 	public static class InteractButtonFactory {
-		private static void FormatInteractButton(ButtonBase button, InteractButtonSize size = InteractButtonSize.Normal) {
-			var icon = (FontIcon)button.Content;
-			switch(size) {
-				case InteractButtonSize.Small: {
-						button.Width = 24;
-						button.Height = 24;
-						button.Margin = new Windows.UI.Xaml.Thickness(2);
-						button.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
-						icon.Width = 16;
-						icon.Height = 16;
-						icon.Margin = new Windows.UI.Xaml.Thickness(-4);
-						break;
-					}
-				case InteractButtonSize.Normal: {
-						button.Width = 36;
-						button.Height = 36;
-						button.Margin = new Windows.UI.Xaml.Thickness(2);
-						button.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
+		public static void FormatInteractButton(InteractButton interactButton) {
+			var icon = (FontIcon)interactButton.Button.Content;
+			// todo make size a global variable to autoformat things with observer pattern
+			switch(ThemeSelectorService.Size) {
+				case ElementSize.Small: {
+						interactButton.Width = 24;
+						interactButton.Height = 24;
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
 						icon.Width = 24;
 						icon.Height = 24;
-						icon.Margin = new Windows.UI.Xaml.Thickness(-4);
 						break;
 					}
-				case InteractButtonSize.Big: {
-						button.Width = 48;
-						button.Height = 48;
-						button.Margin = new Windows.UI.Xaml.Thickness(4);
-						button.CornerRadius = new Windows.UI.Xaml.CornerRadius(4);
+				case ElementSize.Normal: {
+						interactButton.Width = 36;
+						interactButton.Height = 36;
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
 						icon.Width = 36;
 						icon.Height = 36;
-						icon.Margin = new Windows.UI.Xaml.Thickness(-8);
 						break;
 					}
-				case InteractButtonSize.Huge: {
-						button.Width = 64;
-						button.Height = 64;
-						button.Margin = new Windows.UI.Xaml.Thickness(6);
-						button.CornerRadius = new Windows.UI.Xaml.CornerRadius(6);
+				case ElementSize.Big: {
+						interactButton.Width = 48;
+						interactButton.Height = 48;
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(4);
 						icon.Width = 48;
 						icon.Height = 48;
-						icon.Margin = new Windows.UI.Xaml.Thickness(-12);
+						break;
+					}
+				case ElementSize.Huge: {
+						interactButton.Width = 64;
+						interactButton.Height = 64;
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(6);
+						icon.Width = 64;
+						icon.Height = 64;
 						break;
 					}
 				default: {
 						break;
 					}
 			}
-			button.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
-			button.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
-			button.IsEnabled = false;
+			icon.FontSize = icon.Width / 2;
+			icon.Margin = new Windows.UI.Xaml.Thickness(-4);
+			interactButton.Margin = new Windows.UI.Xaml.Thickness(2);
+			interactButton.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+			interactButton.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
 			icon.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
 			icon.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
 
@@ -85,25 +81,17 @@ namespace HyprWinUI3.Factories {
 				</ ToggleButton >
 				*/
 		}
-		public static Button MakeInteractButton(FontIcon icon, InteractButtonSize size = InteractButtonSize.Normal) {
-			var button = new Button() {
-				Content = icon ?? new FontIcon() {
-					FontFamily = new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
-					Glyph = "\xECCD"
-				},
+		public static InteractButton MakeInteractButton(FontIcon icon, ButtonBase button, ICommand command) {
+			button.Content = icon ?? new FontIcon() {
+				FontFamily = new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+				Glyph = "\xECCD"
 			};
-			FormatInteractButton(button, size);
-			return button;
-		}
-		public static ToggleButton MakeInteractToggleButton(FontIcon icon, InteractButtonSize size = InteractButtonSize.Normal) {
-			var toggleButton = new ToggleButton() {
-				Content = icon ?? new FontIcon() {
-					FontFamily = new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
-					Glyph = "\xECCD"
-				},
+			var interactButton = new InteractButton() {
+				Button = button,
+				Command = command
 			};
-			FormatInteractButton(toggleButton, size);
-			return toggleButton;
+			FormatInteractButton(interactButton);
+			return interactButton;
 		}
 	}
 }
