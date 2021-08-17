@@ -17,14 +17,6 @@ namespace HyprWinUI3.Factories {
 			// todo make size a global variable to autoformat things with observer pattern
 			switch(ThemeSelectorService.Size) {
 				case ElementSize.Small: {
-						interactButton.Width = 24;
-						interactButton.Height = 24;
-						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
-						icon.Width = 24;
-						icon.Height = 24;
-						break;
-					}
-				case ElementSize.Normal: {
 						interactButton.Width = 36;
 						interactButton.Height = 36;
 						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
@@ -32,20 +24,28 @@ namespace HyprWinUI3.Factories {
 						icon.Height = 36;
 						break;
 					}
-				case ElementSize.Big: {
+				case ElementSize.Normal: {
 						interactButton.Width = 48;
 						interactButton.Height = 48;
-						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(4);
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(2);
 						icon.Width = 48;
 						icon.Height = 48;
 						break;
 					}
-				case ElementSize.Huge: {
+				case ElementSize.Big: {
 						interactButton.Width = 64;
 						interactButton.Height = 64;
-						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(6);
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(4);
 						icon.Width = 64;
 						icon.Height = 64;
+						break;
+					}
+				case ElementSize.Huge: {
+						interactButton.Width = 96;
+						interactButton.Height = 96;
+						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(8);
+						icon.Width = 96;
+						icon.Height = 96;
 						break;
 					}
 				default: {
@@ -89,6 +89,20 @@ namespace HyprWinUI3.Factories {
 			var interactButton = new InteractButton() {
 				Button = button,
 				Command = command
+			};
+			FormatInteractButton(interactButton);
+			return interactButton;
+		}
+
+		public static InteractButton MakeInteractButton() {
+			var button = new Button();
+			button.Content = new FontIcon() {
+				FontFamily = new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+				Glyph = "\xECCD"
+			};
+			var interactButton = new InteractButton() {
+				Button = button,
+				Command = null
 			};
 			FormatInteractButton(interactButton);
 			return interactButton;

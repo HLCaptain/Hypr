@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Helpers;
 using HyprWinUI3.Models;
 using HyprWinUI3.Models.Diagrams;
@@ -16,8 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using WinUI = Microsoft.UI.Xaml.Controls;
 
-namespace HyprWinUI3.ViewModels
-{
+namespace HyprWinUI3.ViewModels {
 	public class TabViewViewModel : ObservableObject {
 		private RelayCommand _addTabCommand;
 		private RelayCommand<WinUI.TabViewTabCloseRequestedEventArgs> _closeTabCommand;
@@ -36,17 +35,16 @@ namespace HyprWinUI3.ViewModels
 		private void AddTab() {
 			// Creating empty editor, then subbing to Open Diagram input.
 			// todo change var to explicit type. Future you will thank you, because it is more readable.
-			var editor = new EditorControl() {
+			var control = new EditorControl() {
 				VerticalAlignment = VerticalAlignment.Stretch,
 				HorizontalAlignment = HorizontalAlignment.Stretch
 			};
-			var editorStart = editor.Grid.Children[0] as EditorStartControl;
-			editorStart.OpenDiagramEvent += (diagram, start) => OpenDiagram(diagram, start);
+			control.OpenEditorEvent += (editor, editorControl) => OpenEditor(editor, editorControl);
 
 			// Adding the empty editor.
 			Tabs.Add(new TabViewItem() {
 				Header = "New tab",
-				Content = editor
+				Content = control
 			});
 		}
 
@@ -56,22 +54,22 @@ namespace HyprWinUI3.ViewModels
 			}
 		}
 
-		public int OpenDiagram(Diagram diagram) {
-			if (diagram == null) {
+		public int OpenEditor(EditorApp editor) {
+			if (editor == null) {
 				return -1;
 			}
 
 			for (int i = 0; i < Tabs.Count; i++) {
-				if (((EditorControl)Tabs[i].Content).CurrentDiagram == null) {
+				if (((EditorControl)Tabs[i].Content).CurrentEditor == null) {
 					continue;
 				}
-				if ((((EditorControl)Tabs[i].Content).CurrentDiagram.Uid ?? "") == diagram.Uid) {
+				if ((((EditorControl)Tabs[i].Content).CurrentEditor.Model.Uid ?? "") == editor.Model.Uid) {
 					return i;
 				}
 			}
 			Tabs.Add(new TabViewItem() {
-				Header = diagram.Name ?? "Diagram",
-				Content = new EditorControl(diagram) {
+				Header = editor.Model.Name ?? "Editor",
+				Content = new EditorControl(editor) {
 					VerticalAlignment = VerticalAlignment.Stretch,
 					HorizontalAlignment = HorizontalAlignment.Stretch
 				}
@@ -79,20 +77,19 @@ namespace HyprWinUI3.ViewModels
 			return Tabs.Count - 1;
 		}
 
-		public int OpenDiagram(Diagram diagram, int index) {
-			if (diagram == null) {
+		public int OpenEditor(EditorApp editor, int index) {
+			if (editor == null) {
 				return -1;
 			}
-			Tabs[index].Header = diagram.Name ?? "Diagram";
-			((EditorControl)Tabs[index].Content).LoadDiagram(diagram);
+			Tabs[index].Header = editor.Model.Name ?? "Editor";
+			((EditorControl)Tabs[index].Content).LoadEditor(editor);
 			return index;
 		}
 
-		public int OpenDiagram(Diagram diagram, EditorStartControl editorStart) {
-			var startItems = Tabs.Where((item) => { return (item.Content as EditorControl).Grid.Children[0] as EditorStartControl != null; });
-			foreach (var item in startItems) {
-				if (editorStart == (item.Content as EditorControl).Grid.Children[0] as EditorStartControl) {
-					return OpenDiagram(diagram, Tabs.IndexOf(item));
+		public int OpenEditor(EditorApp editor, EditorControl control) {
+			foreach (var item in Tabs) {
+				if (control == (item.Content as EditorControl)) {
+					return OpenEditor(editor, Tabs.IndexOf(item));
 				}
 			}
 			return -1;

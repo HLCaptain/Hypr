@@ -36,7 +36,7 @@
 
 
             <winui:TabView
-                Name="tabView"
+                x:Name="tabView"
                 Grid.Row="0"
                 Grid.Column="0"
                 VerticalAlignment="Stretch"

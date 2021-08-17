@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Actors {
-    class Edge : Element {
+    public abstract class Edge : Element {
         public Vertex Start { get; set; }
         public Vertex End { get; set; }
     }

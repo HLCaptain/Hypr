@@ -34,7 +34,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		public EditorTreeControl() {
 			this.InitializeComponent();
 
-			FilesystemService.DiagramCreated += (diagram) => { RefreshTreeNode(treeView.RootNodes[0]); };
+			FilesystemService.EditorCreated += (diagram) => { RefreshTreeNode(treeView.RootNodes[0]); };
 
 			// Needed when renaming an item can be done outside of the TreeView.s
 			//FilesystemService.ItemRenamed += () => { RefreshTreeNode(treeView.RootNodes[0]); };
@@ -119,9 +119,9 @@ namespace HyprWinUI3.Views.CustomControls {
 			var node = FindNode(item);
 			// todo make this return async and make the whole method async
 			if (ProjectService.IsInProjectSubfolder(item.Content as StorageFolder)) {
-				var diagram = await FilesystemService.CreateDiagramHere(item.Content as StorageFolder, new DiagramExtentionFiller());
-				ProjectService.AddFileToProjectList(diagram.File, ProjectService.CurrentProject.Diagrams);
-				ProjectService.OpenDiagram(diagram);
+				var editor = await FilesystemService.CreateActor(item.Content as StorageFolder, new DiagramExtentionFiller());
+				ProjectService.AddFileToProjectList(editor.Model.File, ProjectService.CurrentProject.Diagrams);
+				ProjectService.OpenEditor(editor);
 				await RefreshTreeNode(node);
 			} else {
 				InfoService.DisplayError("File is not in project folder");

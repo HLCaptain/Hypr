@@ -1,4 +1,5 @@
 ﻿using System;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
 using HyprWinUI3.ViewModels;
@@ -12,19 +13,19 @@ namespace HyprWinUI3.Views
 	// For other samples, get the XAML Controls Gallery app http://aka.ms/XamlControlsGallery
 	public sealed partial class TabViewPage : Page {
 		public TabViewViewModel ViewModel { get; set; }
-        public Grid Grid { get => grid; }
-        public VariableSizedWrapGrid InfoBarGrid { get => infoBarGrid; }
+		public Grid Grid { get => grid; }
+		public VariableSizedWrapGrid InfoBarGrid { get => infoBarGrid; }
 
-        public TabViewPage() {
+		public TabViewPage() {
 			InitializeComponent();
-            InfoService.InfoBarGrid = InfoBarGrid;
+			InfoService.InfoBarGrid = InfoBarGrid;
 			ViewModel = new TabViewViewModel();
 			treeView.TabViewViewModel = ViewModel;
-			ProjectService.OpenDiagramEvent += (diagram) => OpenDiagram(diagram);
+			ProjectService.OpenEditorEvent += (editor) => OpenEditor(editor);
 		}
-		
-		private void OpenDiagram(Diagram diagram) {
-			int index = ViewModel.OpenDiagram(diagram);
+
+		private void OpenEditor(EditorApp editor) {
+			int index = ViewModel.OpenEditor(editor);
 			try {
 				tabView.SelectedIndex = index;
 			} catch (Exception e) {

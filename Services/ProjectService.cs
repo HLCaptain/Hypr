@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Models.Data;
 using HyprWinUI3.Models.Diagrams;
@@ -27,7 +28,7 @@ namespace HyprWinUI3.Services {
 		/// </summary>
 		public static event Action RootFolderChangedEvent;
 
-		public static event Action<Diagram> OpenDiagramEvent;
+		public static event Action<EditorApp> OpenEditorEvent;
 
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
@@ -188,8 +189,8 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
-		public static void OpenDiagram(Diagram diagram) {
-			OpenDiagramEvent?.Invoke(diagram);
+		public static void OpenEditor(EditorApp editor) {
+			OpenEditorEvent?.Invoke(editor);
 		}
 	}
 }

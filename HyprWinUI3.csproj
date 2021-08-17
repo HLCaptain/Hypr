@@ -146,9 +146,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="EditorApps\ClassDiagramEditorApp.cs" />
+    <Compile Include="EditorApps\DiagramEditorApp.cs" />
+    <Compile Include="EditorApps\EditorApp.cs" />
+    <Compile Include="EditorApps\TextEditorApp.cs" />
     <Compile Include="Constants\Enums.cs" />
     <Compile Include="Constants\Extentions.cs" />
-    <Compile Include="Factories\DiagramFactory.cs" />
+    <Compile Include="Factories\EditorAppFactory.cs" />
     <Compile Include="Factories\InteractButtonFactory.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="Models\Actors\ClassElement.cs" />
     <Compile Include="Models\Actors\Element.cs" />
     <Compile Include="Models\Actors\Method.cs" />
+    <Compile Include="Models\Actors\Note.cs" />
     <Compile Include="Models\Actors\Variable.cs" />
     <Compile Include="Models\Actors\Visibility.cs" />
     <Compile Include="Models\Data\TreeItem.cs" />
@@ -185,10 +190,8 @@
     <Compile Include="Services\WindowManagerService.cs" />
     <Compile Include="Strategies\ExtentionFiller\AllFileExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\DiagramExtentionFiller.cs" />
+    <Compile Include="Strategies\ExtentionFiller\EditorExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\IExtentionFiller.cs" />
-    <Compile Include="Strategies\LoadStrategy\ClassDiagramLoader.cs" />
-    <Compile Include="Strategies\LoadStrategy\DiagramLoader.cs" />
-    <Compile Include="Strategies\LoadStrategy\ILoadStrategy.cs" />
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorTreeViewModel.cs" />
@@ -208,9 +211,6 @@
     </Compile>
     <Compile Include="Views\CustomControls\EditorDiagramControl.xaml.cs">
       <DependentUpon>EditorDiagramControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CustomControls\EditorStartControl.xaml.cs">
-      <DependentUpon>EditorStartControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\EditorTreeControl.xaml.cs">
       <DependentUpon>EditorTreeControl.xaml</DependentUpon>
@@ -277,10 +277,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\EditorDiagramControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CustomControls\EditorStartControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -353,7 +349,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
-    <Folder Include="Views\CustomDialogs\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -13,6 +13,8 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using HyprWinUI3.Models.Actors;
+using HyprWinUI3.EditorApps;
 
 namespace HyprWinUI3.Services {
 	/// <summary>
@@ -20,9 +22,9 @@ namespace HyprWinUI3.Services {
 	/// </summary>
 	public static class FilesystemService {
 		/// <summary>
-		/// Fires when a new Diagram is created. arg1 is the new Diagram.
+		/// Fires when a new Editor is created. arg1 is the new Editor.
 		/// </summary>
-		public static event Action<Diagram> DiagramCreated;
+		public static event Action<EditorApp> EditorCreated;
 
 		/// <summary>
 		/// Event when fires when a StorageItem is renamed. arg1 is the old file's name, arg2 is the new file.
@@ -33,7 +35,7 @@ namespace HyprWinUI3.Services {
 		/// Asks user for the new file's name and extention, then creates the file to specific location.
 		/// </summary>
 		/// <param name="folder">The folder the file is created in.</param>
-		public static async Task<Diagram> CreateDiagramHere(StorageFolder folder, IExtentionFiller filler) {
+		public static async Task<EditorApp> CreateActor(StorageFolder folder, IExtentionFiller filler) {
 			// ini content of the content dialog
 			StackPanel content = new StackPanel() {
 				Orientation = Orientation.Horizontal,
@@ -70,17 +72,14 @@ namespace HyprWinUI3.Services {
 			// saving file
 			if (result == ContentDialogResult.Primary) {
 				try {
-					var diagram = DiagramFactory.CreateDiagram((string)fileTypes.SelectedItem);
-					diagram.Name = textBox.Text == "" ? diagram.Uid : textBox.Text;
-					var file = await folder.CreateFileAsync(diagram.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
-					// todo use strategy when saving file data
-					
-					
-					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(diagram));
+					var editor = EditorAppFactory.CreateEditor((string)fileTypes.SelectedItem);
+					editor.Model.Name = textBox.Text == "" ? editor.Model.Uid : textBox.Text;
+					var file = await folder.CreateFileAsync(editor.Model.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
+					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(editor.Model));
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-					DiagramCreated?.Invoke(diagram);
-					diagram.File = file;
-					return diagram;
+					EditorCreated?.Invoke(editor);
+					editor.Model.File = file;
+					return editor;
 				} catch (Exception e) {
 					InfoService.DisplayError(e.Message);
 				}
@@ -94,10 +93,10 @@ namespace HyprWinUI3.Services {
 		/// <summary>
 		/// Can create any given files.
 		/// </summary>
-		public static async Task<Diagram> CreateDiagram() {
+		public static async Task<EditorApp> CreateActor() {
 			var folderPicker = new FolderPicker();
 			folderPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-			folderPicker.CommitButtonText = "Save diagram here";
+			folderPicker.CommitButtonText = "Save file here";
 			folderPicker.FileTypeFilter.Add("*");
 
 			var folder = await folderPicker.PickSingleFolderAsync();
@@ -105,7 +104,7 @@ namespace HyprWinUI3.Services {
 			if (folder != null) {
 				// todo if in subfolder of the project's rootfolder
 				if (ProjectService.IsInProjectSubfolder(folder)) {
-					return await CreateDiagramHere(folder, new DiagramExtentionFiller());
+					return await CreateActor(folder, new EditorExtentionFiller());
 				} else {
 					InfoService.DisplayError("File is not in project folder");
 				}

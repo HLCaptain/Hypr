@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Actors {
-    public class Vertex : Element {
+    public abstract class Vertex : Element {
         public Point Position { get; set; }
     }
 }

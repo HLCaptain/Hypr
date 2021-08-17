@@ -12,13 +12,12 @@
     mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <local:EditorCanvasControl />
+        <local:EditorCanvasControl x:Name="canvas" />
         <local:ToolbarControl
             x:Name="toolbar"
             Width="144"
-            Height="288"
             Margin="10,10,0,0"
             HorizontalAlignment="Left"
-            VerticalAlignment="Top" />
+            VerticalAlignment="Stretch" />
     </Grid>
 </UserControl>
