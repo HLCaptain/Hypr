@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HyprWinUI3.Helpers;
 using HyprWinUI3.Models.Data;
 using HyprWinUI3.Services;
 using HyprWinUI3.Views.CustomControls;
@@ -90,7 +91,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 					var newNode = new TreeItem() {
 						Content = folder,
 					};
-					root.Children.Add(newNode);
+					InsertItem(root, newNode);
 					presentNodes.Add(newNode);
 				}
 			}
@@ -109,7 +110,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 					var newNode = new TreeItem() {
 						Content = file
 					};
-					root.Children.Add(newNode);
+					InsertItem(root, newNode);
 					presentNodes.Add(newNode);
 				}
 			}
@@ -127,10 +128,6 @@ namespace HyprWinUI3.ViewModels.Editor {
 					root.Children.Remove(item);
 				}
 			}
-
-			// todo sort
-			// sorting nodes based on content type and alphabetical order
-			//root.Children.OrderBy(item => item.Content, (o1, o2) => { return true; });
 		}
 		public async Task<TreeItem> RenameItem(TreeItem item) {
 			item.Content = await FilesystemService.RenameItem(item.Content as IStorageItem);
@@ -147,6 +144,18 @@ namespace HyprWinUI3.ViewModels.Editor {
 		}
 		public async Task DeleteItem(TreeItem item) {
 			await FilesystemService.DeleteItem(item.Content as IStorageItem);
+		}
+
+		// sorting nodes based on content type and alphabetical order
+		public void InsertItem(TreeItem root, TreeItem node) {
+			var comparer = new StorageItemComparer<object>();
+			for (int i = 0; i < root.Children.Count; i++) {
+				if (comparer.Compare(root.Children[i].Content, node.Content) > 0) {
+					root.Children.Insert(i, node);
+					return;
+				}
+			}
+			root.Children.Add(node);
 		}
 	}
 }

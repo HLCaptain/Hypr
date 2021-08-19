@@ -157,6 +157,7 @@
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Helpers\StorageItemComparer.cs" />
     <Compile Include="Models\Actors\Actor.cs" />
     <Compile Include="Models\Actors\ClassElement.cs" />
     <Compile Include="Models\Actors\Element.cs" />
