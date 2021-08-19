@@ -27,8 +27,8 @@ namespace HyprWinUI3.EditorApps {
 				return true;
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
+				return false;
 			}
-			return false;
 		}
 
 		public override bool SaveData(StorageFolder folder) {

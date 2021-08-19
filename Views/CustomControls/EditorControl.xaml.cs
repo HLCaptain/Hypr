@@ -37,13 +37,15 @@ namespace HyprWinUI3.Views.CustomControls {
 		public EditorViewModel ViewModel { get; set; } = new EditorViewModel();
 		public EditorApp CurrentEditor { get; set; }
 		public VariableSizedWrapGrid Grid { get => grid; }
+		public TabViewItem TabViewItem { get; set; }
 		public EditorControl() {
 			this.InitializeComponent();
 			ProjectService.ProjectChangedEvent += RefreshItems;
 			RefreshItems();
 		}
 
-		public EditorControl(EditorApp editor) {
+		public EditorControl(EditorApp editor, TabViewItem tabViewItem) {
+			TabViewItem = tabViewItem;
 			this.InitializeComponent();
 			LoadEditor(editor);
 		}
@@ -60,6 +62,12 @@ namespace HyprWinUI3.Views.CustomControls {
 			Grid?.Children.Clear();
 			CurrentEditor?.RefreshView();
 			Content = CurrentEditor?.View;
+			if (CurrentEditor?.Model?.File == null) {
+				TabViewItem.Header = CurrentEditor?.Model?.Name ?? "Editor";
+			} else {
+				TabViewItem.Header = CurrentEditor?.Model?.File.Name ?? "Editor";
+			}
+			
 		}
 
 		public void LoadEditor(EditorApp editor) {

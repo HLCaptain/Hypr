@@ -45,6 +45,8 @@ namespace HyprWinUI3.EditorApps {
 			return true;
 		}
 
+		// flawed, because it is based on string comparing
+		// compares the json parsed data serialized again with the original data
 		private bool IsNote(string data) {
 			var dataModel = JsonSerializer.Deserialize<Note>(data);
 			return JsonSerializer.Serialize<Note>(dataModel).Equals(data);

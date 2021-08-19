@@ -152,6 +152,7 @@
     <Compile Include="EditorApps\TextEditorApp.cs" />
     <Compile Include="Constants\Enums.cs" />
     <Compile Include="Constants\Extentions.cs" />
+    <Compile Include="EditorApps\UseCaseDiagramEditorApp.cs" />
     <Compile Include="Factories\EditorAppFactory.cs" />
     <Compile Include="Factories\InteractButtonFactory.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Models\Diagrams\ClassDiagram.cs" />
     <Compile Include="Models\Diagrams\Diagram.cs" />
     <Compile Include="Models\Diagrams\Project.cs" />
+    <Compile Include="Models\Diagrams\UseCaseDiagram.cs" />
     <Compile Include="Models\DragAndDrop\DragDropCompletedData.cs" />
     <Compile Include="Models\DragAndDrop\DragDropData.cs" />
     <Compile Include="Models\DragAndDrop\DragDropStartingData.cs" />

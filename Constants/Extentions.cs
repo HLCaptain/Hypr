@@ -37,10 +37,15 @@ namespace HyprWinUI3.Constants {
 		public static Dictionary<string, Type> ExtentionAppTypes { get; } = new Dictionary<string, Type>() {
 			{ ClassDiagramExtention, typeof(ClassDiagramEditorApp) },
 			{ SequentialDiagramExtention, null }, // todo sequential diagram class
-			{ UseCaseDiagramExtention, null }, // todo use case diagram class
+			{ UseCaseDiagramExtention, typeof(UseCaseDiagramEditorApp) },
 			{ ClassElementExtention, null }, // todo change to TextEditorViewer
 			{ EdgeElementExtention, null }, // todo change to TextEditorViewer
 			{ TextExtention, typeof(TextEditorApp) }
+		};
+
+		public static Dictionary<string, Type> ExtentionModelTypes { get; } = new Dictionary<string, Type>() {
+			{ ClassElementExtention, typeof(ClassElement) },
+			{ EdgeElementExtention, typeof(Edge) },
 		};
 	}
 }

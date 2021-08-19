@@ -29,16 +29,20 @@ namespace HyprWinUI3.ViewModels {
 		private void AddTab() {
 			// Creating empty editor, then subbing to Open Diagram input.
 			// todo change var to explicit type. Future you will thank you, because it is more readable.
-			var control = new EditorControl() {
-				VerticalAlignment = VerticalAlignment.Stretch,
-				HorizontalAlignment = HorizontalAlignment.Stretch
-			};
 
 			// Adding the empty editor.
-			Tabs.Add(new TabViewItem() {
+			
+
+			var tabViewItem = new TabViewItem() {
 				Header = "New tab",
-				Content = control
-			});
+			};
+			var control = new EditorControl() {
+				VerticalAlignment = VerticalAlignment.Stretch,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				TabViewItem = tabViewItem
+			};
+			tabViewItem.Content = control;
+			Tabs.Add(tabViewItem);
 		}
 
 		private void CloseTab(TabViewTabCloseRequestedEventArgs args) {
@@ -57,13 +61,15 @@ namespace HyprWinUI3.ViewModels {
 					return i;
 				}
 			}
-			Tabs.Add(new TabViewItem() {
+			var tabViewItem = new TabViewItem() {
 				Header = editor.Model.Name ?? "Editor",
-				Content = new EditorControl(editor) {
-					VerticalAlignment = VerticalAlignment.Stretch,
-					HorizontalAlignment = HorizontalAlignment.Stretch
-				}
-			});
+			};
+			var control = new EditorControl(editor, tabViewItem) {
+				VerticalAlignment = VerticalAlignment.Stretch,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+			};
+			tabViewItem.Content = control;
+			Tabs.Add(tabViewItem);
 			return Tabs.Count - 1;
 		}
 
