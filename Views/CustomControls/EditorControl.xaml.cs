@@ -34,23 +34,18 @@ namespace HyprWinUI3.Views.CustomControls {
 		// todo add a strategy dependency injection onto this method
 		public ICommand CreateEditorCommand => _createEditorCommand ?? (_createEditorCommand = new RelayCommand(CreateEditor));
 
-		public event Action<EditorApp, EditorControl> OpenEditorEvent;
-
-		public EditorViewModel ViewModel { get; set; }
+		public EditorViewModel ViewModel { get; set; } = new EditorViewModel();
 		public EditorApp CurrentEditor { get; set; }
 		public VariableSizedWrapGrid Grid { get => grid; }
 		public EditorControl() {
 			this.InitializeComponent();
-			ViewModel = new EditorViewModel();
 			ProjectService.ProjectChangedEvent += RefreshItems;
 			RefreshItems();
 		}
 
-		public EditorControl(EditorApps.EditorApp editor) {
+		public EditorControl(EditorApp editor) {
 			this.InitializeComponent();
-			ViewModel = new EditorViewModel();
-			CurrentEditor = editor;
-			LoadEditor();
+			LoadEditor(editor);
 		}
 
 		/// <summary>
@@ -59,12 +54,18 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// <param name="diagram">Diagram to display.</param>
 		public void LoadEditor() {
 			// An empty Grid is a sign of loaded Editor.
+			if (CurrentEditor == null) {
+				throw new NullReferenceException("Editor cannot load in because it was null.");
+			}
 			Grid?.Children.Clear();
-			CurrentEditor?.InitializeView();
+			CurrentEditor?.RefreshView();
 			Content = CurrentEditor?.View;
 		}
 
 		public void LoadEditor(EditorApp editor) {
+			if (editor == null) {
+				throw new ArgumentNullException();
+			}
 			CurrentEditor = editor;
 			LoadEditor();
 		}
@@ -96,13 +97,9 @@ namespace HyprWinUI3.Views.CustomControls {
 
 		private async void CreateEditor() {
 			var editor = await FilesystemService.CreateActor();
-			if (editor == null) {
-				return;
+			if (editor != null) {
+				LoadEditor(editor);
 			}
-			// todo add different editors (like diagram editors) to project somehow somewhere
-
-			// saying, HEY, I WANNA OPEN AN EDITOR
-			OpenEditorEvent?.Invoke(editor, this);
 		}
 	}
 }

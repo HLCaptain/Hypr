@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace HyprWinUI3.EditorApps {
 	public abstract class DiagramEditorApp : EditorApp {
-		public override void InitializeView() {
+		public override void RefreshView() {
 			var editorDiagram = new EditorDiagramControl(this);
 			editorDiagram.Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new Button(), null));
 			editorDiagram.Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new Button(), null));

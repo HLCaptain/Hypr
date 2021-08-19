@@ -12,35 +12,24 @@ using Windows.Storage;
 namespace HyprWinUI3.Factories {
 	class EditorAppFactory {
 		public static async Task<EditorApp> CreateEditorFromFile(StorageFile file) {
-			if (!Constants.Extentions.EditorExtentions.Contains(file.FileType)) {
-				return null;
+			try {
+				var editor = CreateEditor(file.FileType);
+				await editor.LoadData(file);
+				return editor;
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+				return new TextEditorApp();
 			}
-			foreach (var extention in Constants.Extentions.EditorExtentions) {
-				if (extention == file.FileType) {
-					try {
-						string data = await FileIO.ReadTextAsync(file);
-						var editor = CreateEditor(extention);
-						editor.LoadData(data);
-						return editor;
-					} catch (Exception e) {
-						InfoService.DisplayError(e.Message);
-					}
-				}
-			}
-			return null;
 		}
 		public static EditorApp CreateEditor(string extention) {
-			if (!Constants.Extentions.EditorExtentions.Contains(extention)) {
-				return null;
-			}
 			try {
 				Type editorType = Constants.Extentions.ExtentionAppTypes[extention];
 				var editor = (EditorApp)Activator.CreateInstance(editorType);
 				return editor;
 			} catch (Exception e) {
-				InfoService.DisplayError(e.Message);
+				InfoService.DisplayError(e.Message + $"\nEditor cannot find proper Editor Application to open the file with the extention \"{extention}\".\nDefaulting to Text Editor.");
+				return new TextEditorApp();
 			}
-			return null;
 		}
 	}
 }

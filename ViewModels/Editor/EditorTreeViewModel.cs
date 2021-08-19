@@ -140,7 +140,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 			try {
 				var file = item.Content as StorageFile;
 				// todo generalize it
-				ProjectService.OpenEditor(await Factories.EditorAppFactory.CreateEditorFromFile(file));
+				ProjectService.OpenEditor(file);
 			} catch (Exception exception) {
 				InfoService.DisplayInfoBar(exception.Message, Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
 			}

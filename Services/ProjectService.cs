@@ -29,6 +29,7 @@ namespace HyprWinUI3.Services {
 		public static event Action RootFolderChangedEvent;
 
 		public static event Action<EditorApp> OpenEditorEvent;
+		public static event Action<StorageFile> OpenEditorFileEvent;
 
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
@@ -146,7 +147,7 @@ namespace HyprWinUI3.Services {
 				// we finish making changes and call CompleteUpdatesAsync.
 				CachedFileManager.DeferUpdates(file);
 				// write to file
-				await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(CurrentProject));
+				await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(CurrentProject, new JsonSerializerOptions() { WriteIndented = true }));
 				// Let Windows know that we're finished changing the file so
 				// the other app can update the remote version of the file.
 				// Completing updates may require Windows to ask for user input.
@@ -177,7 +178,7 @@ namespace HyprWinUI3.Services {
 			// we finish making changes and call CompleteUpdatesAsync.
 			CachedFileManager.DeferUpdates(ProjectFile);
 			// write to file
-			await FileIO.WriteTextAsync(ProjectFile, JsonSerializer.Serialize(CurrentProject));
+			await FileIO.WriteTextAsync(ProjectFile, JsonSerializer.Serialize(CurrentProject, new JsonSerializerOptions() { WriteIndented = true }));
 
 			// Saving ends
 			FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(ProjectFile);
@@ -191,6 +192,11 @@ namespace HyprWinUI3.Services {
 
 		public static void OpenEditor(EditorApp editor) {
 			OpenEditorEvent?.Invoke(editor);
+		}
+
+		public static void OpenEditor(StorageFile file) {
+			OpenEditorFileEvent?.Invoke(file);
+			//await Factories.EditorAppFactory.CreateEditorFromFile(file)
 		}
 	}
 }

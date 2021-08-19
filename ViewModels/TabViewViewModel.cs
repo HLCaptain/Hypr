@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using HyprWinUI3.EditorApps;
-using HyprWinUI3.Helpers;
-using HyprWinUI3.Models;
-using HyprWinUI3.Models.Diagrams;
+using HyprWinUI3.Factories;
 using HyprWinUI3.Services;
-using HyprWinUI3.Views;
 using HyprWinUI3.Views.CustomControls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace HyprWinUI3.ViewModels {
 	public class TabViewViewModel : ObservableObject {
 		private RelayCommand _addTabCommand;
-		private RelayCommand<WinUI.TabViewTabCloseRequestedEventArgs> _closeTabCommand;
+		private RelayCommand<TabViewTabCloseRequestedEventArgs> _closeTabCommand;
 
 		public RelayCommand AddTabCommand => _addTabCommand ?? (_addTabCommand = new RelayCommand(AddTab));
 
-		public RelayCommand<WinUI.TabViewTabCloseRequestedEventArgs> CloseTabCommand => _closeTabCommand ?? (_closeTabCommand = new RelayCommand<WinUI.TabViewTabCloseRequestedEventArgs>(CloseTab));
+		public RelayCommand<TabViewTabCloseRequestedEventArgs> CloseTabCommand => _closeTabCommand ?? (_closeTabCommand = new RelayCommand<TabViewTabCloseRequestedEventArgs>(CloseTab));
 
 		public ObservableCollection<TabViewItem> Tabs { get; } = new ObservableCollection<TabViewItem>();
 		public HorizontalAlignment HorizontalAlignment { get; private set; }
@@ -39,7 +33,6 @@ namespace HyprWinUI3.ViewModels {
 				VerticalAlignment = VerticalAlignment.Stretch,
 				HorizontalAlignment = HorizontalAlignment.Stretch
 			};
-			control.OpenEditorEvent += (editor, editorControl) => OpenEditor(editor, editorControl);
 
 			// Adding the empty editor.
 			Tabs.Add(new TabViewItem() {
@@ -48,7 +41,7 @@ namespace HyprWinUI3.ViewModels {
 			});
 		}
 
-		private void CloseTab(WinUI.TabViewTabCloseRequestedEventArgs args) {
+		private void CloseTab(TabViewTabCloseRequestedEventArgs args) {
 			if (args.Item is TabViewItem item) {
 				Tabs.Remove(item);
 			}
@@ -60,10 +53,7 @@ namespace HyprWinUI3.ViewModels {
 			}
 
 			for (int i = 0; i < Tabs.Count; i++) {
-				if (((EditorControl)Tabs[i].Content).CurrentEditor == null) {
-					continue;
-				}
-				if ((((EditorControl)Tabs[i].Content).CurrentEditor.Model.Uid ?? "") == editor.Model.Uid) {
+				if (((EditorControl)Tabs[i].Content).CurrentEditor?.Model?.Uid.Equals(editor.Model.Uid) ?? false) {
 					return i;
 				}
 			}
@@ -93,6 +83,17 @@ namespace HyprWinUI3.ViewModels {
 				}
 			}
 			return -1;
+		}
+
+		public async Task<int> OpenEditor(StorageFile file) {
+			var editor = await EditorAppFactory.CreateEditorFromFile(file);
+			foreach (var item in Tabs) {
+				var itemEditor = ((EditorControl)item.Content).CurrentEditor;
+				if (itemEditor?.Model == editor.Model) {
+					return OpenEditor(itemEditor);
+				}
+			}
+			return OpenEditor(editor);
 		}
 	}
 }

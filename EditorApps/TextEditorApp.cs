@@ -15,15 +15,29 @@ namespace HyprWinUI3.EditorApps {
 		public TextEditorApp() {
 			Model = new Note();
 		}
-		public override void InitializeView() {
-			var richEditBox = new RichEditBox();
-			richEditBox.TextDocument.SetText(Windows.UI.Text.TextSetOptions.None, ((Note)Model).Text);
-			View = richEditBox;
+
+		public override void RefreshView() {
+			if (View is RichEditBox) {
+				((RichEditBox)View)?.TextDocument.SetText(Windows.UI.Text.TextSetOptions.None, ((Note)Model).Text);
+			} else {
+				var richEditBox = new RichEditBox();
+				richEditBox.TextDocument.SetText(Windows.UI.Text.TextSetOptions.None, ((Note)Model).Text);
+				View = richEditBox;
+			}
 		}
 
 		public override bool LoadData(string data) {
 			try {
-				Model = JsonSerializer.Deserialize<Note>(data);
+				var dataModel = JsonSerializer.Deserialize<Note>(data);
+				if (!IsNote(data)) {
+					((Note)Model).Text = data;
+				} else {
+					Model = dataModel;
+				}
+				Model.Uid = dataModel.Uid;
+
+				// If view is loaded, update text
+				RefreshView();
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
 				return false;
@@ -31,8 +45,9 @@ namespace HyprWinUI3.EditorApps {
 			return true;
 		}
 
-		public override bool SaveData(StorageFolder folder) {
-			throw new NotImplementedException();
+		private bool IsNote(string data) {
+			var dataModel = JsonSerializer.Deserialize<Note>(data);
+			return JsonSerializer.Serialize<Note>(dataModel).Equals(data);
 		}
 	}
 }

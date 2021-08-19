@@ -114,7 +114,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private async void AddDiagram(object sender, RoutedEventArgs e) {
+		private async void AddFile(object sender, RoutedEventArgs e) {
 			var item = (sender as MenuFlyoutItem).DataContext as TreeItem;
 			var node = FindNode(item);
 			// todo make this return async and make the whole method async

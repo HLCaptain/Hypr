@@ -59,7 +59,7 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.ContextFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Click="AddDiagram" Text="Add Diagram" />
+                            <MenuFlyoutItem Click="AddFile" Text="Add File" />
                             <MenuFlyoutItem Click="RenameItem" Text="Rename" />
                             <MenuFlyoutItem Click="DeleteItem" Text="Delete" />
                         </MenuFlyout>

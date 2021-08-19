@@ -3,6 +3,7 @@ using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
 using HyprWinUI3.ViewModels;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -22,10 +23,19 @@ namespace HyprWinUI3.Views
 			ViewModel = new TabViewViewModel();
 			treeView.TabViewViewModel = ViewModel;
 			ProjectService.OpenEditorEvent += (editor) => OpenEditor(editor);
+			ProjectService.OpenEditorFileEvent += (file) => OpenEditor(file);
 		}
 
 		private void OpenEditor(EditorApp editor) {
 			int index = ViewModel.OpenEditor(editor);
+			try {
+				tabView.SelectedIndex = index;
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+			}
+		}
+		private async void OpenEditor(StorageFile file) {
+			int index = await ViewModel.OpenEditor(file);
 			try {
 				tabView.SelectedIndex = index;
 			} catch (Exception e) {

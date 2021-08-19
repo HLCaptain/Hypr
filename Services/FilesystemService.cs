@@ -75,7 +75,7 @@ namespace HyprWinUI3.Services {
 					var editor = EditorAppFactory.CreateEditor((string)fileTypes.SelectedItem);
 					editor.Model.Name = textBox.Text == "" ? editor.Model.Uid : textBox.Text;
 					var file = await folder.CreateFileAsync(editor.Model.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
-					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(editor.Model));
+					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(editor.Model, new JsonSerializerOptions() { WriteIndented = true }));
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					EditorCreated?.Invoke(editor);
 					editor.Model.File = file;

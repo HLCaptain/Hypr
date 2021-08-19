@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Services;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,8 +14,32 @@ namespace HyprWinUI3.EditorApps {
 		// model representation
 		public Actor Model { get; protected set; }
 		public UIElement View { get; set; } = new TextBox() { Text = "Editor not initialized" };
-		public abstract void InitializeView();
+		public abstract void RefreshView();
 		public abstract bool LoadData(string data);
-		public abstract bool SaveData(StorageFolder folder);
+		public virtual async Task<bool> LoadData(StorageFile file) {
+			try {
+				string data = await FileIO.ReadTextAsync(file);
+				LoadData(data);
+				Model.File = file;
+				Model.Name = file.Name;
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+				return false;
+			}
+			return true;
+		}
+		public virtual bool SaveData(StorageFolder folder) {
+			try {
+				if (Model.File == null) {
+					// save model as a new file somewhere
+				} else {
+					// save model's info the its file
+				}
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+				return false;
+			}
+			return true;
+		}
 	}
 }
