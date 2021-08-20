@@ -10,17 +10,19 @@
     <Grid>
         <TextBox
             x:Name="textBox"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             LostFocus="textBox_LostFocus"
             Text="textBox"
-            TextAlignment="Center" />
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
         <TextBlock
             x:Name="textBlock"
-            HorizontalAlignment="Stretch"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             DoubleTapped="textBlock_DoubleTapped"
             Text="textBlock"
-            TextAlignment="Center" />
-
+            TextAlignment="Center"
+            TextWrapping="Wrap" />
     </Grid>
 </UserControl>

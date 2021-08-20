@@ -12,25 +12,28 @@
     <Grid PointerMoved="Grid_PointerMoved">
         <Rectangle
             Fill="{ThemeResource SystemControlBaseLowAcrylicWindowBrush}"
+            PointerExited="EditorTextboxControl_PointerExited"
             PointerPressed="EditorTextboxControl_PointerPressed"
             PointerReleased="EditorTextboxControl_PointerReleased"
             RadiusX="8"
-            RadiusY="8" PointerExited="EditorTextboxControl_PointerExited" />
+            RadiusY="8" />
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="48" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="48" MinHeight="48" />
+                <RowDefinition MinHeight="64" />
 
             </Grid.RowDefinitions>
             <local:EditorTextboxControl
                 x:Name="tbName"
                 Grid.Row="0"
-                Margin="20,0,20,0"
+                MaxWidth="240"
+                Margin="20,5,20,5"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch" />
             <local:EditorTextboxControl
                 x:Name="tbText"
                 Grid.Row="1"
+                MaxWidth="240"
                 Margin="20,10,20,10"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch" />

@@ -28,6 +28,8 @@ namespace HyprWinUI3.Views.CustomControls {
 			this.InitializeComponent();
 			Canvas.SetTop(this, 400);
 			Canvas.SetLeft(this, 400);
+			tbText.TextBox.TextAlignment = TextAlignment.Left;
+			tbText.TextBlock.TextAlignment = TextAlignment.Left;
 		}
 
 		private void EditorTextboxControl_PointerPressed(object sender, PointerRoutedEventArgs e) {
