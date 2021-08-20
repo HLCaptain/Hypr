@@ -146,6 +146,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\CommandProcessor.cs" />
+    <Compile Include="Commands\EditorInteractions\AddNoteCommand.cs" />
+    <Compile Include="Commands\EditorInteractions\EditorInteractionBase.cs" />
     <Compile Include="EditorApps\ClassDiagramEditorApp.cs" />
     <Compile Include="EditorApps\DiagramEditorApp.cs" />
     <Compile Include="EditorApps\EditorApp.cs" />
@@ -215,11 +219,17 @@
     <Compile Include="Views\CustomControls\EditorDiagramControl.xaml.cs">
       <DependentUpon>EditorDiagramControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CustomControls\EditorTextboxControl.xaml.cs">
+      <DependentUpon>EditorTextboxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomControls\EditorTreeControl.xaml.cs">
       <DependentUpon>EditorTreeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\InteractButton.xaml.cs">
       <DependentUpon>InteractButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomControls\NoteView.xaml.cs">
+      <DependentUpon>NoteView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\ToolbarControl.xaml.cs">
       <DependentUpon>ToolbarControl.xaml</DependentUpon>
@@ -283,11 +293,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CustomControls\EditorTextboxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CustomControls\EditorTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\InteractButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\NoteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,20 +17,27 @@
             HorizontalScrollBarVisibility="Auto"
             HorizontalScrollMode="Enabled"
             IsTabStop="True"
-            IsVerticalScrollChainingEnabled="True"
             MaxZoomFactor="1"
             MinZoomFactor="0.1"
             VerticalScrollBarVisibility="Auto"
             VerticalScrollMode="Enabled"
             ViewChanged="scrollViewer_ViewChanged"
             ZoomMode="Enabled">
-            <canvas:CanvasVirtualControl
-                x:Name="canvas"
-                Width="10000"
-                Height="10000"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                RegionsInvalidated="Canvas_RegionsInvalidated" />
+            <Grid>
+                <canvas:CanvasVirtualControl
+                    x:Name="bgCanvas"
+                    Width="10000"
+                    Height="10000"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    RegionsInvalidated="Canvas_RegionsInvalidated" />
+                <Canvas
+                    x:Name="fgCanvas"
+                    Width="10000"
+                    Height="10000"
+                    Background="Transparent" />
+            </Grid>
+
         </ScrollViewer>
     </Grid>
 </UserControl>

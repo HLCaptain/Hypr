@@ -25,6 +25,7 @@ namespace HyprWinUI3.Services {
 		/// Fires when a new Editor is created. arg1 is the new Editor.
 		/// </summary>
 		public static event Action<EditorApp> EditorCreated;
+		public static event Action<Actor> ActorCreated;
 
 		/// <summary>
 		/// Event when fires when a StorageItem is renamed. arg1 is the old file's name, arg2 is the new file.
@@ -77,8 +78,9 @@ namespace HyprWinUI3.Services {
 					var file = await folder.CreateFileAsync(editor.Model.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
 					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(editor.Model, new JsonSerializerOptions() { WriteIndented = true }));
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-					EditorCreated?.Invoke(editor);
 					editor.Model.File = file;
+					ActorCreated?.Invoke(editor.Model);
+					EditorCreated?.Invoke(editor);
 					return editor;
 				} catch (Exception e) {
 					InfoService.DisplayError(e.Message);
@@ -179,6 +181,16 @@ namespace HyprWinUI3.Services {
 			} else {
 				InfoService.OperationCancelled();
 			}
+		}
+
+		// todo make actor be saved in a custom folder
+		public static async Task SaveActorFile(Actor actor) {
+			if (actor.File == null) {
+				var file = await ProjectService.RootFolder.CreateFileAsync(actor.Name + " - " + actor.Uid);
+				actor.File = file;
+				ActorCreated?.Invoke(actor);
+			}
+			await FileIO.WriteTextAsync(actor.File, JsonSerializer.Serialize(actor, new JsonSerializerOptions() { WriteIndented = true }));
 		}
 	}
 }

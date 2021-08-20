@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using HyprWinUI3.Factories;
 using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
@@ -31,8 +32,8 @@ namespace HyprWinUI3.EditorApps {
 			}
 		}
 
-		public override bool SaveData(StorageFolder folder) {
-			throw new NotImplementedException();
+		public override async Task<bool> SaveData(StorageFolder folder) {
+			return await base.SaveData(folder);
 		}
 	}
 }

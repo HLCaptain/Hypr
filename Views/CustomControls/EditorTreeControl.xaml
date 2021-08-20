@@ -98,6 +98,7 @@
             ZoomMode="Disabled">
             <Custom:TreeView
                 Name="treeView"
+                CanReorderItems="False"
                 Collapsed="treeView_Collapsed"
                 Expanding="treeView_Expanding"
                 ItemInvoked="treeView_ItemInvoked"

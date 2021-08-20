@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.Commands;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Services;
 using Windows.Storage;
@@ -13,7 +15,8 @@ namespace HyprWinUI3.EditorApps {
 	public abstract class EditorApp {
 		// model representation
 		public Actor Model { get; protected set; }
-		public UIElement View { get; set; } = new TextBox() { Text = "Editor not initialized" };
+		public CommandProcessor CommandProcessor { get; } = new CommandProcessor();
+		public UIElement View { get; protected set; } = new TextBox() { Text = "Editor not initialized" };
 		public abstract void RefreshView();
 		public abstract bool LoadData(string data);
 		public virtual async Task<bool> LoadData(StorageFile file) {
@@ -28,12 +31,13 @@ namespace HyprWinUI3.EditorApps {
 			}
 			return true;
 		}
-		public virtual bool SaveData(StorageFolder folder) {
+		public virtual async Task<bool> SaveData(StorageFolder folder) {
 			try {
 				if (Model.File == null) {
 					// save model as a new file somewhere
 				} else {
-					// save model's info the its file
+					// save model's info to its file
+					await FileIO.WriteTextAsync(Model.File, JsonSerializer.Serialize(Model, new JsonSerializerOptions() { WriteIndented = true }));
 				}
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);

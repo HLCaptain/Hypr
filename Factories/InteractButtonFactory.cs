@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HyprWinUI3.Commands;
 using HyprWinUI3.Constants;
 using HyprWinUI3.Services;
 using HyprWinUI3.Views.CustomControls;
@@ -82,14 +83,19 @@ namespace HyprWinUI3.Factories {
 				*/
 		}
 		public static InteractButton MakeInteractButton(FontIcon icon, ButtonBase button, ICommand command) {
-			button.Content = icon ?? new FontIcon() {
+			icon = icon ?? new FontIcon() {
 				FontFamily = new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
 				Glyph = "\xECCD"
 			};
+			icon.FontFamily = icon.FontFamily ?? new Windows.UI.Xaml.Media.FontFamily("Segoe Fluent Icons");
+			if (icon.Glyph == "") {
+				icon.Glyph = "\xECCD";
+			}
 			var interactButton = new InteractButton() {
 				Button = button,
 				Command = command
 			};
+			button.Content = icon;
 			FormatInteractButton(interactButton);
 			return interactButton;
 		}

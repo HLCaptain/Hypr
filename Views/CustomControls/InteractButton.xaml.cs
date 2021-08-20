@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Input;
+using HyprWinUI3.Commands;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Factories;
 using HyprWinUI3.Services;
 using Microsoft.Toolkit.Mvvm.Input;

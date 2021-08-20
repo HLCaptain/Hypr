@@ -34,7 +34,8 @@ namespace HyprWinUI3.Views.CustomControls {
 		public EditorTreeControl() {
 			this.InitializeComponent();
 
-			FilesystemService.EditorCreated += (diagram) => { RefreshTreeNode(treeView.RootNodes[0]); };
+			FilesystemService.ActorCreated += (actor) => { RefreshTreeNode(FindNode(actor.File) ?? treeView.RootNodes[0]); };
+			FilesystemService.ItemRenamed += (name, item) => { RefreshTreeNode(FindNode(item) ?? treeView.RootNodes[0]); };
 
 			// Needed when renaming an item can be done outside of the TreeView.s
 			//FilesystemService.ItemRenamed += () => { RefreshTreeNode(treeView.RootNodes[0]); };
@@ -73,6 +74,27 @@ namespace HyprWinUI3.Views.CustomControls {
 			while (stack.Any()) {
 				var node = stack.Pop();
 				if ((node.Content as TreeItem).Content == item.Content) {
+					return node;
+				}
+				foreach (var child in node.Children) {
+					stack.Push(child);
+				}
+			}
+			return null;
+		}
+
+		private Microsoft.UI.Xaml.Controls.TreeViewNode FindNode(IStorageItem item) {
+			if (treeView.RootNodes[0] == null) {
+				return null;
+			}
+
+			Stack<Microsoft.UI.Xaml.Controls.TreeViewNode> stack = new Stack<Microsoft.UI.Xaml.Controls.TreeViewNode>();
+			stack.Push(treeView.RootNodes[0]);
+
+			// DFS Preorder
+			while (stack.Any()) {
+				var node = stack.Pop();
+				if ((node.Content as TreeItem).Content as IStorageItem == item) {
 					return node;
 				}
 				foreach (var child in node.Children) {
