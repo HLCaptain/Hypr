@@ -17,7 +17,7 @@ namespace HyprWinUI3.Models.Actors {
 		[JsonIgnore]
 		public StorageFile File { get; set; }
 		public Actor() {
-			PropertyChanged += async (sender, args) => await FilesystemService.SaveActorFile(this);
+			
 		}
 	}
 }

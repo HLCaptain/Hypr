@@ -26,6 +26,7 @@ namespace HyprWinUI3.Services {
 		/// </summary>
 		public static event Action<EditorApp> EditorCreated;
 		public static event Action<Actor> ActorCreated;
+		public static event Action<IStorageItem> ItemChanged;
 
 		/// <summary>
 		/// Event when fires when a StorageItem is renamed. arg1 is the old file's name, arg2 is the new file.
@@ -81,6 +82,7 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					editor.Model.File = file;
 					ActorCreated?.Invoke(editor.Model);
+					ItemChanged?.Invoke(editor.Model.File);
 					EditorCreated?.Invoke(editor);
 					return editor;
 				} catch (Exception e) {
@@ -115,14 +117,21 @@ namespace HyprWinUI3.Services {
 			return null;
 		}
 
-		public static async Task<IStorageItem> RenameItem(IStorageItem storageItem, string newName) {
-			string oldName = storageItem.Name;
-			await storageItem.RenameAsync(newName);
-			ItemRenamed?.Invoke(oldName, storageItem);
-			return storageItem;
+		public static async Task<IStorageItem> RenameItem(IStorageItem item, string newName) {
+			try {
+				string oldName = item.Name;
+				var nameParts = item.Name.Split('.').ToList<string>();
+				string extention = nameParts[nameParts.Count - 1];
+				await item.RenameAsync(newName + "." + extention);
+				ItemRenamed?.Invoke(oldName, item);
+				ItemChanged?.Invoke(item);
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+			}
+			return item;
 		}
 
-		public static async Task<IStorageItem> RenameItem(IStorageItem storageItem) {
+		public static async Task<IStorageItem> RenameItem(IStorageItem item) {
 			// ini content of the content dialog
 			StackPanel content = new StackPanel() {
 				Orientation = Orientation.Horizontal,
@@ -139,7 +148,7 @@ namespace HyprWinUI3.Services {
 
 			// ini contentdialog
 			ContentDialog dialog = new ContentDialog();
-			dialog.Title = $"Rename {storageItem.Name}";
+			dialog.Title = $"Rename {item.Name}";
 			dialog.CloseButtonText = "Cancel";
 			dialog.PrimaryButtonText = "Rename item";
 			dialog.Content = content;
@@ -149,33 +158,33 @@ namespace HyprWinUI3.Services {
 			if (result == ContentDialogResult.Primary) {
 				try {
 					string newName = textBox.Text == "" ? Guid.NewGuid().ToString() : textBox.Text;
-					storageItem = await RenameItem(storageItem, textBox.Text);
-					InfoService.DisplayInfoBar($"{storageItem.Name} renamed!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					item = await RenameItem(item, textBox.Text);
+					InfoService.DisplayInfoBar($"{item.Name} renamed!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 				} catch (Exception e) {
 					InfoService.DisplayError(e.Message);
 				}
 			} else {
 				InfoService.OperationCancelled();
 			}
-			return storageItem;
+			return item;
 		}
 
-		public static async Task DeleteItem(IStorageItem storageItem) {
+		public static async Task DeleteItem(IStorageItem item) {
 			// ini content of the content dialog
 
 			// ini contentdialog
 			ContentDialog dialog = new ContentDialog();
-			dialog.Title = $"Delete {storageItem.Name}";
+			dialog.Title = $"Delete {item.Name}";
 			dialog.CloseButtonText = "Cancel";
 			dialog.PrimaryButtonText = "Delete item";
-			dialog.Content = $"Are you sure, you want to delete {storageItem.Name}?";
+			dialog.Content = $"Are you sure, you want to delete {item.Name}?";
 
 			var result = await dialog.ShowAsync();
 
 			if (result == ContentDialogResult.Primary) {
 				try {
-					await storageItem.DeleteAsync();
-					InfoService.DisplayInfoBar($"{storageItem.Name} deleted!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					await item.DeleteAsync();
+					InfoService.DisplayInfoBar($"{item.Name} deleted!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 				} catch (Exception e) {
 					InfoService.DisplayError(e.Message);
 				}
@@ -184,22 +193,42 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
+		private static string GetExtention(Type type) {
+			// find extention for the file
+			string extention = null;
+			foreach (var item in Constants.Extentions.ExtentionActorTypes.Keys) {
+				if (Constants.Extentions.ExtentionActorTypes[item] == type) {
+					extention = item;
+					break;
+				}
+			}
+			return extention;
+		}
+
 		// todo make actor be saved in a custom folder
 		public static async Task SaveActorFile(Actor actor) {
+			string extention = GetExtention(actor.GetType());
+			// if actor doesnt have a file, create one in the root folder
 			if (actor.File == null) {
-				// fint the extention of the actor
-				string extention = null;
-				foreach (var item in Constants.Extentions.ExtentionActorTypes.Keys) {
-					if (Constants.Extentions.ExtentionActorTypes[item] == actor.GetType()) {
-						extention = item;
-						break;
-					}
+				try {
+					var file = await ProjectService.RootFolder.CreateFileAsync(
+						actor.Name + 
+						" - " + 
+						actor.Uid + 
+						extention ?? ".txt");
+					actor.File = file;
+				} catch (Exception e) {
+					InfoService.DisplayError(e.Message);
 				}
-				var file = await ProjectService.RootFolder.CreateFileAsync(actor.Name + " - " + actor.Uid + extention ?? ".txt");
-				actor.File = file;
 				ActorCreated?.Invoke(actor);
 			}
+			// rename actor if needed
+			if (actor.File.DisplayName != actor.Name) {
+				await actor.File.RenameAsync(actor.Name + extention ?? ".txt");
+			}
+			// write new actor data
 			await FileIO.WriteTextAsync(actor.File, JsonSerializer.Serialize(actor, new JsonSerializerOptions() { WriteIndented = true }));
+			ItemChanged?.Invoke(actor.File);
 		}
 	}
 }

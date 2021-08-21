@@ -33,9 +33,7 @@ namespace HyprWinUI3.Views.CustomControls {
 
 		public EditorTreeControl() {
 			this.InitializeComponent();
-
-			FilesystemService.ActorCreated += (actor) => { RefreshTreeNode(FindNode(actor.File) ?? treeView.RootNodes[0]); };
-			FilesystemService.ItemRenamed += (name, item) => { RefreshTreeNode(FindNode(item) ?? treeView.RootNodes[0]); };
+			FilesystemService.ItemChanged += async (item) => { await RefreshTreeNode(FindNode(item) ?? treeView.RootNodes[0]); };
 
 			// Needed when renaming an item can be done outside of the TreeView.s
 			//FilesystemService.ItemRenamed += () => { RefreshTreeNode(treeView.RootNodes[0]); };

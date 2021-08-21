@@ -39,9 +39,17 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 		private async void AddNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 			// create actor
 			var note = new Note();
-			note.Name = "Note name";
+			note.Name = "Note name - " + note.Uid;
 			note.Text = "Note text";
 			await FilesystemService.SaveActorFile(note);
+			// from now on, every modification made to the actor, it saves
+			note.PropertyChanged += async (sender2, args2) => {
+				if (args2.PropertyName == "Name") {
+					await FilesystemService.RenameItem(note.File, note.Name);
+				} else {
+					await FilesystemService.SaveActorFile(note);
+				}
+			};
 			var view = new NoteView(Canvas.ForegroundCanvas, note);
 			ToolTipService.SetToolTip(view, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
 

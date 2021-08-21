@@ -24,7 +24,7 @@ namespace HyprWinUI3.EditorApps {
 				string data = await FileIO.ReadTextAsync(file);
 				LoadData(data);
 				Model.File = file;
-				Model.Name = file.Name;
+				Model.Name = file.DisplayName;
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
 				return false;

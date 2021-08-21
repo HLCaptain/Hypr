@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class NoteView : UserControl {
-		
 		public Canvas Canvas { get; set; }
 		public Note Note { get; set; }
 		public UserControl This { get => this; }
@@ -28,8 +27,21 @@ namespace HyprWinUI3.Views.CustomControls {
 			this.InitializeComponent();
 			Canvas.SetTop(this, 400);
 			Canvas.SetLeft(this, 400);
+			tbName.TextBlock.Text = note.Name;
+			tbText.TextBlock.Text = note.Text;
+			tbName.TextBox.IsEnabledChanged += (sender, args) => {
+				if ((bool)args.NewValue == false) {
+					note.Name = tbName.TextBox.Text;
+				}
+			};
+			tbText.TextBox.IsEnabledChanged += (sender, args) => {
+				if ((bool)args.NewValue == false) {
+					note.Text = tbText.TextBox.Text;
+				}
+			};
 			tbName.TextBox.TextAlignment = TextAlignment.Center;
 			tbName.TextBlock.TextAlignment = TextAlignment.Center;
+			tbText.TextBox.AcceptsReturn = true;
 		}
 	}
 }

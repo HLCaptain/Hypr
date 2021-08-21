@@ -21,8 +21,8 @@ namespace HyprWinUI3.Views
 			await ViewModel.InitializeAsync();
 		}
 
-		private void sizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			ThemeSelectorService.SetSizeAsync((ElementSize)e.AddedItems[0]);
+		private async void sizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			await ThemeSelectorService.SetSizeAsync((ElementSize)e.AddedItems[0]);
 		}
 	}
 }

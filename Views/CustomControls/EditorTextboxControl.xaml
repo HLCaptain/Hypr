@@ -5,11 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:HyprWinUI3.Views.CustomControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    MinWidth="32"
+    MinHeight="16"
     mc:Ignorable="d">
 
     <Grid>
         <TextBox
             x:Name="textBox"
+            MinWidth="32"
+            MinHeight="16"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             LostFocus="textBox_LostFocus"
@@ -17,6 +21,8 @@
             TextWrapping="Wrap" />
         <TextBlock
             x:Name="textBlock"
+            MinWidth="32"
+            MinHeight="16"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             DoubleTapped="textBlock_DoubleTapped"

@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <local:EditorElementBackground Element="{x:Bind This}" />
+        <local:EditorElementBackground Element="{x:Bind This}" Model="{x:Bind Note}" />
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" MinHeight="48" />

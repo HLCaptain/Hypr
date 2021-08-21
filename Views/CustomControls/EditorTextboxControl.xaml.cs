@@ -21,6 +21,7 @@ namespace HyprWinUI3.Views.CustomControls {
 		// textBOX is editable
 		public TextBox TextBox { get => textBox; }
 		public TextBlock TextBlock { get => textBlock; }
+		public event Action<string> TextChanged;
 		public EditorTextboxControl() {
 			this.InitializeComponent();
 			textBox.IsEnabled = false;

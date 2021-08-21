@@ -133,7 +133,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 			item.Content = await FilesystemService.RenameItem(item.Content as IStorageItem);
 			return item;
 		}
-		public async void OpenFile(TreeItem item) {
+		public void OpenFile(TreeItem item) {
 			try {
 				var file = item.Content as StorageFile;
 				// todo generalize it

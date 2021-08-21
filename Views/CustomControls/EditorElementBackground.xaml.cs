@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.Models.Actors;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -29,6 +30,15 @@ namespace HyprWinUI3.Views.CustomControls {
 		public static readonly DependencyProperty ElementProperty =
 			DependencyProperty.Register("Element", typeof(UIElement), typeof(UIElement), new PropertyMetadata(null));
 
+		public Vertex Model {
+			get { return (Vertex)GetValue(ModelProperty); }
+			set { SetValue(ModelProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty ModelProperty =
+			DependencyProperty.Register("Model", typeof(Vertex), typeof(object), new PropertyMetadata(null));
+
 		public EditorElementBackground() {
 			this.InitializeComponent();
 		}
@@ -42,6 +52,9 @@ namespace HyprWinUI3.Views.CustomControls {
 			if (isDragged) {
 				Canvas.SetLeft(Element, Canvas.GetLeft(Element) + e.GetCurrentPoint(Element).Position.X - grabPosition.X);
 				Canvas.SetTop(Element, Canvas.GetTop(Element) + e.GetCurrentPoint(Element).Position.Y - grabPosition.Y);
+			}
+			if (Model != null) {
+				Model.Position = e.GetCurrentPoint(Element).Position;
 			}
 			isDragged = false;
 		}

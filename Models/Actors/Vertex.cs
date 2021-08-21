@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Windows.Foundation;
 using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Actors {
     public abstract class Vertex : Element {
-        public Point Position { get; set; }
+        [JsonIgnore]
+        private Point position;
+        public Point Position { get => position; set => SetProperty<Point>(ref position, value); }
     }
 }
