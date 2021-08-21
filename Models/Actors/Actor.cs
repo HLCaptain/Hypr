@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using HyprWinUI3.Services;
 using HyprWinUI3.Strategies;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Windows.Storage;
@@ -15,5 +16,8 @@ namespace HyprWinUI3.Models.Actors {
 	public abstract class Actor : Entity {
 		[JsonIgnore]
 		public StorageFile File { get; set; }
+		public Actor() {
+			PropertyChanged += async (sender, args) => await FilesystemService.SaveActorFile(this);
+		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Services;
 using HyprWinUI3.Views.CustomControls;
@@ -12,10 +13,9 @@ using Windows.UI.Xaml.Input;
 
 namespace HyprWinUI3.Commands.EditorInteractions {
 	public class AddNoteCommand : EditorInteractionBase {
-		public Stack<UIElement> Elements { get; set; } = new Stack<UIElement>();
-		public AddNoteCommand(EditorCanvasControl canvas, CommandProcessor commandProcessor) {
-			Canvas = canvas;
-			CommandProcessor = commandProcessor;
+		public Stack<NoteView> Elements { get; set; } = new Stack<NoteView>();
+		public AddNoteCommand(EditorApp editor) {
+			Editor = editor;
 			Initialize();
 		}
 
@@ -31,16 +31,27 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 		}
 
 		private void RemoveNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-			Canvas.ForegroundCanvas.Children.Remove(Elements.Pop());
+			var element = Elements.Pop();
+			Canvas.ForegroundCanvas.Children.Remove(element);
+			Model.Elements.Remove(element.Note);
 		}
 
 		private async void AddNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+			// create actor
 			var note = new Note();
+			note.Name = "Note name";
+			note.Text = "Note text";
 			await FilesystemService.SaveActorFile(note);
 			var view = new NoteView(Canvas.ForegroundCanvas, note);
 			ToolTipService.SetToolTip(view, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
+
+			// add actor to places
 			Canvas.ForegroundCanvas.Children.Add(view);
 			Elements.Push(view);
+			Model.Elements.Add(note);
+
+			// save
+			await FilesystemService.SaveActorFile(Model);
 		}
 	}
 }

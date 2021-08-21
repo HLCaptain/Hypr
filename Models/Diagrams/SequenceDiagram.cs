@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HyprWinUI3.Models.Actors {
-	public class Note : Vertex {
-		public string Text { get; set; } = "";
+namespace HyprWinUI3.Models.Diagrams {
+	public class SequenceDiagram : Diagram {
 	}
 }

@@ -174,6 +174,7 @@
     <Compile Include="Models\Diagrams\ClassDiagram.cs" />
     <Compile Include="Models\Diagrams\Diagram.cs" />
     <Compile Include="Models\Diagrams\Project.cs" />
+    <Compile Include="Models\Diagrams\SequenceDiagram.cs" />
     <Compile Include="Models\Diagrams\UseCaseDiagram.cs" />
     <Compile Include="Models\DragAndDrop\DragDropCompletedData.cs" />
     <Compile Include="Models\DragAndDrop\DragDropData.cs" />
@@ -218,6 +219,9 @@
     </Compile>
     <Compile Include="Views\CustomControls\EditorDiagramControl.xaml.cs">
       <DependentUpon>EditorDiagramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomControls\EditorElementBackground.xaml.cs">
+      <DependentUpon>EditorElementBackground.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\EditorTextboxControl.xaml.cs">
       <DependentUpon>EditorTextboxControl.xaml</DependentUpon>
@@ -277,6 +281,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\CustomControls\ClassElementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -290,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\EditorDiagramControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\EditorElementBackground.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

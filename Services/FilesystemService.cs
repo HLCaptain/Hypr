@@ -62,6 +62,7 @@ namespace HyprWinUI3.Services {
 			content.Children.Add(fileTypes);
 
 			// ini contentdialog
+			// todo use a custom content dialog (kind of like a usercontrol) instead
 			ContentDialog dialog = new ContentDialog();
 			dialog.Title = "Create new file";
 			dialog.CloseButtonText = "Cancel";
@@ -186,7 +187,15 @@ namespace HyprWinUI3.Services {
 		// todo make actor be saved in a custom folder
 		public static async Task SaveActorFile(Actor actor) {
 			if (actor.File == null) {
-				var file = await ProjectService.RootFolder.CreateFileAsync(actor.Name + " - " + actor.Uid);
+				// fint the extention of the actor
+				string extention = null;
+				foreach (var item in Constants.Extentions.ExtentionActorTypes.Keys) {
+					if (Constants.Extentions.ExtentionActorTypes[item] == actor.GetType()) {
+						extention = item;
+						break;
+					}
+				}
+				var file = await ProjectService.RootFolder.CreateFileAsync(actor.Name + " - " + actor.Uid + extention ?? ".txt");
 				actor.File = file;
 				ActorCreated?.Invoke(actor);
 			}

@@ -14,7 +14,6 @@
             VerticalAlignment="Center"
             LostFocus="textBox_LostFocus"
             Text="textBox"
-            TextAlignment="Center"
             TextWrapping="Wrap" />
         <TextBlock
             x:Name="textBlock"
@@ -22,7 +21,6 @@
             VerticalAlignment="Center"
             DoubleTapped="textBlock_DoubleTapped"
             Text="textBlock"
-            TextAlignment="Center"
             TextWrapping="Wrap" />
     </Grid>
 </UserControl>

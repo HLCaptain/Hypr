@@ -13,6 +13,7 @@ namespace HyprWinUI3.Constants {
 		public static string SequentialDiagramExtention { get; } = ".hysq"; // Sequential diagram
 		public static string UseCaseDiagramExtention { get; } = ".hyuc"; // Use case diagram
 		public static string TextExtention { get; } = ".txt"; // Text editor
+		public static string NoteExtention { get; } = ".hynote";
 
 		public static List<string> DiagramExtentions { get; } = new List<string>() {
 			ClassDiagramExtention,
@@ -24,7 +25,8 @@ namespace HyprWinUI3.Constants {
 			ClassDiagramExtention,
 			SequentialDiagramExtention,
 			UseCaseDiagramExtention,
-			TextExtention
+			TextExtention,
+			NoteExtention
 		};
 
 		public static string ClassElementExtention { get; } = ".hyclass"; // Class element
@@ -32,6 +34,7 @@ namespace HyprWinUI3.Constants {
 		public static List<string> ElementExtentions { get; } = new List<string>() {
 			ClassElementExtention,
 			EdgeElementExtention,
+			NoteExtention
 		};
 
 		public static Dictionary<string, Type> ExtentionAppTypes { get; } = new Dictionary<string, Type>() {
@@ -40,12 +43,17 @@ namespace HyprWinUI3.Constants {
 			{ UseCaseDiagramExtention, typeof(UseCaseDiagramEditorApp) },
 			{ ClassElementExtention, null }, // todo change to TextEditorViewer
 			{ EdgeElementExtention, null }, // todo change to TextEditorViewer
-			{ TextExtention, typeof(TextEditorApp) }
+			{ TextExtention, typeof(TextEditorApp) },
+			{ NoteExtention, typeof(TextEditorApp) }
 		};
 
-		public static Dictionary<string, Type> ExtentionModelTypes { get; } = new Dictionary<string, Type>() {
+		public static Dictionary<string, Type> ExtentionActorTypes { get; } = new Dictionary<string, Type>() {
 			{ ClassElementExtention, typeof(ClassElement) },
 			{ EdgeElementExtention, typeof(Edge) },
+			{ NoteExtention, typeof(Note) },
+			{ ClassDiagramExtention, typeof(ClassDiagram) },
+			{ SequentialDiagramExtention, typeof(SequenceDiagram) },
+			{ UseCaseDiagramExtention, typeof(UseCaseDiagram) },
 		};
 	}
 }

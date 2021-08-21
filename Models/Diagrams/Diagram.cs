@@ -7,7 +7,7 @@ using HyprWinUI3.Models.Actors;
 
 namespace HyprWinUI3.Models.Diagrams {
 	public abstract class Diagram : Actor {
-		public List<Element> Elements { get; set; }
+		public List<Element> Elements { get; set; } = new List<Element>();
 
 		public Diagram() {
 		}
