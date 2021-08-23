@@ -15,6 +15,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.EditorApps;
+using Windows.Storage.Provider;
+using HyprWinUI3.Core.Helpers;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace HyprWinUI3.Services {
 	/// <summary>
@@ -25,7 +29,7 @@ namespace HyprWinUI3.Services {
 		/// Fires when a new Editor is created. arg1 is the new Editor.
 		/// </summary>
 		public static event Action<EditorApp> EditorCreated;
-		public static event Action<Actor> ActorCreated;
+		public static event Action<Element> ElementCreated;
 		public static event Action<IStorageItem> ItemChanged;
 
 		/// <summary>
@@ -78,10 +82,10 @@ namespace HyprWinUI3.Services {
 					var editor = EditorAppFactory.CreateEditor((string)fileTypes.SelectedItem);
 					editor.Model.Name = textBox.Text == "" ? editor.Model.Uid : textBox.Text;
 					var file = await folder.CreateFileAsync(editor.Model.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
-					await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(editor.Model, new JsonSerializerOptions() { WriteIndented = true }));
+					await SaveJsonFile(file, editor.Model);
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
+					AddRelativePathToList(ProjectService.RootFolder, file, ProjectService.CurrentProject.Diagrams);
 					editor.Model.File = file;
-					ActorCreated?.Invoke(editor.Model);
 					ItemChanged?.Invoke(editor.Model.File);
 					EditorCreated?.Invoke(editor);
 					return editor;
@@ -108,7 +112,7 @@ namespace HyprWinUI3.Services {
 
 			if (folder != null) {
 				// todo if in subfolder of the project's rootfolder
-				if (ProjectService.IsInProjectSubfolder(folder)) {
+				if (folder.Path.StartsWith(ProjectService.RootFolder.Path)) {
 					return await CreateActor(folder, new EditorExtentionFiller());
 				} else {
 					InfoService.DisplayError("File is not in project folder");
@@ -193,7 +197,7 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
-		private static string GetExtention(Type type) {
+		private static string GetActorExtention(Type type) {
 			// find extention for the file
 			string extention = null;
 			foreach (var item in Constants.Extentions.ExtentionActorTypes.Keys) {
@@ -205,30 +209,71 @@ namespace HyprWinUI3.Services {
 			return extention;
 		}
 
-		// todo make actor be saved in a custom folder
-		public static async Task SaveActorFile(Actor actor) {
-			string extention = GetExtention(actor.GetType());
-			// if actor doesnt have a file, create one in the root folder
-			if (actor.File == null) {
-				try {
-					var file = await ProjectService.RootFolder.CreateFileAsync(
-						actor.Name + 
-						" - " + 
-						actor.Uid + 
-						extention ?? ".txt");
-					actor.File = file;
-				} catch (Exception e) {
-					InfoService.DisplayError(e.Message);
-				}
-				ActorCreated?.Invoke(actor);
+		public static async Task<StorageFile> CreateActorFile(Actor actor) {
+			string extention = GetActorExtention(actor.GetType());
+			try {
+				var file = await ProjectService.RootFolder.CreateFileAsync(
+					actor.Name +
+					" - " +
+					actor.Uid +
+					extention ?? ".txt");
+				actor.File = file;
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
 			}
+			return actor.File;
+		}
+		public static async Task<StorageFile> CreateElementFile(Element element, IList<string> elements) {
+			await CreateActorFile(element);
+			AddRelativePathToList(ProjectService.RootFolder, element.File, elements);
+			ElementCreated?.Invoke(element);
+			return element.File;
+		}
+
+		public static async Task SaveActorFile(Actor actor) {
 			// rename actor if needed
 			if (actor.File.DisplayName != actor.Name) {
-				await actor.File.RenameAsync(actor.Name + extention ?? ".txt");
+				await RenameItem(actor.File, actor.Name);
 			}
 			// write new actor data
-			await FileIO.WriteTextAsync(actor.File, JsonSerializer.Serialize(actor, new JsonSerializerOptions() { WriteIndented = true }));
-			ItemChanged?.Invoke(actor.File);
+			await SaveJsonFile(actor.File, actor);
+		}
+
+		private static async Task<FileUpdateStatus> SaveFile(IStorageFile file, string data) {
+			CachedFileManager.DeferUpdates(file);
+			await FileIO.WriteTextAsync(file, data);
+			return await CachedFileManager.CompleteUpdatesAsync(file);
+		}
+
+		private static async Task<FileUpdateStatus> SaveJsonFile(IStorageFile file, object data) {
+			return await SaveFile(file, JsonConvert.SerializeObject(data, Formatting.Indented));
+		}
+
+		// todo renaming paths in project file's pathlist when folder is renamed
+
+		/// <summary>
+		/// Adds a reference path to a list.
+		/// </summary>
+		/// <param name="file">We add the relative path of this file. Has to be in the same folder or in subfolders as the Project.</param>
+		/// <param name="list">The list related to the project to add the relative path to.</param>
+		public static void AddRelativePathToList(StorageFolder root, IStorageItem file, IList<string> list) {
+			try {
+				if (!list.Contains(RelativePathFromFolder(root, file))) {
+					if (file.Path.StartsWith(root.Path)) {
+						list.Add(RelativePathFromFolder(root, file));
+					} else {
+						InfoService.DisplayError($"Cannot add {file.Name} to the list, because {file.Name} is not in the same folder as {root.Name}!");
+					}
+				} else {
+					InfoService.DisplayError($"Cannot add {file.Name} to the list, because {file.Name} is already in it!");
+				}
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+			}
+		}
+
+		public static string RelativePathFromFolder(StorageFolder root, IStorageItem item) {
+			return Path.GetRelativePath(root.Path, item.Path);
 		}
 	}
 }
