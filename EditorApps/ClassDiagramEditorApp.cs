@@ -13,15 +13,6 @@ namespace HyprWinUI3.EditorApps {
 		public ClassDiagramEditorApp() {
 			Model = new ClassDiagram();
 		}
-		public override void RefreshView() {
-			// Initialize EditorDiagramControl
-			base.RefreshView();
-
-			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
-			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
-			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
-		}
-
 		public override bool LoadData(string data) {
 			try {
 				Model = JsonSerializer.Deserialize<ClassDiagram>(data);
@@ -31,9 +22,12 @@ namespace HyprWinUI3.EditorApps {
 				return false;
 			}
 		}
-
-		public override async Task<bool> SaveData(StorageFolder folder) {
-			return await base.SaveData(folder);
+		public override void RefreshView() {
+			// Initialize EditorDiagramControl
+			base.RefreshView();
+			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
+			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
+			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
 		}
 	}
 }

@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using HyprWinUI3.Commands;
 using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -37,7 +38,7 @@ namespace HyprWinUI3.EditorApps {
 					// save model as a new file somewhere
 				} else {
 					// save model's info to its file
-					await FileIO.WriteTextAsync(Model.File, JsonSerializer.Serialize(Model, new JsonSerializerOptions() { WriteIndented = true }));
+					await FilesystemService.SaveActorFile(Model);
 				}
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);

@@ -33,7 +33,8 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 		private void RemoveNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 			var element = Elements.Pop();
 			Canvas.ForegroundCanvas.Children.Remove(element);
-			Model.Elements.Remove(element.Note);
+			string relativePath = FilesystemService.RelativePathFromFolder(ProjectService.RootFolder, element.Note.File);
+			Model.Elements.Remove(relativePath);
 		}
 
 		private async void AddNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
@@ -41,25 +42,15 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 			var note = new Note();
 			note.Name = "Note name - " + note.Uid;
 			note.Text = "Note text";
-			await FilesystemService.SaveActorFile(note);
-			// from now on, every modification made to the actor, it saves
-			note.PropertyChanged += async (sender2, args2) => {
-				if (args2.PropertyName == "Name") {
-					await FilesystemService.RenameItem(note.File, note.Name);
-				} else {
-					await FilesystemService.SaveActorFile(note);
-				}
-			};
+			await FilesystemService.CreateElementFile(note, Model.Elements);
 			var view = new NoteView(Canvas.ForegroundCanvas, note);
-			ToolTipService.SetToolTip(view, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
-
+			
 			// add actor to places
 			Canvas.ForegroundCanvas.Children.Add(view);
 			Elements.Push(view);
-			Model.Elements.Add(note);
 
 			// save
-			await FilesystemService.SaveActorFile(Model);
+			await FilesystemService.SaveActorFile(note);
 		}
 	}
 }

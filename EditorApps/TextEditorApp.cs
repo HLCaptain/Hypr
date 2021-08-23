@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.Core.Helpers;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Services;
 using Windows.Storage;
@@ -26,7 +27,7 @@ namespace HyprWinUI3.EditorApps {
 			}
 		}
 
-		public override bool LoadData(string data) {
+		public override async Task<bool> LoadData(string data) {
 			try {
 				var dataModel = JsonSerializer.Deserialize<Note>(data);
 				if (!IsNote(data)) {
@@ -49,7 +50,7 @@ namespace HyprWinUI3.EditorApps {
 		// compares the json parsed data serialized again with the original data
 		private bool IsNote(string data) {
 			var dataModel = JsonSerializer.Deserialize<Note>(data);
-			return JsonSerializer.Serialize<Note>(dataModel).Equals(data);
+			return Newtonsoft.Json.JsonConvert.SerializeObject(dataModel, Newtonsoft.Json.Formatting.Indented).Equals(data);
 		}
 	}
 }
