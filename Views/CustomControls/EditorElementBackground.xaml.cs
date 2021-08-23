@@ -54,7 +54,7 @@ namespace HyprWinUI3.Views.CustomControls {
 				Canvas.SetTop(Element, Canvas.GetTop(Element) + e.GetCurrentPoint(Element).Position.Y - grabPosition.Y);
 			}
 			if (Model != null) {
-				Model.Position = e.GetCurrentPoint(Element).Position;
+				Model.Position = new Point(Canvas.GetLeft(Element), Canvas.GetTop(Element));
 			}
 			isDragged = false;
 		}

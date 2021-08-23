@@ -42,6 +42,11 @@ namespace HyprWinUI3.Views.CustomControls {
 			tbName.TextBox.TextAlignment = TextAlignment.Center;
 			tbName.TextBlock.TextAlignment = TextAlignment.Center;
 			tbText.TextBox.AcceptsReturn = true;
+
+			ToolTipService.SetToolTip(this, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
+			note.PropertyChanged += (sender, args) => {
+				ToolTipService.SetToolTip(this, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
+			};
 		}
 	}
 }
