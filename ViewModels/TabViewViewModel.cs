@@ -9,6 +9,8 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace HyprWinUI3.ViewModels {
 	public class TabViewViewModel : ObservableObject {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using HyprWinUI3.Constants;
 using HyprWinUI3.Helpers;

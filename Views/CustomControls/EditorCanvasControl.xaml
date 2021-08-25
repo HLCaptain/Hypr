@@ -17,6 +17,7 @@
             HorizontalScrollBarVisibility="Auto"
             HorizontalScrollMode="Enabled"
             IsTabStop="True"
+            IsVerticalScrollChainingEnabled="True"
             MaxZoomFactor="1"
             MinZoomFactor="0.1"
             VerticalScrollBarVisibility="Auto"

@@ -43,6 +43,7 @@ namespace HyprWinUI3.Views.CustomControls {
 			if (root == null) {
 				return;
 			}
+		}
 
 			Stack<Microsoft.UI.Xaml.Controls.TreeViewNode> stack = new Stack<Microsoft.UI.Xaml.Controls.TreeViewNode>();
 			stack.Push(root);

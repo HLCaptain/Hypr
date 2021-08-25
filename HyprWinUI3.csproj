@@ -204,6 +204,7 @@
     <Compile Include="Strategies\LoadStrategy\ILoadStrategy.cs" />
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
+    <Compile Include="ViewModels\EditorStartControlViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorTreeViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
