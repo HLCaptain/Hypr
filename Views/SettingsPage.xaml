@@ -67,6 +67,14 @@
                     CommandParameter="{Binding IsChecked, ElementName=checkBox}"
                     FontSize="{StaticResource MediumFontSize}"
                     IsChecked="{x:Bind ViewModel.IsHighContrast}" />
+                <TextBlock Margin="{StaticResource SmallTopMargin}" Text="Element Size" />
+                <ComboBox
+                    x:Name="sizeComboBox"
+                    x:Uid="Settings_Size_Combobox"
+                    Margin="{StaticResource XSmallTopMargin}"
+                    FontSize="{StaticResource MediumFontSize}"
+                    ItemsSource="{x:Bind ViewModel.Sizes}"
+                    SelectionChanged="sizeComboBox_SelectionChanged" />
             </StackPanel>
 
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />

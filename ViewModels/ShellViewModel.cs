@@ -87,6 +87,6 @@ namespace HyprWinUI3.ViewModels
 			args.Handled = result;
 		}
 
-        
-    }
+		
+	}
 }

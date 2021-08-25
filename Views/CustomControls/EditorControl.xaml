@@ -8,5 +8,34 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <Grid Name="grid" />
+    <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftTopBottomMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Uid="Main_Title"
+            Grid.Row="0"
+            Margin="{StaticResource MediumLeftMargin}"
+            Style="{StaticResource PageTitleStyle}" />
+        <d:ScrollViewer />
+        <Grid
+            Grid.Row="1"
+            Margin="{StaticResource SmallLeftTopBottomMargin}"
+            Background="{ThemeResource SystemControlBackgroundListLowBrush}"
+            CornerRadius="8,8,8,8">
+            <VariableSizedWrapGrid
+                x:Name="grid"
+                Margin="{StaticResource MediumLeftTopRightBottomMargin}"
+                FocusVisualPrimaryBrush="{x:Null}"
+                FocusVisualSecondaryBrush="{x:Null}" />
+
+            <!--
+                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content.
+                Place your content here.
+            -->
+
+        </Grid>
+    </Grid>
 </UserControl>

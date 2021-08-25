@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HyprWinUI3.Models.Actors {
-    class Method : Actor {
+    public class Method : Actor {
     }
 }

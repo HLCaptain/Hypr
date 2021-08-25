@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.EditorApps;
+using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
+using HyprWinUI3.Strategies.LoadStrategy;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -33,18 +38,33 @@ namespace HyprWinUI3.Views.CustomControls {
 		Color dotColor = Color.FromArgb(255, 0, 0, 0);
 		Color backGroundColor = Color.FromArgb(255, 240, 240, 240);
 
+		public Canvas ForegroundCanvas => fgCanvas;
+		public CanvasVirtualControl BackgroundCanvas => bgCanvas;
+
+		public EditorApp Editor {
+			get { return (EditorApp)GetValue(EditorProperty); }
+			set { SetValue(EditorProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for Editor.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty EditorProperty =
+			DependencyProperty.Register("Editor", typeof(EditorApp), typeof(object), new PropertyMetadata(null));
+
+		public Diagram Diagram => (Diagram)Editor.Model;
+
 		public EditorCanvasControl() {
 			this.InitializeComponent();
-			ThemeSelectorService.ThemeChanged += ThemeSelectorService_ThemeChanged;
-			UpdateColors();
+			ThemeSelectorService.ThemeChanged += ThemeSelectorService_ColorChanged;
+			ThemeSelectorService.ContrastChanged += ThemeSelectorService_ColorChanged;
+			RefreshColors();
 		}
 
 		/// <summary>
 		/// Invalidates the whole canvas and updates the drawing colors to match the new theme.
 		/// </summary>
-		private void ThemeSelectorService_ThemeChanged() {
-			UpdateColors();
-			canvas.Invalidate();
+		private void ThemeSelectorService_ColorChanged() {
+			RefreshColors();
+			bgCanvas.Invalidate();
 		}
 
 		/// <summary>
@@ -128,7 +148,7 @@ namespace HyprWinUI3.Views.CustomControls {
 			if (zoom == scrollViewer.ZoomFactor) {
 				// If the zooming stopped right now, redraw the scene if needed.
 				if (zooming && NeedToRedraw()) {
-					canvas.Invalidate();
+					bgCanvas.Invalidate();
 				}
 				zooming = false;
 			} else {
@@ -142,14 +162,15 @@ namespace HyprWinUI3.Views.CustomControls {
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
 		private void UserControl_ActualThemeChanged(FrameworkElement sender, object args) {
-			UpdateColors();
-			canvas.Invalidate();
+			RefreshColors();
+			bgCanvas.Invalidate();
 		}
 
 		/// <summary>
 		/// Updates colors to match the new theme.
 		/// </summary>
-		private void UpdateColors() {
+		private void RefreshColors() {
+			// todo make color a systematic brush, so we don't have to change it manually
 			// changing color based on current theme
 			switch (ThemeSelectorService.Theme) {
 				case ElementTheme.Default:

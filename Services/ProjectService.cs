@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.Core.Helpers;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Models.Data;
 using HyprWinUI3.Models.Diagrams;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -26,9 +29,11 @@ namespace HyprWinUI3.Services {
 		/// </summary>
 		public static event Action RootFolderChangedEvent;
 
+		public static event Action<EditorApp> OpenEditorEvent;
+		public static event Action<StorageFile> OpenEditorFileEvent;
+
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
-		private static StorageFile _projectFile;
 
 		/// <summary>
 		/// Current Project loaded. Cannot be null after given a proper value.
@@ -57,49 +62,6 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
-		public static StorageFile ProjectFile {
-			get => _projectFile;
-			set {
-				if (value != null) {
-					_projectFile = value;
-				}
-			}
-		}
-
-		public static void AddDiagramFileToProject(Diagram diagram) {
-			if (CurrentProject == null) {
-				return;
-			}
-			AddFileToProjectList(diagram.File, CurrentProject.Diagrams);
-		}
-		public static void AddElementFileToProject(Element element) {
-			if (CurrentProject == null) {
-				return;
-			}
-			AddFileToProjectList(element.File, CurrentProject.Elements);
-		}
-		/// <summary>
-		/// Adds a reference path to a project's list.
-		/// </summary>
-		/// <param name="file">We add the relative path of this file. Has to be in the same folder or in subfolders as the Project.</param>
-		/// <param name="list">The list related to the project to add the relative path to.</param>
-		private static void AddFileToProjectList(StorageFile file, IList<string> list) {
-			try {
-				if (!list.Contains(file.Path.Substring(RootFolder.Path.Length + 1)) && // is the file name already in the list?
-					IsInProjectSubfolder(file)) {
-					list.Add(file.Path.Substring(RootFolder.Path.Length + 1));
-					SaveProject();
-				} else {
-					InfoService.DisplayError($"Cannot add {file.Name} to {ProjectFile.Name}, because {file.Name} is not in the same folder as {ProjectFile.Name}!");
-				}
-			} catch (Exception e) {
-				InfoService.DisplayError(e.Message);
-			}
-		}
-		public static bool IsInProjectSubfolder(IStorageItem file) {
-			//return file.Path.StartsWith(RootFolder.Path) && file.Path.Substring(file.Path.Length - file.Name.Length).Length > RootFolder.Path.Length;
-			return file.Path.StartsWith(RootFolder.Path);
-		}
 		/// <summary>
 		/// Opens and loads a project by a FileOpenPicker.
 		/// </summary>
@@ -123,7 +85,7 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("File " + file.Name + " was opened.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					// Updating project attributes.
-					ProjectFile = file;
+					CurrentProject.File = file;
 					RootFolder = await file.GetParentAsync();
 				} else {
 					InfoService.DisplayError("File " + file.Name + " couldn't be opened.");
@@ -146,25 +108,13 @@ namespace HyprWinUI3.Services {
 			StorageFile file = await savePicker.PickSaveFileAsync();
 			if (file != null) {
 				CurrentProject = new Project() { Name = file.DisplayName };
-				// Saving the file
-
-				// Prevent updates to the remote version of the file until
-				// we finish making changes and call CompleteUpdatesAsync.
-				CachedFileManager.DeferUpdates(file);
-				// write to file
-				await FileIO.WriteTextAsync(file, JsonSerializer.Serialize(CurrentProject));
-				// Let Windows know that we're finished changing the file so
-				// the other app can update the remote version of the file.
-				// Completing updates may require Windows to ask for user input.
-				
-				// Saving ends
-				FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+				var status = await FilesystemService.SaveJsonFile(file, CurrentProject);
 				if (status == FileUpdateStatus.Complete) {
 					InfoService.DisplayInfoBar("File " + file.Name + " was saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					// if everything is alright, then we can set the root folder to be the folder the project is in
 					RootFolder = await file.GetParentAsync();
-					ProjectFile = file;
+					CurrentProject.File = file;
 				} else {
 					InfoService.DisplayInfoBar("File " + file.Name + " couldn't be saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
@@ -173,25 +123,63 @@ namespace HyprWinUI3.Services {
 				InfoService.DisplayError("Operation cancelled.");
 			}
 		}
-		public static async void SaveProject() {
-			if (ProjectFile == null) {
+		public static async Task SaveProject() {
+			if (CurrentProject?.File == null) {
 				return;
 			}
-			// Saving the file
-
-			// Prevent updates to the remote version of the file until
-			// we finish making changes and call CompleteUpdatesAsync.
-			CachedFileManager.DeferUpdates(ProjectFile);
-			// write to file
-			await FileIO.WriteTextAsync(ProjectFile, JsonSerializer.Serialize(CurrentProject));
-
-			// Saving ends
-			FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(ProjectFile);
+			var status = await FilesystemService.SaveJsonFile(CurrentProject?.File, CurrentProject);
 			if (status == FileUpdateStatus.Complete) {
-				InfoService.DisplayInfoBar(ProjectFile.Name + " saved.",
+				InfoService.DisplayInfoBar(CurrentProject.File.Name + " saved.",
 					Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 			} else {
-				InfoService.DisplayError(ProjectFile.Name + " couldn't be saved.");
+				InfoService.DisplayError(CurrentProject.File.Name + " couldn't be saved.");
+			}
+		}
+
+		public static void OpenEditor(EditorApp editor) {
+			OpenEditorEvent?.Invoke(editor);
+		}
+
+		public static void OpenEditor(StorageFile file) {
+			OpenEditorFileEvent?.Invoke(file);
+		}
+
+		public static async void FilePathChanged(string oldPath, string newPath) {
+			foreach (var path in CurrentProject.Diagrams) {
+				if (path == oldPath) {
+					CurrentProject.Diagrams[CurrentProject.Diagrams.IndexOf(path)] = newPath;
+					break;
+				}
+			}
+			foreach (var path in CurrentProject.Elements) {
+				if (path == oldPath) {
+					CurrentProject.Elements[CurrentProject.Elements.IndexOf(path)] = newPath;
+					break;
+				}
+			}
+			foreach (var path in CurrentProject.Diagrams) {
+				var diagram = (Diagram)await FilesystemService.LoadActor(path);
+				foreach (var item in diagram.Vertices) {
+					if (item.ElementReference == oldPath) {
+						diagram.Vertices[diagram.Vertices.IndexOf(item)].ElementReference = newPath;
+						break;
+					}
+				}
+				foreach (var item in diagram.Edges) {
+					if (item == oldPath) {
+						diagram.Edges[diagram.Edges.IndexOf(item)] = newPath;
+						break;
+					}
+				}
+				foreach (var item in diagram.Edges) {
+					var edge = (Edge)await FilesystemService.LoadActor(item);
+					if (edge.End == oldPath) {
+						edge.End = newPath;
+					}
+					if (edge.Start == oldPath) {
+						edge.Start = newPath;
+					}
+				}
 			}
 		}
 	}

@@ -17,13 +17,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
     public sealed partial class ToolbarControl : UserControl {
+        public VariableSizedWrapGrid Grid { get => grid; }
         public ToolbarControl() {
             this.InitializeComponent();
-
-            // ini
-            for (int i = 0; i < new Random().Next(8, 24); i++) {
-                grid.Children.Add(new InteractButton());
-            }
         }
     }
 }

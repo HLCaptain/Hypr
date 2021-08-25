@@ -8,6 +8,6 @@ namespace HyprWinUI3.Models.Actors {
     /// <summary>
     /// Elements can be displayed in diagrams.
     /// </summary>
-    public class Element : Actor {
+    public abstract class Element : Actor {
     }
 }

@@ -9,25 +9,5 @@
     d:DesignWidth="42"
     mc:Ignorable="d">
 
-    <Grid>
-        <ToggleButton
-            Width="36"
-            Height="36"
-            Margin="2,2,2,2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            AutomationProperties.Name="Store"
-            CornerRadius="4,4,4,4">
-            <FontIcon
-                x:Name="icon"
-                Width="24"
-                Height="24"
-                Margin="-4,-4,-4,-4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontFamily="Segoe Fluent Icons"
-                Glyph="&#xECCD;" />
-        </ToggleButton>
-
-    </Grid>
+    <Grid x:Name="grid" />
 </UserControl>
