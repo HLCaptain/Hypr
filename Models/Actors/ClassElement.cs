@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HyprWinUI3.Models.Actors {
-    public class ClassElement : Vertex {
+    public class ClassElement : Element {
         public bool Specification { get; set; }
         public bool IsAbstract { get; set; }
         public List<Variable> Variables { get; set; }

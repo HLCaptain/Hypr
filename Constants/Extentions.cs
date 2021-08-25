@@ -10,20 +10,20 @@ using HyprWinUI3.Models.Diagrams;
 namespace HyprWinUI3.Constants {
 	public static class Extentions {
 		public static string ClassDiagramExtention { get; } = ".hycd"; // Class diagram
-		public static string SequentialDiagramExtention { get; } = ".hysq"; // Sequential diagram
+		public static string SequenceDiagramExtention { get; } = ".hysq"; // Sequential diagram
 		public static string UseCaseDiagramExtention { get; } = ".hyuc"; // Use case diagram
 		public static string TextExtention { get; } = ".txt"; // Text editor
 		public static string NoteExtention { get; } = ".hynote";
 
 		public static List<string> DiagramExtentions { get; } = new List<string>() {
 			ClassDiagramExtention,
-			SequentialDiagramExtention,
+			SequenceDiagramExtention,
 			UseCaseDiagramExtention,
 		};
 
 		public static List<string> EditorExtentions { get; } = new List<string>() {
 			ClassDiagramExtention,
-			SequentialDiagramExtention,
+			SequenceDiagramExtention,
 			UseCaseDiagramExtention,
 			TextExtention,
 			NoteExtention
@@ -39,20 +39,24 @@ namespace HyprWinUI3.Constants {
 
 		public static Dictionary<string, Type> ExtentionAppTypes { get; } = new Dictionary<string, Type>() {
 			{ ClassDiagramExtention, typeof(ClassDiagramEditorApp) },
-			{ SequentialDiagramExtention, null }, // todo sequential diagram class
+			{ SequenceDiagramExtention, typeof(SequenceDiagramEditorApp) }, // todo sequential diagram class
 			{ UseCaseDiagramExtention, typeof(UseCaseDiagramEditorApp) },
-			{ ClassElementExtention, null }, // todo change to TextEditorViewer
-			{ EdgeElementExtention, null }, // todo change to TextEditorViewer
 			{ TextExtention, typeof(TextEditorApp) },
 			{ NoteExtention, typeof(TextEditorApp) }
 		};
 
-		public static Dictionary<string, Type> ExtentionActorTypes { get; } = new Dictionary<string, Type>() {
-			{ ClassElementExtention, typeof(ClassElement) },
+		public static Dictionary<string, Type> ExtentionEdgeTypes { get; } = new Dictionary<string, Type>() {
 			{ EdgeElementExtention, typeof(Edge) },
+		};
+
+		public static Dictionary<string, Type> ExtentionVertexTypes { get; } = new Dictionary<string, Type>() {
+			{ ClassElementExtention, typeof(ClassElement) },
 			{ NoteExtention, typeof(Note) },
+		};
+
+		public static Dictionary<string, Type> ExtentionDiagramTypes { get; } = new Dictionary<string, Type>() {
 			{ ClassDiagramExtention, typeof(ClassDiagram) },
-			{ SequentialDiagramExtention, typeof(SequenceDiagram) },
+			{ SequenceDiagramExtention, typeof(SequenceDiagram) }, // todo sequential diagram class
 			{ UseCaseDiagramExtention, typeof(UseCaseDiagram) },
 		};
 	}

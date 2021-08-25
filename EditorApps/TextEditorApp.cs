@@ -27,7 +27,7 @@ namespace HyprWinUI3.EditorApps {
 			}
 		}
 
-		public override async Task<bool> LoadData(string data) {
+		public override bool LoadData(string data) {
 			try {
 				var dataModel = JsonSerializer.Deserialize<Note>(data);
 				if (!IsNote(data)) {

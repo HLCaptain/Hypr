@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using Windows.UI.Xaml.Input;
 
 namespace HyprWinUI3.Commands.EditorInteractions {
 	public class AddNoteCommand : EditorInteractionBase {
-		public Stack<NoteView> Elements { get; set; } = new Stack<NoteView>();
+		public Stack<ElementView> Elements { get; set; } = new Stack<ElementView>();
 		public AddNoteCommand(EditorApp editor) {
 			Editor = editor;
 			Initialize();
@@ -33,19 +34,24 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 		private void RemoveNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 			var element = Elements.Pop();
 			Canvas.ForegroundCanvas.Children.Remove(element);
-			string relativePath = FilesystemService.RelativePathFromFolder(ProjectService.RootFolder, element.Note.File);
-			Model.Elements.Remove(relativePath);
+			Model.Vertices.Remove(element.Vertex);
 		}
 
 		private async void AddNote(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 			// create actor
 			var note = new Note();
-			note.Name = "Note name - " + note.Uid;
+			note.Name = "Note name";
 			note.Text = "Note text";
-			await FilesystemService.CreateElementFile(note, Model.Elements);
-			var view = new NoteView(Canvas.ForegroundCanvas, note);
-			
+			await FilesystemService.CreateElementFile(note);
+			Vertex vertex = new Vertex() { Element = note };
+			Model.Vertices.Add(vertex);
+			// todo refresh list automatically
 			// add actor to places
+
+			var view = new ElementView() {
+				Vertex = vertex,
+				View = new NoteView(note)
+			};
 			Canvas.ForegroundCanvas.Children.Add(view);
 			Elements.Push(view);
 

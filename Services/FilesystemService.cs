@@ -124,9 +124,11 @@ namespace HyprWinUI3.Services {
 		public static async Task<IStorageItem> RenameItem(IStorageItem item, string newName) {
 			try {
 				string oldName = item.Name;
+				string oldPath = Path.GetRelativePath(ProjectService.RootFolder.Path, item.Path);
 				var nameParts = item.Name.Split('.').ToList<string>();
 				string extention = nameParts[nameParts.Count - 1];
 				await item.RenameAsync(newName + "." + extention);
+				ProjectService.FilePathChanged(oldPath, Path.GetRelativePath(ProjectService.RootFolder.Path, item.Path));
 				ItemRenamed?.Invoke(oldName, item);
 				ItemChanged?.Invoke(item);
 			} catch (Exception e) {
@@ -200,8 +202,26 @@ namespace HyprWinUI3.Services {
 		private static string GetActorExtention(Type type) {
 			// find extention for the file
 			string extention = null;
-			foreach (var item in Constants.Extentions.ExtentionActorTypes.Keys) {
-				if (Constants.Extentions.ExtentionActorTypes[item] == type) {
+			foreach (var item in Constants.Extentions.ExtentionDiagramTypes.Keys) {
+				if (Constants.Extentions.ExtentionDiagramTypes[item] == type) {
+					extention = item;
+					break;
+				}
+			}
+			if (extention != null) {
+				return extention;
+			}
+			foreach (var item in Constants.Extentions.ExtentionEdgeTypes.Keys) {
+				if (Constants.Extentions.ExtentionEdgeTypes[item] == type) {
+					extention = item;
+					break;
+				}
+			}
+			if (extention != null) {
+				return extention;
+			}
+			foreach (var item in Constants.Extentions.ExtentionVertexTypes.Keys) {
+				if (Constants.Extentions.ExtentionVertexTypes[item] == type) {
 					extention = item;
 					break;
 				}
@@ -209,23 +229,50 @@ namespace HyprWinUI3.Services {
 			return extention;
 		}
 
+		private static Type GetActorTypeFromExtention(string extention) {
+			Type type = null;
+			if (Constants.Extentions.ExtentionDiagramTypes.Keys.Contains(extention)) {
+				type = Constants.Extentions.ExtentionDiagramTypes[extention];
+			}
+			if (type != null) {
+				return type;
+			}
+			if (Constants.Extentions.ExtentionEdgeTypes.Keys.Contains(extention)) {
+				type = Constants.Extentions.ExtentionEdgeTypes[extention];
+			}
+			if (type != null) {
+				return type;
+			}
+			if (Constants.Extentions.ExtentionVertexTypes.Keys.Contains(extention)) {
+				type = Constants.Extentions.ExtentionVertexTypes[extention];
+			}
+			return type;
+		}
+
 		public static async Task<StorageFile> CreateActorFile(Actor actor) {
 			string extention = GetActorExtention(actor.GetType());
 			try {
-				var file = await ProjectService.RootFolder.CreateFileAsync(
-					actor.Name +
-					" - " +
-					actor.Uid +
-					extention ?? ".txt");
-				actor.File = file;
+				if (actor.File == null) {
+					actor.Name = actor.Name + " - " + actor.Uid;
+					var file = await ProjectService.RootFolder.CreateFileAsync(
+						actor.Name +
+						extention ?? ".txt");
+					actor.File = file;
+					ItemChanged?.Invoke(actor.File);
+				}
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
 			}
 			return actor.File;
 		}
 		public static async Task<StorageFile> CreateElementFile(Element element, IList<string> elements) {
-			await CreateActorFile(element);
+			element.File = await CreateElementFile(element);
 			AddRelativePathToList(ProjectService.RootFolder, element.File, elements);
+			return element.File;
+		}
+
+		public static async Task<StorageFile> CreateElementFile(Element element) {
+			element.File = await CreateActorFile(element);
 			ElementCreated?.Invoke(element);
 			return element.File;
 		}
@@ -239,13 +286,13 @@ namespace HyprWinUI3.Services {
 			await SaveJsonFile(actor.File, actor);
 		}
 
-		private static async Task<FileUpdateStatus> SaveFile(IStorageFile file, string data) {
+		public static async Task<FileUpdateStatus> SaveFile(IStorageFile file, string data) {
 			CachedFileManager.DeferUpdates(file);
 			await FileIO.WriteTextAsync(file, data);
 			return await CachedFileManager.CompleteUpdatesAsync(file);
 		}
 
-		private static async Task<FileUpdateStatus> SaveJsonFile(IStorageFile file, object data) {
+		public static async Task<FileUpdateStatus> SaveJsonFile(IStorageFile file, object data) {
 			return await SaveFile(file, JsonConvert.SerializeObject(data, Formatting.Indented));
 		}
 
@@ -258,9 +305,9 @@ namespace HyprWinUI3.Services {
 		/// <param name="list">The list related to the project to add the relative path to.</param>
 		public static void AddRelativePathToList(StorageFolder root, IStorageItem file, IList<string> list) {
 			try {
-				if (!list.Contains(RelativePathFromFolder(root, file))) {
+				if (!list.Contains(Path.GetRelativePath(root.Path, file.Path))) {
 					if (file.Path.StartsWith(root.Path)) {
-						list.Add(RelativePathFromFolder(root, file));
+						list.Add(Path.GetRelativePath(root.Path, file.Path));
 					} else {
 						InfoService.DisplayError($"Cannot add {file.Name} to the list, because {file.Name} is not in the same folder as {root.Name}!");
 					}
@@ -272,8 +319,23 @@ namespace HyprWinUI3.Services {
 			}
 		}
 
-		public static string RelativePathFromFolder(StorageFolder root, IStorageItem item) {
-			return Path.GetRelativePath(root.Path, item.Path);
+		public static async Task<Actor> LoadActor(string path) {
+			try {
+				var absolutePath = Path.Combine(ProjectService.RootFolder.Path, path);
+				var file = await StorageFile.GetFileFromPathAsync(absolutePath);
+				return await LoadActor(file);
+			} catch (Exception e) {
+				InfoService.DisplayError(e.Message);
+				throw;
+			}
+		}
+
+		public static async Task<Actor> LoadActor(StorageFile file) {
+			var type = GetActorTypeFromExtention(file.FileType);
+			var data = await FileIO.ReadTextAsync(file);
+			var actor = (Actor)JsonConvert.DeserializeObject(data, type);
+			actor.File = file;
+			return actor;
 		}
 	}
 }

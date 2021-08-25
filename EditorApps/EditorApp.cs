@@ -8,6 +8,7 @@ using HyprWinUI3.Commands;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
+using HyprWinUI3.Strategies.LoadStrategy;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,8 +25,8 @@ namespace HyprWinUI3.EditorApps {
 			try {
 				string data = await FileIO.ReadTextAsync(file);
 				LoadData(data);
-				Model.File = file;
 				Model.Name = file.DisplayName;
+				Model.File = file;
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
 				return false;

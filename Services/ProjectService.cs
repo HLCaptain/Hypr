@@ -108,20 +108,7 @@ namespace HyprWinUI3.Services {
 			StorageFile file = await savePicker.PickSaveFileAsync();
 			if (file != null) {
 				CurrentProject = new Project() { Name = file.DisplayName };
-				// Saving the file
-
-				// Prevent updates to the remote version of the file until
-				// we finish making changes and call CompleteUpdatesAsync.
-				CachedFileManager.DeferUpdates(file);
-				// write to file
-				
-				await FileIO.WriteTextAsync(file, Newtonsoft.Json.JsonConvert.SerializeObject(CurrentProject, Newtonsoft.Json.Formatting.Indented));
-				// Let Windows know that we're finished changing the file so
-				// the other app can update the remote version of the file.
-				// Completing updates may require Windows to ask for user input.
-				
-				// Saving ends
-				FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+				var status = await FilesystemService.SaveJsonFile(file, CurrentProject);
 				if (status == FileUpdateStatus.Complete) {
 					InfoService.DisplayInfoBar("File " + file.Name + " was saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
@@ -140,16 +127,7 @@ namespace HyprWinUI3.Services {
 			if (CurrentProject?.File == null) {
 				return;
 			}
-			// Saving the file
-
-			// Prevent updates to the remote version of the file until
-			// we finish making changes and call CompleteUpdatesAsync.
-			CachedFileManager.DeferUpdates(CurrentProject.File);
-			// write to file
-			await FileIO.WriteTextAsync(CurrentProject.File, Newtonsoft.Json.JsonConvert.SerializeObject(CurrentProject, Newtonsoft.Json.Formatting.Indented));
-
-			// Saving ends
-			FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(CurrentProject.File);
+			var status = await FilesystemService.SaveJsonFile(CurrentProject?.File, CurrentProject);
 			if (status == FileUpdateStatus.Complete) {
 				InfoService.DisplayInfoBar(CurrentProject.File.Name + " saved.",
 					Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
@@ -164,6 +142,45 @@ namespace HyprWinUI3.Services {
 
 		public static void OpenEditor(StorageFile file) {
 			OpenEditorFileEvent?.Invoke(file);
+		}
+
+		public static async void FilePathChanged(string oldPath, string newPath) {
+			foreach (var path in CurrentProject.Diagrams) {
+				if (path == oldPath) {
+					CurrentProject.Diagrams[CurrentProject.Diagrams.IndexOf(path)] = newPath;
+					break;
+				}
+			}
+			foreach (var path in CurrentProject.Elements) {
+				if (path == oldPath) {
+					CurrentProject.Elements[CurrentProject.Elements.IndexOf(path)] = newPath;
+					break;
+				}
+			}
+			foreach (var path in CurrentProject.Diagrams) {
+				var diagram = (Diagram)await FilesystemService.LoadActor(path);
+				foreach (var item in diagram.Vertices) {
+					if (item.ElementReference == oldPath) {
+						diagram.Vertices[diagram.Vertices.IndexOf(item)].ElementReference = newPath;
+						break;
+					}
+				}
+				foreach (var item in diagram.Edges) {
+					if (item == oldPath) {
+						diagram.Edges[diagram.Edges.IndexOf(item)] = newPath;
+						break;
+					}
+				}
+				foreach (var item in diagram.Edges) {
+					var edge = (Edge)await FilesystemService.LoadActor(item);
+					if (edge.End == oldPath) {
+						edge.End = newPath;
+					}
+					if (edge.Start == oldPath) {
+						edge.Start = newPath;
+					}
+				}
+			}
 		}
 	}
 }

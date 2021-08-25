@@ -7,7 +7,7 @@ using HyprWinUI3.Strategies;
 
 namespace HyprWinUI3.Models.Diagrams {
     public class ClassDiagram : Diagram {
-        public ClassDiagram() {
+        public ClassDiagram() : base() {
 		}
     }
 }

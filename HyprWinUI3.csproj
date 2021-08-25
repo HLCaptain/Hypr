@@ -153,6 +153,7 @@
     <Compile Include="EditorApps\ClassDiagramEditorApp.cs" />
     <Compile Include="EditorApps\DiagramEditorApp.cs" />
     <Compile Include="EditorApps\EditorApp.cs" />
+    <Compile Include="EditorApps\SequenceDiagramEditorApp.cs" />
     <Compile Include="EditorApps\TextEditorApp.cs" />
     <Compile Include="Constants\Enums.cs" />
     <Compile Include="Constants\Extentions.cs" />
@@ -196,10 +197,11 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
-    <Compile Include="Strategies\ExtentionFiller\AllFileExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\DiagramExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\EditorExtentionFiller.cs" />
     <Compile Include="Strategies\ExtentionFiller\IExtentionFiller.cs" />
+    <Compile Include="Strategies\LoadStrategy\ClassDiagramLoadStrategy.cs" />
+    <Compile Include="Strategies\LoadStrategy\ILoadStrategy.cs" />
     <Compile Include="ViewModels\Diagrams\ClassDiagramViewModel.cs" />
     <Compile Include="ViewModels\Diagrams\DiagramViewModel.cs" />
     <Compile Include="ViewModels\Editor\EditorTreeViewModel.cs" />
@@ -228,6 +230,9 @@
     </Compile>
     <Compile Include="Views\CustomControls\EditorTreeControl.xaml.cs">
       <DependentUpon>EditorTreeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomControls\ElementView.xaml.cs">
+      <DependentUpon>ElementView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\InteractButton.xaml.cs">
       <DependentUpon>InteractButton.xaml</DependentUpon>
@@ -310,6 +315,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\EditorTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\ElementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

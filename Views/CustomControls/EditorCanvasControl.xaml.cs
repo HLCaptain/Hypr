@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.EditorApps;
+using HyprWinUI3.Models.Actors;
+using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Services;
+using HyprWinUI3.Strategies.LoadStrategy;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.Foundation;
@@ -37,14 +41,23 @@ namespace HyprWinUI3.Views.CustomControls {
 		public Canvas ForegroundCanvas => fgCanvas;
 		public CanvasVirtualControl BackgroundCanvas => bgCanvas;
 
+		public EditorApp Editor {
+			get { return (EditorApp)GetValue(EditorProperty); }
+			set { SetValue(EditorProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for Editor.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty EditorProperty =
+			DependencyProperty.Register("Editor", typeof(EditorApp), typeof(object), new PropertyMetadata(null));
+
+		public Diagram Diagram => (Diagram)Editor.Model;
+
 		public EditorCanvasControl() {
 			this.InitializeComponent();
 			ThemeSelectorService.ThemeChanged += ThemeSelectorService_ColorChanged;
 			ThemeSelectorService.ContrastChanged += ThemeSelectorService_ColorChanged;
 			RefreshColors();
 		}
-
-
 
 		/// <summary>
 		/// Invalidates the whole canvas and updates the drawing colors to match the new theme.

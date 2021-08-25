@@ -24,12 +24,9 @@ namespace HyprWinUI3.Models.Actors {
 				if (args2.PropertyName == "Name") {
 					await FilesystemService.RenameItem(File, Name);
 				} else if (args2.PropertyName == "File") {
-					if (File == null) {
 
-					}
-				} else {
-					await FilesystemService.SaveActorFile(this);
 				}
+				await FilesystemService.SaveActorFile(this);
 			};
 		}
 	}

@@ -138,9 +138,8 @@ namespace HyprWinUI3.Views.CustomControls {
 			var item = (sender as MenuFlyoutItem).DataContext as TreeItem;
 			var node = FindNode(item);
 			// todo make this return async and make the whole method async
-			if (ProjectService.IsInProjectSubfolder(item.Content as StorageFolder)) {
+			if ((item.Content as StorageFolder).Path.StartsWith(ProjectService.RootFolder.Path)) {
 				var editor = await FilesystemService.CreateActor(item.Content as StorageFolder, new DiagramExtentionFiller());
-				ProjectService.AddFileToProjectList(editor.Model.File, ProjectService.CurrentProject.Diagrams);
 				ProjectService.OpenEditor(editor);
 				await RefreshTreeNode(node);
 			} else {

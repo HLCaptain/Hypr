@@ -18,11 +18,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class NoteView : UserControl {
-		public Canvas Canvas { get; set; }
 		public Note Note { get; set; }
-		public UserControl This { get => this; }
-		public NoteView(Canvas canvas, Note note) {
-			Canvas = canvas;
+		public NoteView(Note note) {
 			Note = note;
 			this.InitializeComponent();
 			Canvas.SetTop(this, 400);
