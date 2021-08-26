@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using HyprWinUI3.Core.Helpers;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Services;
 using Windows.Storage;

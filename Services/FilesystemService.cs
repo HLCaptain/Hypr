@@ -16,7 +16,6 @@ using Windows.UI.Xaml.Controls;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.EditorApps;
 using Windows.Storage.Provider;
-using HyprWinUI3.Core.Helpers;
 using Newtonsoft.Json;
 using System.IO;
 

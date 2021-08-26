@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-
-using HyprWinUI3.Core.Helpers;
-
+using Newtonsoft.Json;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -23,7 +21,7 @@ namespace HyprWinUI3.Helpers
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await Json.StringifyAsync(content);
+            var fileContent = JsonConvert.SerializeObject(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -38,12 +36,12 @@ namespace HyprWinUI3.Helpers
             var file = await folder.GetFileAsync($"{name}.json");
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return await Json.ToObjectAsync<T>(fileContent);
+            return (T)JsonConvert.DeserializeObject(fileContent);
         }
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await Json.StringifyAsync(value));
+            settings.SaveString(key, JsonConvert.SerializeObject(value));
         }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
@@ -57,7 +55,7 @@ namespace HyprWinUI3.Helpers
 
             if (settings.Values.TryGetValue(key, out obj))
             {
-                return await Json.ToObjectAsync<T>((string)obj);
+                return (T)JsonConvert.DeserializeObject((string)obj);
             }
 
             return default;
