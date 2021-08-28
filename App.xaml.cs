@@ -24,7 +24,7 @@ namespace HyprWinUI3
 
 		protected override async void OnLaunched(LaunchActivatedEventArgs args)
 		{
-			DebugSettings.EnableFrameRateCounter = true;
+			//DebugSettings.EnableFrameRateCounter = true;
 			if (!args.PrelaunchActivated)
 			{
 				await ActivationService.ActivateAsync(args);

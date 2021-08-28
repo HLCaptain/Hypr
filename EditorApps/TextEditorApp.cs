@@ -25,31 +25,5 @@ namespace HyprWinUI3.EditorApps {
 				View = richEditBox;
 			}
 		}
-
-		public override bool LoadData(string data) {
-			try {
-				var dataModel = JsonSerializer.Deserialize<Note>(data);
-				if (!IsNote(data)) {
-					((Note)Model).Text = data;
-				} else {
-					Model = dataModel;
-				}
-				Model.Uid = dataModel.Uid;
-
-				// If view is loaded, update text
-				RefreshView();
-			} catch (Exception e) {
-				InfoService.DisplayError(e.Message);
-				return false;
-			}
-			return true;
-		}
-
-		// flawed, because it is based on string comparing
-		// compares the json parsed data serialized again with the original data
-		private bool IsNote(string data) {
-			var dataModel = JsonSerializer.Deserialize<Note>(data);
-			return Newtonsoft.Json.JsonConvert.SerializeObject(dataModel, Newtonsoft.Json.Formatting.Indented).Equals(data);
-		}
 	}
 }

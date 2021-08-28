@@ -20,7 +20,7 @@ namespace HyprWinUI3.Services {
         /// <summary>
 		/// The UI element, the InfoBar is displayed on.
 		/// </summary>
-        public static VariableSizedWrapGrid InfoBarGrid { get; set; }
+        public static StackPanel InfoBarStack { get; set; }
 
         /// <summary>
 		/// Displays an InfoBar on the InfoBarGrid for 3 seconds.
@@ -41,7 +41,7 @@ namespace HyprWinUI3.Services {
                 MinWidth = 600,
 			};
 
-            InfoBarGrid?.Children.Add(infoBar);
+            InfoBarStack?.Children.Add(infoBar);
 
             // timer removes infobar after 3 seconds
             var timer = new Timer(CloseInfoBar, infoBar, dueTime, Timeout.Infinite);
@@ -60,7 +60,7 @@ namespace HyprWinUI3.Services {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, () => {
                 if (infoBar != null) {
                     if (infoBar.IsOpen) {
-                        InfoBarGrid?.Children.Remove(infoBar);
+                        InfoBarStack?.Children.Remove(infoBar);
                     }
                 }
             });

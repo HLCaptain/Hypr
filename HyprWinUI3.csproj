@@ -151,6 +151,7 @@
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\CommandProcessor.cs" />
+    <Compile Include="Commands\EditorInteractions\AddClassElementCommand.cs" />
     <Compile Include="Commands\EditorInteractions\AddNoteCommand.cs" />
     <Compile Include="Commands\EditorInteractions\EditorInteractionBase.cs" />
     <Compile Include="EditorApps\ClassDiagramEditorApp.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Helpers\StorageItemComparer.cs" />
     <Compile Include="Models\Actors\Actor.cs" />
     <Compile Include="Models\Actors\ClassElement.cs" />
+    <Compile Include="Models\Actors\Document.cs" />
     <Compile Include="Models\Actors\Element.cs" />
     <Compile Include="Models\Actors\Method.cs" />
     <Compile Include="Models\Actors\Note.cs" />
@@ -187,6 +189,8 @@
     <Compile Include="Models\Actors\Entity.cs" />
     <Compile Include="Models\Actors\Vertex.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Proxy\DocumentProxy.cs" />
+    <Compile Include="Proxy\IActorProxy.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
     <Compile Include="Services\FilesystemService.cs" />
@@ -274,6 +278,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\_Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\_CornerRadius.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

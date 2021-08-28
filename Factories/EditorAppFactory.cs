@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -14,7 +15,16 @@ namespace HyprWinUI3.Factories {
 		public static async Task<EditorApp> CreateEditorFromFile(StorageFile file) {
 			try {
 				var editor = CreateEditor(file.FileType);
-				await editor.LoadData(file);
+				// is the file in the projectfile's pathlist?
+				var references = ProjectService.DocumentProxies.Where((proxy) => {
+					return proxy.ReferencePath == Path.GetRelativePath(ProjectService.RootFolder.Path, file.Path);
+				}).ToList();
+				if (references.Any()) {
+					editor.Model = await references[0].GetActor();
+				} else {
+					InfoService.DisplayInfoBar($"{file.Name} is not in project files!");
+					editor.Model = await FilesystemService.LoadActor(Path.GetRelativePath(ProjectService.CurrentProject.File.Path, file.Path));
+				}
 				return editor;
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);

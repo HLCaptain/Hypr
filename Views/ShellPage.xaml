@@ -31,9 +31,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" MaxHeight="48" />
             </Grid.RowDefinitions>
-            <VariableSizedWrapGrid
-                x:Name="variableSizedWrapGrid"
+            <StackPanel
                 Grid.Row="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -49,6 +49,7 @@
                     <winui:MenuBarItem x:Uid="ShellMenuBarItem_Edit">
                         <MenuFlyoutItem x:Uid="ShellMenuItem_Edit_CreateProject" Command="{x:Bind ViewModel.CreateProjectCommand}" />
                         <MenuFlyoutItem x:Uid="ShellMenuItem_File_OpenProject" Command="{x:Bind ViewModel.OpenProjectCommand}" />
+                        <MenuFlyoutItem x:Uid="ShellMenuItem_File_SaveProject" Command="{x:Bind ViewModel.SaveProjectCommand}" />
                     </winui:MenuBarItem>
                 </winui:MenuBar>
                 <Button
@@ -61,11 +62,34 @@
                         FontFamily="Segoe Fluent Icons"
                         Glyph="&#xE115;" />
                 </Button>
-            </VariableSizedWrapGrid>
+            </StackPanel>
+
             <Grid Name="frameGrid" Grid.Row="1">
                 <Frame x:Name="shellFrame" />
             </Grid>
+            <StackPanel
+                x:Name="saveStatePanel"
+                Grid.Row="2"
+                Margin="{StaticResource XSmallLeftTopRightBottomMargin}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <FontIcon
+                    x:Name="xIcon"
+                    FontFamily="Segoe Fluent Icons"
+                    Glyph="&#xF78A;" />
+                <FontIcon
+                    x:Name="tickIcon"
+                    FontFamily="Segoe Fluent Icons"
+                    Glyph="&#xF78C;" />
+                <winui:ProgressRing x:Name="progressRing" IsActive="True" />
+                <TextBlock
+                    x:Name="stateText"
+                    Margin="{StaticResource SmallLeftMargin}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="No project loaded" />
+            </StackPanel>
         </Grid>
     </SplitView>
-
 </Page>

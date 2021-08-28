@@ -8,6 +8,7 @@ using HyprWinUI3.Services;
 using HyprWinUI3.Strategies;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Windows.Storage;
+using System.IO;
 
 namespace HyprWinUI3.Models.Actors {
 	/// <summary>
@@ -23,10 +24,8 @@ namespace HyprWinUI3.Models.Actors {
 				}
 				if (args2.PropertyName == "Name") {
 					await FilesystemService.RenameItem(File, Name);
-				} else if (args2.PropertyName == "File") {
-
+					await FilesystemService.SaveActorFile(this);
 				}
-				await FilesystemService.SaveActorFile(this);
 			};
 		}
 	}

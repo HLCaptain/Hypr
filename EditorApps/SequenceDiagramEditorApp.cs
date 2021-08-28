@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace HyprWinUI3.EditorApps {
 	class SequenceDiagramEditorApp : DiagramEditorApp {
-		public override bool LoadData(string data) {
-			throw new NotImplementedException();
-		}
 	}
 }

@@ -15,11 +15,11 @@ namespace HyprWinUI3.Views
 	public sealed partial class TabViewPage : Page {
 		public TabViewViewModel ViewModel { get; set; }
 		public Grid Grid { get => grid; }
-		public VariableSizedWrapGrid InfoBarGrid { get => infoBarGrid; }
+		public StackPanel InfoBarStack { get => infoBarStack; }
 
 		public TabViewPage() {
 			InitializeComponent();
-			InfoService.InfoBarGrid = InfoBarGrid;
+			InfoService.InfoBarStack = InfoBarStack;
 			ViewModel = new TabViewViewModel();
 			treeView.TabViewViewModel = ViewModel;
 			ProjectService.OpenEditorEvent += (editor) => OpenEditor(editor);

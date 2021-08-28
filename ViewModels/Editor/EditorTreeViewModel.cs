@@ -105,7 +105,7 @@ namespace HyprWinUI3.ViewModels.Editor {
 				presentNodes.AddRange(sameFiles);
 
 				// if the file is not present in the node, add it
-				if (!sameFiles.Any()) {
+				if (!sameFiles.Any() && file.FileType != ".~tmp") {
 					// adding new file
 					var newNode = new TreeItem() {
 						Content = file

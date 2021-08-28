@@ -12,27 +12,14 @@ namespace HyprWinUI3.Models.Diagrams {
 		/// <summary>
 		/// Relative paths to Diagrams.
 		/// </summary>
-		public ObservableCollection<string> Diagrams { get; set; } = new ObservableCollection<string>();
-
-		/// <summary>
-		/// Relative paths to Elements.
-		/// </summary>
-		public ObservableCollection<string> Elements { get; set; } = new ObservableCollection<string>();
+		public ObservableCollection<string> Documents { get; set; } = new ObservableCollection<string>();
 
 		public Project() {
-			Elements.CollectionChanged += async (sender, args) => {
-				if (File != null || ProjectService.CurrentProject?.File == File) {
-					await ProjectService.SaveProject();
-				}
-			};
-			Diagrams.CollectionChanged += async (sender, args) => {
-				if (File != null || ProjectService.CurrentProject?.File == File) {
-					await ProjectService.SaveProject();
-				}
-			};
-			PropertyChanged += async (sender, args) => {
-				if (File != null || ProjectService.CurrentProject?.File == File) {
-					await ProjectService.SaveProject();
+			Documents.CollectionChanged += (sender, args) => {
+				if (ProjectService.CurrentProject == this) {
+					foreach (var item in args.NewItems) {
+						ProjectService.DocumentProxies.Add(new Proxy.DocumentProxy((string)item));
+					}
 				}
 			};
 		}

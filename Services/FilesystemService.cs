@@ -78,12 +78,13 @@ namespace HyprWinUI3.Services {
 			// saving file
 			if (result == ContentDialogResult.Primary) {
 				try {
-					var editor = EditorAppFactory.CreateEditor((string)fileTypes.SelectedItem);
-					editor.Model.Name = textBox.Text == "" ? editor.Model.Uid : textBox.Text;
-					var file = await folder.CreateFileAsync(editor.Model.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
-					await SaveJsonFile(file, editor.Model);
+					var actor = (Actor)Activator.CreateInstance(GetActorTypeFromExtention((string)fileTypes.SelectedItem));
+					actor.Name = textBox.Text == "" ? actor.Uid : textBox.Text;
+					var file = await folder.CreateFileAsync(actor.Name + (string)fileTypes.SelectedItem, CreationCollisionOption.FailIfExists);
+					AddRelativePathToList(ProjectService.RootFolder, file, ProjectService.CurrentProject.Documents);
+					await SaveJsonFile(file, actor);
+					var editor = await EditorAppFactory.CreateEditorFromFile(file);
 					InfoService.DisplayInfoBar($"{file.Name} created!", Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
-					AddRelativePathToList(ProjectService.RootFolder, file, ProjectService.CurrentProject.Diagrams);
 					editor.Model.File = file;
 					ItemChanged?.Invoke(editor.Model.File);
 					EditorCreated?.Invoke(editor);
@@ -124,10 +125,10 @@ namespace HyprWinUI3.Services {
 			try {
 				string oldName = item.Name;
 				string oldPath = Path.GetRelativePath(ProjectService.RootFolder.Path, item.Path);
-				var nameParts = item.Name.Split('.').ToList<string>();
+				var nameParts = item.Name.Split('.').ToList();
 				string extention = nameParts[nameParts.Count - 1];
 				await item.RenameAsync(newName + "." + extention);
-				ProjectService.FilePathChanged(oldPath, Path.GetRelativePath(ProjectService.RootFolder.Path, item.Path));
+				await ProjectService.FilePathChanged(oldPath, Path.GetRelativePath(ProjectService.RootFolder.Path, item.Path));
 				ItemRenamed?.Invoke(oldName, item);
 				ItemChanged?.Invoke(item);
 			} catch (Exception e) {
@@ -248,7 +249,7 @@ namespace HyprWinUI3.Services {
 			return type;
 		}
 
-		public static async Task<StorageFile> CreateActorFile(Actor actor) {
+		public static async Task CreateActorFile(Actor actor) {
 			string extention = GetActorExtention(actor.GetType());
 			try {
 				if (actor.File == null) {
@@ -259,10 +260,10 @@ namespace HyprWinUI3.Services {
 					actor.File = file;
 					ItemChanged?.Invoke(actor.File);
 				}
+				await SaveActorFile(actor);
 			} catch (Exception e) {
 				InfoService.DisplayError(e.Message);
 			}
-			return actor.File;
 		}
 		public static async Task<StorageFile> CreateElementFile(Element element, IList<string> elements) {
 			element.File = await CreateElementFile(element);
@@ -271,7 +272,7 @@ namespace HyprWinUI3.Services {
 		}
 
 		public static async Task<StorageFile> CreateElementFile(Element element) {
-			element.File = await CreateActorFile(element);
+			await CreateActorFile(element);
 			ElementCreated?.Invoke(element);
 			return element.File;
 		}

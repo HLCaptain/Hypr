@@ -11,7 +11,10 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        CornerRadius="16,16,16,16">
         <local:EditorCanvasControl x:Name="canvas" Editor="{x:Bind CurrentEditor}" />
         <local:ToolbarControl
             x:Name="toolbar"

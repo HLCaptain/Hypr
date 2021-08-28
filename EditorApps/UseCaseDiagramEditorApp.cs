@@ -15,15 +15,6 @@ namespace HyprWinUI3.EditorApps {
 		public UseCaseDiagramEditorApp() {
 			Model = new UseCaseDiagram();
 		}
-		public override bool LoadData(string data) {
-			try {
-				Model = JsonSerializer.Deserialize<UseCaseDiagram>(data);
-				return true;
-			} catch (Exception e) {
-				InfoService.DisplayError(e.Message);
-				return false;
-			}
-		}
 		public override void RefreshView() {
 			base.RefreshView();
 			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new RepeatButton(), null));

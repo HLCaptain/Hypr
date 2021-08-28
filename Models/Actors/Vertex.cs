@@ -18,7 +18,14 @@ namespace HyprWinUI3.Models.Actors {
 		[JsonIgnore]
 		private string elementReference = "";
 
-		public string ElementReference { get => elementReference; set => SetProperty(ref elementReference, value); }
+		public string ElementReference { get {
+				if (Element != null) {
+					ElementReference = Path.GetRelativePath(ProjectService.RootFolder.Path, Element.File?.Path);
+				}
+				return elementReference;
+			}
+			set => SetProperty(ref elementReference, value);
+		}
 
 		[JsonIgnore]
 		private Element element;
@@ -27,9 +34,7 @@ namespace HyprWinUI3.Models.Actors {
 			get => element;
 			set {
 				value.PropertyChanged += (sender, args) => {
-					if (args.PropertyName == "Name") {
-						ElementReference = Path.GetRelativePath(ProjectService.RootFolder.Path, value.File?.Path);
-					}
+					ElementReference = Path.GetRelativePath(ProjectService.RootFolder.Path, value.File?.Path);
 				};
 				ElementReference = Path.GetRelativePath(ProjectService.RootFolder.Path, value.File?.Path);
 				element = value;

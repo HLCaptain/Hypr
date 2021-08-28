@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Thickness x:Key="SmallCornerRadius">8, 8, 8, 8</Thickness>
+    <Thickness x:Key="MediumCornerRadius">16, 16, 16, 16</Thickness>
+    <Thickness x:Key="LargeCornerRadius">24, 24, 24, 24</Thickness>
+</ResourceDictionary>

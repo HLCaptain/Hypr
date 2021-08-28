@@ -33,12 +33,12 @@
                 GripperForeground="Transparent"
                 ResizeBehavior="BasedOnAlignment"
                 ResizeDirection="Auto" />
-
-
             <winui:TabView
                 x:Name="tabView"
                 Grid.Row="0"
                 Grid.Column="0"
+                Margin="0,0,0,0"
+                Padding="20,0,0,0"
                 VerticalAlignment="Stretch"
                 AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"
                 AllowDropTabs="True"
@@ -58,13 +58,12 @@
                 </winui:TabView.TabItemTemplate>
             </winui:TabView>
         </Grid>
-        <VariableSizedWrapGrid
-            Name="infoBarGrid"
+        <StackPanel
+            Name="infoBarStack"
             Margin="{StaticResource MediumLeftTopRightBottomMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             FocusVisualPrimaryBrush="{x:Null}"
             FocusVisualSecondaryBrush="{x:Null}" />
     </Grid>
-
 </Page>

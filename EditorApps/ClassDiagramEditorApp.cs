@@ -14,18 +14,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace HyprWinUI3.EditorApps {
 	public class ClassDiagramEditorApp : DiagramEditorApp {
-		public ClassDiagramEditorApp() {
-			Model = new ClassDiagram();
-		}
-		public override bool LoadData(string data) {
-			try {
-				Model = JsonConvert.DeserializeObject<ClassDiagram>(data);
-				return true;
-			} catch (Exception e) {
-				InfoService.DisplayError(e.Message);
-				return false;
-			}
-		}
 		public override async void RefreshView() {
 			// Initialize EditorDiagramControl
 			base.RefreshView();

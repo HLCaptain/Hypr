@@ -138,7 +138,7 @@
     <comment>Menu item text for Exit</comment>
   </data>
   <data name="Main_Title.Text" xml:space="preserve">
-    <value>Main</value>
+    <value>Start</value>
     <comment>Page title for MainPage</comment>
   </data>
   <data name="TabbedPivot_PivotItem1.Header" xml:space="preserve">
@@ -197,7 +197,7 @@
     <value></value>
   </data>
   <data name="Settings_HighContrast_Checkbox.Content" xml:space="preserve">
-    <value>High contrast</value>
+    <value>High Contrast</value>
     <comment>High contrast for Settings</comment>
   </data>
   <data name="ShellMenuItem_Edit_CreateProject.Text" xml:space="preserve">
@@ -205,5 +205,8 @@
   </data>
   <data name="ShellMenuItem_File_OpenProject.Text" xml:space="preserve">
     <value>Open Project</value>
+  </data>
+  <data name="ShellMenuItem_File_SaveProject.Text" xml:space="preserve">
+    <value>Save Project</value>
   </data>
 </root>

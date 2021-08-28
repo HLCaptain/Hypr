@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Models.Data;
 using HyprWinUI3.Models.Diagrams;
+using HyprWinUI3.Proxy;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -31,6 +33,9 @@ namespace HyprWinUI3.Services {
 		public static event Action<EditorApp> OpenEditorEvent;
 		public static event Action<StorageFile> OpenEditorFileEvent;
 
+		public static event Action<string> SavingStarted;
+		public static event Action<string> SavingEnded;
+
 		private static Project _currentProject;
 		private static StorageFolder _rootFolder;
 
@@ -44,9 +49,15 @@ namespace HyprWinUI3.Services {
 				if (value != null) {
 					_currentProject = value;
 					ProjectChangedEvent?.Invoke();
+					DocumentProxies.Clear();
+					foreach (var documentPath in value.Documents) {
+						DocumentProxies.Add(new DocumentProxy(documentPath));
+					}
 				}
 			}
 		}
+
+		public static ObservableCollection<DocumentProxy> DocumentProxies { get; set; } = new ObservableCollection<DocumentProxy>();
 
 		/// <summary>
 		/// Root Folder loaded. Cannot be null after given a proper value.
@@ -75,7 +86,7 @@ namespace HyprWinUI3.Services {
 				// we finish making changes and call CompleteUpdatesAsync.
 				CachedFileManager.DeferUpdates(file);
 				string projectData = await FileIO.ReadTextAsync(file);
-				CurrentProject = JsonSerializer.Deserialize<Project>(projectData);
+				var project = JsonSerializer.Deserialize<Project>(projectData);
 				// Let Windows know that we're finished changing the file so
 				// the other app can update the remote version of the file.
 				// Completing updates may require Windows to ask for user input.
@@ -84,7 +95,8 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("File " + file.Name + " was opened.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					// Updating project attributes.
-					CurrentProject.File = file;
+					project.File = file;
+					CurrentProject = project;
 					RootFolder = await file.GetParentAsync();
 				} else {
 					InfoService.DisplayError("File " + file.Name + " couldn't be opened.");
@@ -106,14 +118,15 @@ namespace HyprWinUI3.Services {
 
 			StorageFile file = await savePicker.PickSaveFileAsync();
 			if (file != null) {
-				CurrentProject = new Project() { Name = file.DisplayName };
-				var status = await FilesystemService.SaveJsonFile(file, CurrentProject);
+				var project = new Project() { Name = file.DisplayName };
+				var status = await FilesystemService.SaveJsonFile(file, project);
 				if (status == FileUpdateStatus.Complete) {
 					InfoService.DisplayInfoBar("File " + file.Name + " was saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					// if everything is alright, then we can set the root folder to be the folder the project is in
 					RootFolder = await file.GetParentAsync();
-					CurrentProject.File = file;
+					project.File = file;
+					CurrentProject = project;
 				} else {
 					InfoService.DisplayInfoBar("File " + file.Name + " couldn't be saved.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error);
@@ -126,6 +139,7 @@ namespace HyprWinUI3.Services {
 			if (CurrentProject?.File == null) {
 				return;
 			}
+			await SaveFiles();
 			var status = await FilesystemService.SaveJsonFile(CurrentProject?.File, CurrentProject);
 			if (status == FileUpdateStatus.Complete) {
 				InfoService.DisplayInfoBar(CurrentProject.File.Name + " saved.",
@@ -142,43 +156,28 @@ namespace HyprWinUI3.Services {
 		public static void OpenEditor(StorageFile file) {
 			OpenEditorFileEvent?.Invoke(file);
 		}
+		
+		// Every opened Diagram should register itself to this
+		// because we can update currently opened diagrams of reference
+		// changes. This is useful, because we can avoid inconsistency.
 
-		public static async void FilePathChanged(string oldPath, string newPath) {
-			foreach (var path in CurrentProject.Diagrams) {
-				if (path == oldPath) {
-					CurrentProject.Diagrams[CurrentProject.Diagrams.IndexOf(path)] = newPath;
-					break;
-				}
+		// Param1 is oldPath, param2 is newPath (relative paths to Project file)
+		// Called when Project file wants to update the old references within the model.
+		public static event Action<string, string> ReferenceChanged;
+
+		// todo make Proxy classes
+
+		private static async Task SaveFiles() {
+			SavingStarted?.Invoke("Saving files!");
+			foreach (var document in DocumentProxies) {
+				await document.SaveDocument();
 			}
-			foreach (var path in CurrentProject.Elements) {
-				if (path == oldPath) {
-					CurrentProject.Elements[CurrentProject.Elements.IndexOf(path)] = newPath;
-					break;
-				}
-			}
-			foreach (var path in CurrentProject.Diagrams) {
-				var diagram = (Diagram)await FilesystemService.LoadActor(path);
-				foreach (var item in diagram.Vertices) {
-					if (item.ElementReference == oldPath) {
-						diagram.Vertices[diagram.Vertices.IndexOf(item)].ElementReference = newPath;
-						break;
-					}
-				}
-				foreach (var item in diagram.Edges) {
-					if (item == oldPath) {
-						diagram.Edges[diagram.Edges.IndexOf(item)] = newPath;
-						break;
-					}
-				}
-				foreach (var item in diagram.Edges) {
-					var edge = (Edge)await FilesystemService.LoadActor(item);
-					if (edge.End == oldPath) {
-						edge.End = newPath;
-					}
-					if (edge.Start == oldPath) {
-						edge.Start = newPath;
-					}
-				}
+			SavingEnded?.Invoke("Files saved!");
+		}
+
+		public static async Task FilePathChanged(string oldPath, string newPath) {
+			foreach (var proxies in DocumentProxies) {
+				await proxies.ChangeReference(oldPath, newPath);
 			}
 		}
 	}

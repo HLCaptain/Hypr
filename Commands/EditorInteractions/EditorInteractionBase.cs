@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HyprWinUI3.EditorApps;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Models.Diagrams;
 using HyprWinUI3.Views.CustomControls;
@@ -21,5 +22,8 @@ namespace HyprWinUI3.Commands.EditorInteractions {
 		}
 		public CommandProcessor CommandProcessor { get; private set; }
 		public Diagram Model { get; private set; }
+		public EditorInteractionBase(EditorApp editor) {
+			Editor = editor;
+		}
 	}
 }
