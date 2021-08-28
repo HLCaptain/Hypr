@@ -37,8 +37,6 @@ namespace HyprWinUI3.Services {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 CornerRadius = new CornerRadius(8),
                 Margin = new Thickness(4),
-                MinHeight = 80,
-                MinWidth = 600,
 			};
 
             InfoBarStack?.Children.Add(infoBar);
