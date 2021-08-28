@@ -95,9 +95,9 @@ namespace HyprWinUI3.Services {
 					InfoService.DisplayInfoBar("File " + file.Name + " was opened.",
 						Microsoft.UI.Xaml.Controls.InfoBarSeverity.Success);
 					// Updating project attributes.
+					RootFolder = await file.GetParentAsync();
 					project.File = file;
 					CurrentProject = project;
-					RootFolder = await file.GetParentAsync();
 				} else {
 					InfoService.DisplayError("File " + file.Name + " couldn't be opened.");
 				}
@@ -156,16 +156,6 @@ namespace HyprWinUI3.Services {
 		public static void OpenEditor(StorageFile file) {
 			OpenEditorFileEvent?.Invoke(file);
 		}
-		
-		// Every opened Diagram should register itself to this
-		// because we can update currently opened diagrams of reference
-		// changes. This is useful, because we can avoid inconsistency.
-
-		// Param1 is oldPath, param2 is newPath (relative paths to Project file)
-		// Called when Project file wants to update the old references within the model.
-		public static event Action<string, string> ReferenceChanged;
-
-		// todo make Proxy classes
 
 		private static async Task SaveFiles() {
 			SavingStarted?.Invoke("Saving files!");

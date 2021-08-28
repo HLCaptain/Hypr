@@ -19,11 +19,12 @@ namespace HyprWinUI3.Factories {
 				var references = ProjectService.DocumentProxies.Where((proxy) => {
 					return proxy.ReferencePath == Path.GetRelativePath(ProjectService.RootFolder.Path, file.Path);
 				}).ToList();
+				ProjectService.CurrentProject.ToString();
 				if (references.Any()) {
 					editor.Model = await references[0].GetActor();
 				} else {
 					InfoService.DisplayInfoBar($"{file.Name} is not in project files!");
-					editor.Model = await FilesystemService.LoadActor(Path.GetRelativePath(ProjectService.CurrentProject.File.Path, file.Path));
+					editor.Model = await FilesystemService.LoadActor(Path.GetRelativePath(ProjectService.RootFolder.Path, file.Path));
 				}
 				return editor;
 			} catch (Exception e) {
