@@ -1,20 +1,20 @@
 ﻿using System;
 
 using HyprWinUI3.Services;
-
+using HyprWinUI3.Views;
+using HyprWinUI3.Views.CustomControls;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 
 namespace HyprWinUI3
 {
-	public sealed partial class App : Application
-	{
+	public sealed partial class App : Application {
 		private Lazy<ActivationService> _activationService;
 
-        private ActivationService ActivationService => _activationService.Value;
+		private ActivationService ActivationService => _activationService.Value;
 
-        public App()
-		{
+		public App() {
 			InitializeComponent();
 			UnhandledException += OnAppUnhandledException;
 
@@ -22,33 +22,27 @@ namespace HyprWinUI3
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 		}
 
-		protected override async void OnLaunched(LaunchActivatedEventArgs args)
-		{
+		protected override async void OnLaunched(LaunchActivatedEventArgs args) {
 			//DebugSettings.EnableFrameRateCounter = true;
-			if (!args.PrelaunchActivated)
-			{
+			if (!args.PrelaunchActivated) {
 				await ActivationService.ActivateAsync(args);
 			}
 		}
 
-		protected override async void OnActivated(IActivatedEventArgs args)
-		{
+		protected override async void OnActivated(IActivatedEventArgs args) {
 			await ActivationService.ActivateAsync(args);
 		}
 
-		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
-		{
+		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e) {
 			// TODO WTS: Please log and handle the exception as appropriate to your scenario
 			// For more info see https://docs.microsoft.com/uwp/api/windows.ui.xaml.application.unhandledexception
 		}
 
-		private ActivationService CreateActivationService()
-		{
+		private ActivationService CreateActivationService() {
 			return new ActivationService(this, typeof(Views.TabViewPage), new Lazy<UIElement>(CreateShell));
 		}
 
-		private UIElement CreateShell()
-		{
+		private UIElement CreateShell() {
 			return new Views.ShellPage();
 		}
 	}

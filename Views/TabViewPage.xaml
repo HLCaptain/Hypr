@@ -37,7 +37,7 @@
                 x:Name="tabView"
                 Grid.Row="0"
                 Grid.Column="0"
-                Margin="0,0,0,0"
+                Margin="0,2,0,0"
                 Padding="20,0,0,0"
                 VerticalAlignment="Stretch"
                 AddTabButtonCommand="{x:Bind ViewModel.AddTabCommand}"

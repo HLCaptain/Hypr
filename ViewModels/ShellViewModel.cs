@@ -27,25 +27,8 @@ namespace HyprWinUI3.ViewModels
 		private IList<KeyboardAccelerator> _keyboardAccelerators;
 
 		private ICommand _loadedCommand;
-		private ICommand _menuViewsTabViewCommand;
-		private ICommand _menuFilesSettingsCommand;
-		private ICommand _menuFileExitCommand;
-		private ICommand _createProjectCommand;
-		private ICommand _openProjectCommand;
-		private ICommand _saveProjectCommand;
 
 		public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new RelayCommand(OnLoaded));
-
-		public ICommand MenuViewsTabViewCommand => _menuViewsTabViewCommand ?? (_menuViewsTabViewCommand = new RelayCommand(OnMenuViewsTabView));
-
-		public ICommand MenuFileSettingsCommand => _menuFilesSettingsCommand ?? (_menuFilesSettingsCommand = new RelayCommand(OnMenuFileSettings));
-
-		public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
-
-		public ICommand CreateProjectCommand => _createProjectCommand ?? (_createProjectCommand = new RelayCommand(ProjectService.CreateProject));
-		public ICommand OpenProjectCommand => _openProjectCommand ?? (_openProjectCommand = new RelayCommand(ProjectService.OpenProject));
-
-		public ICommand SaveProjectCommand => _saveProjectCommand ?? (_saveProjectCommand = new AsyncRelayCommand(ProjectService.SaveProject));
 
 		public ShellViewModel() {
 		}
@@ -93,14 +76,6 @@ namespace HyprWinUI3.ViewModels
 			// More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
 			_keyboardAccelerators.Add(_altLeftKeyboardAccelerator);
 			_keyboardAccelerators.Add(_backKeyboardAccelerator);
-		}
-
-		private void OnMenuViewsTabView() => MenuNavigationHelper.UpdateView(typeof(TabViewPage));
-
-		private void OnMenuFileSettings() => MenuNavigationHelper.OpenInRightPane(typeof(SettingsPage));
-
-		private void OnMenuFileExit() {
-			Application.Current.Exit();
 		}
 
 		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null) {

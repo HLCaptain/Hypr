@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="HyprWinUI3.Views.CustomControls.TitleBarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:HyprWinUI3.Views.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="Transparent">
+        <StackPanel
+            x:Name="titleBarMenu"
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <winui:MenuBar Height="31" VerticalAlignment="Stretch">
+                <!--
+                    TODO WTS: You can edit the text for the menu in String/en-US/Resources.resw
+                -->
+                <winui:MenuBarItem
+                    x:Uid="ShellMenuBarItem_File"
+                    Margin="0,0,2,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_File_Settings" Command="{x:Bind ViewModel.MenuFileSettingsCommand}" />
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_File_Exit" Command="{x:Bind ViewModel.MenuFileExitCommand}" />
+                </winui:MenuBarItem>
+                <winui:MenuBarItem
+                    x:Uid="ShellMenuBarItem_Edit"
+                    Margin="2,0,4,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_Edit_CreateProject" Command="{x:Bind ViewModel.CreateProjectCommand}" />
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_File_OpenProject" Command="{x:Bind ViewModel.OpenProjectCommand}" />
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_File_SaveProject" Command="{x:Bind ViewModel.SaveProjectCommand}" />
+                </winui:MenuBarItem>
+            </winui:MenuBar>
+            <Button
+                x:Name="settingsButton"
+                Grid.Column="1"
+                Padding="11,5,11,4"
+                HorizontalAlignment="Right"
+                Click="settingsButton_Click">
+                <FontIcon
+                    Name="settingsIcon"
+                    FontFamily="Segoe Fluent Icons"
+                    Glyph="&#xE115;" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
