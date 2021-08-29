@@ -22,20 +22,8 @@ namespace HyprWinUI3.Views.CustomControls {
 		public NoteView(Note note) {
 			Note = note;
 			this.InitializeComponent();
-			Canvas.SetTop(this, 400);
-			Canvas.SetLeft(this, 400);
 			tbName.TextBlock.Text = note.Name;
 			tbText.TextBlock.Text = note.Text;
-			tbName.TextBox.IsEnabledChanged += (sender, args) => {
-				if ((bool)args.NewValue == false) {
-					note.Name = tbName.TextBox.Text;
-				}
-			};
-			tbText.TextBox.IsEnabledChanged += (sender, args) => {
-				if ((bool)args.NewValue == false) {
-					note.Text = tbText.TextBox.Text;
-				}
-			};
 			tbName.TextBox.TextAlignment = TextAlignment.Center;
 			tbName.TextBlock.TextAlignment = TextAlignment.Center;
 			tbText.TextBox.AcceptsReturn = true;
@@ -44,6 +32,14 @@ namespace HyprWinUI3.Views.CustomControls {
 			note.PropertyChanged += (sender, args) => {
 				ToolTipService.SetToolTip(this, $"File\nName: {note.File?.Name}\nUid: {note.Uid}\nPath: {note.File?.Path}");
 			};
+		}
+
+		private void tbText_TextUpdatedEvent(object sender, string text) {
+			Note.Text = text;
+		}
+
+		private void tbName_TextUpdatedEvent(object sender, string text) {
+			Note.Name = text;
 		}
 	}
 }

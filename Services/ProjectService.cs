@@ -135,11 +135,10 @@ namespace HyprWinUI3.Services {
 				InfoService.DisplayError("Operation cancelled.");
 			}
 		}
-		public static async Task SaveProject() {
+		public static async Task SaveProjectFile() {
 			if (CurrentProject?.File == null) {
 				return;
 			}
-			await SaveFiles();
 			var status = await FilesystemService.SaveJsonFile(CurrentProject?.File, CurrentProject);
 			if (status == FileUpdateStatus.Complete) {
 				InfoService.DisplayInfoBar(CurrentProject.File.Name + " saved.",
@@ -168,6 +167,9 @@ namespace HyprWinUI3.Services {
 		public static async Task FilePathChanged(string oldPath, string newPath) {
 			foreach (var proxies in DocumentProxies) {
 				await proxies.ChangeReference(oldPath, newPath);
+			}
+			if (CurrentProject.Documents.Contains(oldPath)) {
+				CurrentProject.Documents[CurrentProject.Documents.IndexOf(oldPath)] = newPath;
 			}
 		}
 	}

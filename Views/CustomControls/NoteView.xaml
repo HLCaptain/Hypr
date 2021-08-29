@@ -21,14 +21,14 @@
                 MaxWidth="240"
                 Margin="10,5,10,5"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" />
+                VerticalAlignment="Stretch" TextUpdatedEvent="tbName_TextUpdatedEvent" />
             <local:EditorTextboxControl
                 x:Name="tbText"
                 Grid.Row="1"
                 MaxWidth="240"
                 Margin="10,10,10,10"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" />
+                VerticalAlignment="Stretch" TextUpdatedEvent="tbText_TextUpdatedEvent" />
         </Grid>
     </Grid>
 </UserControl>

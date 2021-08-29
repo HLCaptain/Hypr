@@ -21,6 +21,16 @@ namespace HyprWinUI3.Views.CustomControls {
 		// textBOX is editable
 		public TextBox TextBox { get => textBox; }
 		public TextBlock TextBlock { get => textBlock; }
+
+		public delegate void TextUpdated(object sender, string text);
+		public event TextUpdated TextUpdatedEvent;
+
+		// Using a DependencyProperty as the backing store for TextChangedEvent.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty TextUpdatedEventProperty =
+			DependencyProperty.Register("TextUpdatedEvent", typeof(TextUpdated), typeof(EditorTextboxControl), new PropertyMetadata(null));
+
+
+
 		public EditorTextboxControl() {
 			this.InitializeComponent();
 			textBox.IsEnabled = false;
@@ -41,6 +51,7 @@ namespace HyprWinUI3.Views.CustomControls {
 			textBox.Visibility = Visibility.Collapsed;
 			textBlock.Text = textBox.Text;
 			textBlock.Visibility = Visibility.Visible;
+			TextUpdatedEvent(this, textBlock.Text);
 		}
 	}
 }

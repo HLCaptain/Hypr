@@ -29,6 +29,10 @@ namespace HyprWinUI3.Views.CustomControls {
 						Model = Vertex,
 						Element = this,
 					});
+					// if the view has default position, change it
+					if (Vertex.Position.X == 0 && Vertex.Position.Y == 0) {
+						Vertex.Position = new Point(400, 400);
+					}
 					Canvas.SetLeft(this, Vertex.Position.X);
 					Canvas.SetTop(this, Vertex.Position.Y);
 				}
