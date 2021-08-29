@@ -18,15 +18,14 @@ namespace HyprWinUI3.Models.Actors {
 		[JsonIgnore]
 		public StorageFile File { get; set; } = null;
 		public Actor() {
-			PropertyChanged += async (sender2, args2) => {
-				if (File == null) {
-					return;
-				}
-				if (args2.PropertyName == "Name") {
-					await FilesystemService.RenameItem(File, Name);
-					await FilesystemService.SaveActorFile(this);
-				}
-			};
+			//PropertyChanged += async (sender2, args2) => {
+			//	if (File == null) {
+			//		return;
+			//	}
+			//	if (args2.PropertyName == "Name") {
+			//		await FilesystemService.SaveActorFile(this);
+			//	}
+			//};
 		}
 	}
 }

@@ -17,9 +17,7 @@ namespace HyprWinUI3.Models.Actors {
 				if (File == null) {
 					return;
 				}
-				if (args.PropertyName == "Text") {
-					await FilesystemService.SaveActorFile(this);
-				}
+				await FilesystemService.SaveActorFile(this);
 			};
 		}
 	}

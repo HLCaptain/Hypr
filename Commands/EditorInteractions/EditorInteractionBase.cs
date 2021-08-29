@@ -12,7 +12,7 @@ using HyprWinUI3.Views.CustomControls;
 namespace HyprWinUI3.Commands.EditorInteractions {
 	public abstract class EditorInteractionBase : CommandBase {
 		public EditorCanvasControl Canvas { get; private set; }
-		public EditorApps.EditorApp Editor {
+		public EditorApp Editor {
 			get { return Editor; }
 			set {
 				Canvas = ((EditorDiagramControl)value.View).Canvas;

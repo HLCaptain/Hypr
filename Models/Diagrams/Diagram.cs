@@ -57,8 +57,9 @@ namespace HyprWinUI3.Models.Diagrams {
 
 		private async void VertexChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
 			if (File != null) {
+
 				// references are changing globally, so dont save on every property change
-				if (e.PropertyName == "Position") {
+				if (e.PropertyName != "ElementReference") {
 					await FilesystemService.SaveActorFile(this);
 				}
 			}
