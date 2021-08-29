@@ -11,8 +11,10 @@ namespace HyprWinUI3.Proxy {
 		public string ReferencePath { get; protected set; } = string.Empty;
 		private Document Document { get; set; } = null;
 		public async Task ChangeReference(string oldPath, string newPath) {
-			((Document)await GetActor()).References[Document.References.IndexOf(oldPath)] = newPath;
-			await SaveDocument();
+			if (((Document)await GetActor()).References.Contains(oldPath)) {
+				((Document)await GetActor()).References[Document.References.IndexOf(oldPath)] = newPath;
+				await SaveDocument();
+			}
 		}
 
 		// get loaded document
