@@ -48,14 +48,14 @@ namespace HyprWinUI3.ViewModels
 			progressRing.Visibility = Visibility.Collapsed;
 
 			ProjectService.ProjectChangedEvent += () => {
-				ProjectService.CurrentProject.PropertyChanged += (sender, args) => {
-					if (args.PropertyName == "File") {
-						stateText.Text = ProjectService.CurrentProject.File.Name;
-						xIcon.Visibility = Visibility.Collapsed;
-						tickIcon.Visibility = Visibility.Visible;
-						progressRing.Visibility = Visibility.Collapsed;
-					}
-				};
+				if (ProjectService.CurrentProject.File == null) {
+					stateText.Text = "No file loaded to project!";
+				} else {
+					stateText.Text = ProjectService.CurrentProject.File.Name;
+				}
+				xIcon.Visibility = Visibility.Collapsed;
+				tickIcon.Visibility = Visibility.Visible;
+				progressRing.Visibility = Visibility.Collapsed;
 			};
 			ProjectService.SavingStarted += (message) => {
 				xIcon.Visibility = Visibility.Collapsed;

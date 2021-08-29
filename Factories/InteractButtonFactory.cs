@@ -33,7 +33,7 @@ namespace HyprWinUI3.Factories {
 						icon.Height = 48;
 						break;
 					}
-				case ElementSize.Big: {
+				case ElementSize.Large: {
 						interactButton.Width = 64;
 						interactButton.Height = 64;
 						interactButton.CornerRadius = new Windows.UI.Xaml.CornerRadius(4);

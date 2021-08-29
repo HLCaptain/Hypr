@@ -21,5 +21,5 @@ namespace HyprWinUI3.Views.CustomControls {
         public WideButtonControl() {
             this.InitializeComponent();
         }
-    }
+	}
 }

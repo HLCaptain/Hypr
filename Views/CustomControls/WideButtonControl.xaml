@@ -5,15 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:HyprWinUI3.Views.CustomControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="90"
-    Height="95"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <AppBarButton
             x:Name="appBarButton"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             Icon="Accept"
             Label="AppBarButton" />
     </Grid>

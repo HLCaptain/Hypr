@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace HyprWinUI3.Constants {
 	public enum ElementSize {
-		Small, Normal, Big, Huge
+		Small, Normal, Large, Huge
 	}
 }

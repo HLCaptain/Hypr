@@ -48,7 +48,7 @@ namespace HyprWinUI3.ViewModels
 			}
 		}
 
-		public ObservableCollection<ElementSize> Sizes { get; set; } = new ObservableCollection<ElementSize>() { ElementSize.Small, ElementSize.Normal, ElementSize.Big, ElementSize.Huge };
+		public ObservableCollection<ElementSize> Sizes { get; set; } = new ObservableCollection<ElementSize>() { ElementSize.Small, ElementSize.Normal, ElementSize.Large, ElementSize.Huge };
 
 		private bool _isHighContrast;
 
@@ -101,7 +101,7 @@ namespace HyprWinUI3.ViewModels
 		}
 
 		private string GetVersionDescription() {
-			var appName = "AppDisplayName".GetLocalized();
+			var appName = "Hypr".GetLocalized();
 			var package = Package.Current;
 			var packageId = package.Id;
 			var version = packageId.Version;

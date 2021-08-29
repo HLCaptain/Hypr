@@ -38,10 +38,9 @@ namespace HyprWinUI3.ViewModels {
 			var tabViewItem = new TabViewItem() {
 				Header = "New tab",
 			};
-			var control = new EditorControl() {
+			var control = new EditorControl(tabViewItem) {
 				VerticalAlignment = VerticalAlignment.Stretch,
 				HorizontalAlignment = HorizontalAlignment.Stretch,
-				TabViewItem = tabViewItem
 			};
 			tabViewItem.Content = control;
 			Tabs.Add(tabViewItem);
@@ -59,7 +58,7 @@ namespace HyprWinUI3.ViewModels {
 			}
 
 			for (int i = 0; i < Tabs.Count; i++) {
-				if (((EditorControl)Tabs[i].Content).CurrentEditor?.Model?.Uid.Equals(editor.Model.Uid) ?? false) {
+				if (((EditorControl)Tabs[i].Content).ViewModel.CurrentEditor?.Model?.Uid.Equals(editor.Model.Uid) ?? false) {
 					return i;
 				}
 			}
@@ -80,7 +79,7 @@ namespace HyprWinUI3.ViewModels {
 				return -1;
 			}
 			Tabs[index].Header = editor.Model.Name ?? "Editor";
-			((EditorControl)Tabs[index].Content).LoadEditor(editor);
+			((EditorControl)Tabs[index].Content).ViewModel.LoadEditor(editor);
 			return index;
 		}
 
@@ -96,7 +95,7 @@ namespace HyprWinUI3.ViewModels {
 		public async Task<int> OpenEditor(StorageFile file) {
 			var editor = await EditorAppFactory.CreateEditorFromFile(file);
 			foreach (var item in Tabs) {
-				var itemEditor = ((EditorControl)item.Content).CurrentEditor;
+				var itemEditor = ((EditorControl)item.Content).ViewModel.CurrentEditor;
 				if (itemEditor?.Model == editor.Model) {
 					return OpenEditor(itemEditor);
 				}

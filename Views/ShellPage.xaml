@@ -60,16 +60,29 @@
                     Orientation="Horizontal">
                     <FontIcon
                         x:Name="xIcon"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         FontFamily="Segoe Fluent Icons"
                         Glyph="&#xF78A;" />
                     <FontIcon
                         x:Name="tickIcon"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         FontFamily="Segoe Fluent Icons"
                         Glyph="&#xF78C;" />
-                    <winui:ProgressRing x:Name="progressRing" IsActive="True" />
+                    <winui:ProgressRing
+                        x:Name="progressRing"
+                        Width="{x:Bind stateText.ActualHeight}"
+                        Height="{x:Bind stateText.ActualHeight}"
+                        IsActive="True" />
+                    <!--
+                        Width="{x:Bind stateText.ActualHeight}"
+                        Height="{x:Bind stateText.ActualHeight}" />
+                    -->
+
                     <TextBlock
                         x:Name="stateText"
-                        Margin="{StaticResource SmallLeftMargin}"
+                        Margin="{StaticResource XXSmallLeftMargin}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Text="No project loaded" />
