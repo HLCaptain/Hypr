@@ -35,6 +35,6 @@ namespace HyprWinUI3.ViewModels {
 		public ICommand CreateProjectCommand => _createProjectCommand ?? (_createProjectCommand = new RelayCommand(ProjectService.CreateProject));
 		public ICommand OpenProjectCommand => _openProjectCommand ?? (_openProjectCommand = new RelayCommand(ProjectService.OpenProject));
 
-		public ICommand SaveProjectCommand => _saveProjectCommand ?? (_saveProjectCommand = new AsyncRelayCommand(ProjectService.SaveProjectFile));
+		public ICommand SaveProjectCommand => _saveProjectCommand ?? (_saveProjectCommand = new AsyncRelayCommand(ProjectService.SaveAll));
 	}
 }

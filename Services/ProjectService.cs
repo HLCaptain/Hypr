@@ -136,6 +136,7 @@ namespace HyprWinUI3.Services {
 			}
 		}
 		public static async Task SaveProjectFile() {
+			SavingStarted?.Invoke("Saving project file!");
 			if (CurrentProject?.File == null) {
 				return;
 			}
@@ -146,6 +147,12 @@ namespace HyprWinUI3.Services {
 			} else {
 				InfoService.DisplayError(CurrentProject.File.Name + " couldn't be saved.");
 			}
+			SavingEnded?.Invoke("File saved!");
+		}
+
+		public static async Task SaveAll() {
+			await SaveProjectFile();
+			await SaveFiles();
 		}
 
 		public static void OpenEditor(EditorApp editor) {
