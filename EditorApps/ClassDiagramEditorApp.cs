@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using HyprWinUI3.Commands.EditorInteractions;
 using HyprWinUI3.Factories;
 using HyprWinUI3.Models.Actors;
 using HyprWinUI3.Models.Diagrams;
@@ -10,6 +11,7 @@ using HyprWinUI3.Strategies.LoadStrategy;
 using HyprWinUI3.Views.CustomControls;
 using Newtonsoft.Json;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace HyprWinUI3.EditorApps {
@@ -19,7 +21,15 @@ namespace HyprWinUI3.EditorApps {
 			base.RefreshView();
 			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
 			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
-			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(InteractButtonFactory.MakeInteractButton(null, new ToggleButton(), null));
+			// Add note button
+			var button = new Button();
+			ToolTipService.SetToolTip(button, "Add Class");
+			((EditorDiagramControl)View).Toolbar.Grid.Children.Add(
+				InteractButtonFactory.MakeInteractButton(
+				  new FontIcon() { Glyph = "\xE109" },
+				  button,
+				  new AddClassElementCommand(this).ExecuteCommand)
+				);
 
 			// load data onto view
 			if (Model == null) {

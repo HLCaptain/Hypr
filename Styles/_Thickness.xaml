@@ -34,4 +34,10 @@
     <Thickness x:Key="XXSmallLeftMargin">4, 0, 0, 0</Thickness>
     <Thickness x:Key="XXSmallTopRightBottomMargin">0, 4, 4, 4</Thickness>
     <Thickness x:Key="XXSmallLeftTopRightBottomMargin">4, 4, 4, 4</Thickness>
+
+    <!--  Small size margins of Vertex elements  -->
+    <Thickness x:Key="VertexContentLeftRightMargin">6, 0, 6, 0</Thickness>
+    <Thickness x:Key="VertexContentTopBottomMargin">0, 6, 0, 6</Thickness>
+    <Thickness x:Key="VertexContentLeftTopRightBottomMargin">6, 6, 6, 6</Thickness>
+
 </ResourceDictionary>

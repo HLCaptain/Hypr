@@ -19,16 +19,18 @@
                 x:Name="tbName"
                 Grid.Row="0"
                 MaxWidth="240"
-                Margin="10,5,10,5"
+                Margin="{StaticResource VertexContentLeftTopRightBottomMargin}"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" TextUpdatedEvent="tbName_TextUpdatedEvent" />
+                VerticalAlignment="Stretch"
+                TextUpdatedEvent="tbName_TextUpdatedEvent" />
             <local:EditorTextboxControl
                 x:Name="tbText"
                 Grid.Row="1"
                 MaxWidth="240"
-                Margin="10,10,10,10"
+                Margin="{StaticResource VertexContentLeftTopRightBottomMargin}"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" TextUpdatedEvent="tbText_TextUpdatedEvent" />
+                VerticalAlignment="Stretch"
+                TextUpdatedEvent="tbText_TextUpdatedEvent" />
         </Grid>
     </Grid>
 </UserControl>

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using HyprWinUI3.Commands;
+using HyprWinUI3.Commands.EditorInteractions;
 using HyprWinUI3.Models.Actors;
+using HyprWinUI3.ViewModels.Diagrams;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -19,9 +22,11 @@ using Windows.UI.Xaml.Navigation;
 namespace HyprWinUI3.Views.CustomControls {
 	public sealed partial class ClassElementView : UserControl {
 		public ClassElement ClassElement { get; set; }
+		public CommandBase AddFieldCommand { get; set; }
 		public ClassElementView(ClassElement classElement) {
 			this.InitializeComponent();
 			ClassElement = classElement;
+			AddFieldCommand = new AddFieldCommand(ClassElement);
 		}
 	}
 }

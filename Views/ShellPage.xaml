@@ -45,7 +45,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" MaxHeight="48" />
+                    <RowDefinition Height="36" />
                 </Grid.RowDefinitions>
 
                 <Grid Name="frameGrid" Grid.Row="1">

@@ -152,6 +152,7 @@
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\CommandProcessor.cs" />
     <Compile Include="Commands\EditorInteractions\AddClassElementCommand.cs" />
+    <Compile Include="Commands\EditorInteractions\AddFieldCommand.cs" />
     <Compile Include="Commands\EditorInteractions\AddNoteCommand.cs" />
     <Compile Include="Commands\EditorInteractions\EditorInteractionBase.cs" />
     <Compile Include="EditorApps\ClassDiagramEditorApp.cs" />
@@ -172,8 +173,10 @@
     <Compile Include="Models\Actors\ClassElement.cs" />
     <Compile Include="Models\Actors\Document.cs" />
     <Compile Include="Models\Actors\Element.cs" />
+    <Compile Include="Models\Actors\FieldVariable.cs" />
     <Compile Include="Models\Actors\Method.cs" />
     <Compile Include="Models\Actors\Note.cs" />
+    <Compile Include="Models\Actors\ParameterVariable.cs" />
     <Compile Include="Models\Actors\Variable.cs" />
     <Compile Include="Models\Actors\Visibility.cs" />
     <Compile Include="Models\Data\TreeItem.cs" />
@@ -241,6 +244,9 @@
     </Compile>
     <Compile Include="Views\CustomControls\ElementView.xaml.cs">
       <DependentUpon>ElementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomControls\FieldView.xaml.cs">
+      <DependentUpon>FieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomControls\InteractButton.xaml.cs">
       <DependentUpon>InteractButton.xaml</DependentUpon>
@@ -334,6 +340,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomControls\ElementView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomControls\FieldView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
